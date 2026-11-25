@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tutkimus – ArkVisio</title>
+  <meta name="description" content="Kuntotarkastukset, kosteusmittaukset, kosteusvauriotutkimukset ja energiatodistukset. Laske tutkimuksen hinta.">
+  <link rel="icon" href="assets/logo/logo-musta.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="css/tyylit.css">
+</head>
+<body>
+  <a class="ohita" href="#sisalto">Siirry sisältöön</a>
+
+  <!-- YLÄOSA: sama logo ja valikko kuin etusivulla -->
+  <header class="alasivu-yla tumma">
+    <div class="kehys">
+      <div class="yla">
+        <a class="logo" href="index.html"><img src="assets/logo/logo-valkoinen.svg" alt="ArkVisio – etusivulle" width="84" height="40"></a>
+        <nav class="valikko" id="valikko" aria-label="Päävalikko">
+          <a href="index.html#palvelut">Palvelut</a>
+          <a href="index.html#kohteemme">Kohteemme</a>
+          <a href="#yhteys">Yhteys</a>
+        </nav>
+        <button class="valikko-nappi" type="button" aria-expanded="false" aria-controls="valikko">Valikko</button>
+      </div>
+
+      <div class="alasivu-otsikko">
+        <div>
+          <p class="murupolku"><a href="index.html#palvelut">Kolme osaamista</a> / Tutkimus</p>
+          <h1>Tutkimus<span class="oranssi">.</span></h1>
+          <p class="alasivu-lede">Kuntotarkastukset asuntokauppaan, kosteusmittaukset ja kosteusvauriotutkimukset sekä energiatodistukset – erikoisalaamme vuodesta 1996.</p>
+        </div>
+        <div class="alasivu-ikoni"><svg class="ikoni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20.5 20.5-5.4-5.4"/><path d="M10.5 7.5v6M7.5 10.5h6"/></svg></div>
+      </div>
+      <ul class="alasivu-sisalto"><li>Kuntotarkastukset</li><li>Kosteusmittaukset</li><li>Kosteusvauriotutkimukset</li><li>Energiatodistukset</li><li>Pinta-alamittaukset</li></ul>
+    </div>
+  </header>
+
+  <main id="sisalto">
+
+    <!-- HINTALASKURI: vaihtoehdot ja tuntiarviot tiedostossa data/hinnasto.js -->
+    <section class="osio" id="hintalaskuri">
+      <div class="kehys">
+        <div class="osio-otsikko">
+          <p class="ylaotsikko">Hintalaskuri</p>
+          <h2>Laske tutkimuksen hinta.</h2>
+          <p>Valitse kuvakkeista kohde ja tarvitsemasi palvelut – hinta muodostuu hinnastomme tuntihinnoista.</p>
+        </div>
+        <div data-laskuri="tutkimus"></div>
+      </div>
+    </section>
+
+    <!-- TUNTIHINNAT -->
+    <section class="osio" id="tuntihinnat" style="padding-top:0">
+      <div class="kehys">
+        <div class="osio-otsikko">
+          <p class="ylaotsikko">Hinnasto 2026 · Etelä-Suomi</p>
+          <h2>Tuntihinnat.</h2>
+          <p>Käytetään tehtävissä, joista ei ole sovittu kiinteää palkkiota. Hinnat sisältävät alv:n 25,5 %.</p>
+        </div>
+        <div class="tuntihinnat" data-tuntihinnat="erityis"></div>
+        <h3 class="lisakulut-otsikko">Lisäkustannukset</h3>
+        <ul class="lisakulut" data-lisakulut></ul>
+      </div>
+    </section>
+
+    <!-- MUUT OSAAMISET -->
+    <section class="osio" style="padding-top:0">
+      <div class="kehys">
+        <div class="osaamiset osaamiset-muut">
+          <a class="osaaminen" href="suunnittelu.html">
+            <svg class="ikoni" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="katto" fill="currentColor" stroke="none" d="M11.5 19 24 8.5 36.5 19z"/><path d="M14 22v15h20V22"/><path d="M21.5 37v-7h5v7"/><path d="M17 25.5h3v3h-3zM28 25.5h3v3h-3z"/><path d="M14 42.5h20M14 41v3M34 41v3"/><path d="M8.5 22v15M7 22h3M7 37h3"/></svg>
+            <h3>Suunnittelu</h3>
+          </a>
+          <a class="osaaminen" href="tyomaa.html">
+            <svg class="ikoni" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="katto" fill="currentColor" stroke="none" d="M31.5 12 34 7l2.5 5z"/><path d="M5 41h38"/><path d="M34 41V12"/><path d="M19 12h24"/><path d="M24 12v7"/><path d="M21.5 19h5v3.5h-5z"/><path d="M7 31 15.5 24.5 24 31"/><path d="M9 33v8M15.5 33v8M22 33v8M9 33h13"/></svg>
+            <h3>Työmaa</h3>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- YHTEYS -->
+  <footer class="alatunniste tumma" id="yhteys">
+    <div class="kehys alatunniste-sisalto">
+      <div>
+        <h2>Suunnitellaan <span class="oranssi">yhdessä.</span></h2>
+      </div>
+      <div class="alalaita">
+        <div class="alalaita-tiedot">
+          <a class="alalaita-logo" href="index.html"><img src="assets/logo/logo-valkoinen.svg" alt="ArkVisio – etusivulle" width="68" height="32"></a>
+          <span>Y-tunnus 0930755-1</span>
+          <a href="mailto:toimisto@arkvisio.fi">toimisto@arkvisio.fi</a>
+          <a href="tel:+35898711281">09 8711 281</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data/hinnasto.js"></script>
+  <script src="js/ikonit.js"></script>
+  <script src="js/havainne.js"></script>
+  <script src="js/laskuri.js"></script>
+  <script src="js/valikko.js"></script>
+</body>
+</html>

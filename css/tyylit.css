@@ -1,0 +1,449 @@
+/* ============================================================
+   ARKVISIO – TYYLIT
+   Brändin perusta on muuttujina heti alla. Värit, fontit ja
+   mitat muutetaan vain tästä, niin ne päivittyvät koko sivulle.
+   Ilme: grafiitti + Vision Oranssi, kapea serif-otsikko ja
+   harvennettu versaali (kuten ArkVision mainoksissa).
+   ============================================================ */
+
+:root {
+  /* Värit */
+  --grafiitti: #1F2229;        /* tummat osiot, pääkuva, kartta */
+  --grafiitti-2: #292D35;      /* pinnat tummalla */
+  --grafiitti-3: #363B45;      /* viivat tummalla */
+  /* Koko sivu on tumma: entiset vaaleiden osioiden värit osoittavat grafiitin sävyihin. */
+  --kalkki: #1F2229;           /* sivun tausta */
+  --pinta: #292D35;            /* kortit */
+  --kivi: #363B45;             /* viivat */
+  --muste: #F4F1EC;            /* teksti */
+  --harmaa: #A9ACB3;           /* toissijainen teksti */
+  --teksti-oranssilla: #1F2229; /* teksti oranssilla tai vaalealla pohjalla */
+  --vaalea: #F4F1EC;           /* teksti tummalla */
+  --vaalea-2: #A9ACB3;         /* toissijainen teksti tummalla */
+  --vision-oranssi: #F79C09;   /* toiminto- ja korostusväri */
+  --oranssi-teksti: #F79C09;   /* pieni oranssi teksti */
+
+  /* Fontit */
+  --fontti-otsikko: "Instrument Serif", "Times New Roman", Georgia, serif;
+  --fontti-teksti: "Jost", "Century Gothic", "Segoe UI", system-ui, sans-serif;
+
+  /* Mitat */
+  --leveys: 1240px;
+  --reuna: max(20px, env(safe-area-inset-left, 0px));
+  --reuna-o: max(20px, env(safe-area-inset-right, 0px));
+  --pyoristys: 4px;
+  --osio-vali: clamp(72px, 9vw, 128px);
+}
+
+/* ---------- Perusta ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--kalkki);
+  color: var(--muste);
+  font: 400 17px/1.6 var(--fontti-teksti);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-weight: 400; }
+h1, h2 { font-family: var(--fontti-otsikko); letter-spacing: -.01em; line-height: 1; }
+h3 { font-family: var(--fontti-teksti); font-weight: 500; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--vision-oranssi); outline-offset: 3px; }
+
+.kehys { max-width: var(--leveys); margin: 0 auto; padding-left: var(--reuna); padding-right: var(--reuna-o); }
+.ohita { position: absolute; left: -9999px; top: 8px; background: var(--vision-oranssi); color: var(--teksti-oranssilla); padding: 10px 14px; z-index: 100; }
+.ohita:focus { left: 8px; }
+
+.versaali { font: 500 13px/1.5 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; }
+.ylaotsikko { font: 500 12px/1.4 var(--fontti-teksti); letter-spacing: .2em; text-transform: uppercase; color: var(--oranssi-teksti); }
+.tumma .ylaotsikko { color: var(--vision-oranssi); }
+.oranssi { color: var(--vision-oranssi); }
+
+/* ---------- Napit ---------- */
+.napit { display: flex; flex-wrap: wrap; gap: 12px; }
+.nappi {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font: 500 13px/1 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; text-decoration: none;
+  padding: 17px 24px; border-radius: var(--pyoristys); border: 1px solid transparent; cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.nappi-oranssi { background: var(--vision-oranssi); color: var(--teksti-oranssilla); }
+.nappi-oranssi:hover { background: #FFAD2E; }
+.nappi-reuna { border-color: currentColor; background: transparent; color: inherit; }
+.nappi-reuna:hover { border-color: var(--vision-oranssi); color: var(--vision-oranssi); }
+
+/* ---------- Tummat osiot ---------- */
+.tumma { background: var(--grafiitti); color: var(--vaalea); }
+
+/* ---------- Pääkuva (sisältää logon ja valikon, ei erillistä palkkia) ---------- */
+.paakuva { position: relative; overflow: hidden; isolation: isolate; }
+.paakuva-kuva {
+  position: absolute; inset: 0; z-index: -1;
+  background-color: var(--grafiitti);
+}
+/* Liukuvärit vain kun pääkuva on käytössä (class="paakuva-kuva kuvalla"),
+   muuten selaimen liukuvärikohina näkyy tasaisessa taustassa laikkuina. */
+.paakuva-kuva.kuvalla {
+  background-image:
+    linear-gradient(90deg, var(--grafiitti) 0%, rgba(31, 34, 41, .92) 38%, rgba(31, 34, 41, .35) 70%, rgba(31, 34, 41, .15) 100%),
+    linear-gradient(0deg, var(--grafiitti) 0%, rgba(31, 34, 41, 0) 40%),
+    url("../assets/images/hero.jpg");
+  background-size: cover; background-position: center right;
+}
+/* Yläpalkki seuraa vieritystä kaikilla sivuilla. Sisältö on samassa linjassa kuin .kehys;
+   vieritettäessä (js/valikko.js: html.rullattu) palkki tiivistyy ja saa tumman, sumennetun taustan. */
+.yla { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
+  padding: 28px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 28px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna));
+  border-bottom: 1px solid transparent; transition: padding .25s ease, background-color .25s ease, border-color .25s ease; }
+.rullattu .yla { padding-block: 14px; background: rgba(31, 34, 41, .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom-color: var(--grafiitti-3); }
+.yla + * { margin-top: 96px; }               /* tila kiinteän palkin alla */
+/* Palkki on yläosan sisällä: yläosa pääsisällön (main, z-index 1) yläpuolelle, ettei sisältö peitä palkkia */
+.paakuva, .alasivu-yla { position: relative; z-index: 2; }
+html { scroll-padding-top: 84px; }
+.logo img { width: 84px; height: auto; }
+.valikko { display: flex; gap: 30px; margin-left: auto; }
+.valikko a { text-decoration: none; font: 500 12px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: var(--vaalea-2); padding-block: 8px; border-bottom: 1px solid transparent; }
+.valikko a:hover { color: var(--vaalea); border-bottom-color: var(--vision-oranssi); }
+.valikko-nappi { display: none; margin-left: auto; background: none; border: 1px solid var(--grafiitti-3); color: var(--vaalea); border-radius: var(--pyoristys); padding: 11px 14px; font: 500 12px/1 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; cursor: pointer; }
+
+/* Pääkuvassa iskulause keskellä */
+.paakuva-keski { min-height: calc(100svh - 96px); display: grid; place-content: center; text-align: center; padding-block: clamp(40px, 6vw, 80px); }
+/* Asemapiirros pääkuvan taustalla: viivat piirtyvät kerran, reunat ja keskusta (iskulause) häivytetty */
+.asemapiirros { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 62% 60% at 50% 50%, rgba(0, 0, 0, .35) 0%, #000 52%, transparent 100%);
+  mask-image: radial-gradient(ellipse 62% 60% at 50% 50%, rgba(0, 0, 0, .35) 0%, #000 52%, transparent 100%); }
+.paakuva > .kehys { position: relative; z-index: 1; }
+.asemapiirros .v { stroke: rgba(244, 241, 236, .2); stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; animation: asema 2.6s cubic-bezier(.4, 0, .2, 1) forwards; animation-delay: calc(var(--d, 0s) + .2s); }
+.asemapiirros .ohut { stroke-width: .8; }
+.asemapiirros .kayrat .v { stroke: rgba(244, 241, 236, .09); stroke-width: 1; animation-duration: 3.4s; }
+.asemapiirros .talo .v { stroke: rgba(247, 156, 9, .75); stroke-width: 1.4; }
+.asemapiirros .piste { fill: rgba(244, 241, 236, .3); opacity: 0; animation: asema-esiin .8s ease forwards; animation-delay: calc(var(--d, 0s) + 1.4s); }
+.asemapiirros text { fill: rgba(244, 241, 236, .32); font: 500 11px var(--fontti-teksti); letter-spacing: .12em; opacity: 0; animation: asema-esiin 1s ease forwards; animation-delay: calc(var(--d, 0s) + 1.6s); }
+.asemapiirros .katto { fill: var(--vision-oranssi); opacity: 0; animation: asema-esiin .8s ease forwards; animation-delay: 2.4s; }
+@keyframes asema { to { stroke-dashoffset: 0; } }
+@keyframes asema-esiin { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .asemapiirros .v, .asemapiirros .piste, .asemapiirros text, .asemapiirros .katto { animation: none; stroke-dashoffset: 0; opacity: 1; } }
+.paakuva h1 { font-size: clamp(60px, 10.5vw, 168px); line-height: .92; letter-spacing: -.01em; }
+.paakuva h1 .oranssi { display: block; }
+
+/* Karttaosio: otsikko, hankelaskuri ja suodattimet vasemmalla, kartta oikealla */
+.kartta-osio { overflow: hidden; }
+.kartta-osio-sisalto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.kartta-teksti { position: relative; z-index: 1; display: grid; gap: 20px; }
+.kartta-teksti h2 { font-size: clamp(44px, 6vw, 88px); line-height: .95; }
+.kartta-teksti h2 .oranssi { display: block; }
+.hankelaskuri { display: flex; align-items: baseline; gap: 14px; margin-top: clamp(8px, 1.6vw, 20px); }
+.hankeluku { font: 400 clamp(48px, 5vw, 76px)/1 var(--fontti-otsikko); color: var(--vaalea); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.hankeselite { font: 500 12px/1.5 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: var(--vaalea); }
+.hankeselite small { display: block; font-size: 12px; letter-spacing: .04em; text-transform: none; font-weight: 400; color: var(--vaalea-2); }
+.kartta-osio .suodatin { background: rgba(41, 45, 53, .72); border-color: rgba(244, 241, 236, .1); backdrop-filter: blur(6px); border-radius: 999px; padding: 9px 14px; }
+
+/* ---------- Kartta ---------- */
+
+.kartta { min-width: 0; display: grid; gap: 14px; }
+.kartta-alue { position: relative; aspect-ratio: 1 / 1; max-width: 100%; border-radius: var(--pyoristys); background: var(--grafiitti); overflow: hidden; }
+.kartta canvas { width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
+.kartta-alue.aktiivinen canvas { touch-action: none; }
+/* Häivytystila: lähennetty kartta saa levitä kehyksen yli, reunat häipyvät taustaan.
+   Pallo pysyy kaukaa katsottuna kehyksen kokoisena. */
+.kartta-alue.haivytys { overflow: visible; background: none; }
+/* Ylöspäin vähemmän, ettei kartta nouse yläpalkin alle. */
+.kartta-alue.haivytys canvas { position: absolute; top: -6%; left: -16%; width: 132%; height: 118%; }
+.paakuva h1, .kartta .suodattimet { position: relative; z-index: 1; }
+/* Suodattimet kartan alareunassa, kartan päällä */
+.kartta.haivytys { position: relative; }
+.kartta.haivytys .suodattimet {
+  position: absolute; left: 50%; bottom: -4%; transform: translateX(-50%);
+  width: max-content; max-width: 132%; justify-content: center; z-index: 2;
+}
+.kartta.haivytys .suodatin { background: rgba(41, 45, 53, .72); border-color: rgba(244, 241, 236, .1); backdrop-filter: blur(6px); border-radius: 999px; padding: 9px 14px; }
+/* Ohjaimet pystyyn oikeaan reunaan, eivät osu suodattimiin */
+.kartta.haivytys .kartta-ohjaimet { flex-direction: column; align-items: flex-end; top: 50%; bottom: auto; right: -4%; transform: translateY(-50%); }
+.kartta.haivytys .kartta-ohjaimet button { border-radius: 999px; }
+
+/* Taustatila: kartta on koko pääkuvan tausta. Kehys (.kartta-alue) vain kertoo pallon paikan ja koon. */
+/* Kartta jatkuu pääkuvan alareunan yli ja häipyy seuraavan osion puolella. */
+.paakuva.kartta-taustana { overflow: visible; }
+main, .alatunniste { position: relative; z-index: 1; }
+.paakuva.kartta-taustana > canvas { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% + 260px); z-index: 0; display: block; touch-action: pan-y; cursor: grab; }
+.paakuva.kartta-taustana > canvas:active { cursor: grabbing; }
+.paakuva.kartta-taustana:has(.kartta-alue.aktiivinen) > canvas { touch-action: none; }
+.paakuva.kartta-taustana > .kehys { position: relative; z-index: 1; pointer-events: none; }
+.paakuva.kartta-taustana > .kehys :is(a, button, .suodattimet) { pointer-events: auto; }
+.paakuva.kartta-taustana .kartta-alue { background: none; overflow: visible; }
+.kartta.tausta .suodatin { background: rgba(41, 45, 53, .72); border-color: rgba(244, 241, 236, .1); backdrop-filter: blur(6px); border-radius: 999px; padding: 9px 14px; }
+.kartta.tausta .kartta-ohjaimet button { border-radius: 999px; backdrop-filter: blur(6px); }
+.kartta canvas:active { cursor: grabbing; }
+.kartta-vihje {
+  position: absolute; pointer-events: none; z-index: 3;
+  transform: translate(-50%, calc(-100% - 16px));
+  background: var(--vaalea); color: var(--teksti-oranssilla);
+  font: 500 13px/1.4 var(--fontti-teksti); padding: 8px 12px; border-radius: var(--pyoristys); white-space: nowrap; max-width: 280px;
+}
+.kartta-vihje small { display: block; color: #62656C; font-weight: 400; }
+.kartta-vihje ul { margin: 6px 0 0; padding: 0; list-style: none; white-space: normal; }
+.kartta-ohjaimet { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 6px; z-index: 2; }
+.kartta-ohjaimet button {
+  font: 500 11px/1 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase;
+  min-width: 40px; height: 40px; padding: 0 12px; border-radius: var(--pyoristys);
+  border: 1px solid var(--grafiitti-3); background: rgba(41, 45, 53, .9); color: var(--vaalea); cursor: pointer;
+}
+.kartta-ohjaimet button:hover { border-color: var(--vision-oranssi); }
+.suodattimet { display: flex; flex-wrap: wrap; gap: 8px; }
+.suodatin {
+  display: inline-flex; align-items: center; gap: 10px;
+  font: 500 14px/1 var(--fontti-teksti); padding: 11px 14px; border-radius: var(--pyoristys);
+  border: 1px solid var(--kivi); background: var(--pinta); color: var(--muste); cursor: pointer; text-align: left;
+}
+.tumma .suodatin { border-color: var(--grafiitti-3); background: var(--grafiitti-2); color: var(--vaalea); }
+.suodatin i { flex: none; width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(31, 34, 41, .35); }
+.suodatin .maara { margin-left: auto; padding-left: 12px; color: var(--harmaa); font-variant-numeric: tabular-nums; }
+.tumma .suodatin .maara { color: var(--vaalea-2); }
+.suodatin[aria-pressed="false"] { opacity: .45; }
+.suodatin[aria-pressed="false"] i { background: transparent !important; box-shadow: inset 0 0 0 1.5px currentColor; }
+
+/* ---------- Vaaleat osiot ---------- */
+.osio { padding-block: var(--osio-vali); }
+.osio-otsikko { display: grid; gap: 16px; max-width: 64ch; margin-bottom: clamp(36px, 4vw, 56px); }
+.osio-otsikko h2 { font-size: clamp(44px, 5.6vw, 76px); }
+.osio-otsikko p { color: var(--harmaa); font-weight: 300; font-size: 18px; }
+.tumma .osio-otsikko p { color: var(--vaalea-2); }
+
+/* Palvelut */
+.palvelut { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--kivi); }
+.palvelu { padding: clamp(24px, 3vw, 40px) clamp(0px, 2vw, 32px) 8px 0; display: grid; gap: 14px; align-content: start; }
+.palvelu + .palvelu { padding-left: clamp(20px, 2.4vw, 32px); border-left: 1px solid var(--kivi); }
+.palvelu h3 { font-family: var(--fontti-otsikko); font-weight: 400; font-size: 40px; line-height: 1; }
+.palvelu p { color: var(--harmaa); font-weight: 300; }
+.palvelu ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.palvelu li { font: 500 12px/1.5 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; display: flex; gap: 10px; }
+.palvelu li::before { content: "•"; color: var(--vision-oranssi); }
+
+/* Kohteet */
+.kohteet-palkki { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
+.kohdekortit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 20px; }
+.kohde { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 14px; align-content: start; }
+.kohde:focus-visible { outline: 2px solid var(--vision-oranssi); outline-offset: 4px; }
+.kohde-kuva { position: relative; aspect-ratio: 4 / 3; border-radius: var(--pyoristys); overflow: hidden; background: var(--grafiitti-2); }
+.kohde-kuva img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.kohde:hover .kohde-kuva img { transform: scale(1.03); }
+.kohde-kuva .paikkamerkki { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(160deg, var(--grafiitti-3), var(--grafiitti-2)); }
+.kohde-kuva .paikkamerkki img { width: 30%; height: auto; opacity: .14; }
+.kohde-kuva .merkinta { position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 8px; font: 500 11px/1 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; padding: 8px 10px; border-radius: var(--pyoristys); background: rgba(31, 34, 41, .82); color: var(--vaalea); }
+.kohde-kuva .merkinta i { width: 8px; height: 8px; border-radius: 50%; }
+.kohde-kuva .esimerkki { position: absolute; right: 12px; top: 12px; font: 500 10px/1 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; padding: 6px 8px; border-radius: var(--pyoristys); background: var(--vision-oranssi); color: var(--teksti-oranssilla); }
+.kohde-tiedot { display: grid; gap: 4px; }
+.kohde-nimi { font: 400 30px/1.05 var(--fontti-otsikko); }
+.kohde-tiedot .meta { color: var(--harmaa); font-size: 15px; font-weight: 300; font-variant-numeric: tabular-nums; }
+.kohde-tiedot .nayta { font: 500 11px/1 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; color: var(--oranssi-teksti); margin-top: 8px; }
+.lisaa { display: flex; justify-content: center; margin-top: 40px; }
+.lisaa .nappi { color: var(--muste); }
+.tyhja { grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--harmaa); background: var(--pinta); }
+
+.tagi { justify-self: start; font: 500 11px/1 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; padding: 7px 10px; border-radius: var(--pyoristys); background: var(--vision-oranssi); color: var(--teksti-oranssilla); }
+
+/* Tarinamme */
+.tarina { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(28px, 5vw, 80px); align-items: start; }
+.tarina-teksti { display: grid; gap: 16px; color: var(--harmaa); font-weight: 300; font-size: 18px; max-width: 50ch; }
+.tiimi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.henkilo { display: grid; gap: 10px; align-content: start; }
+.henkilo-kuva { aspect-ratio: 4 / 5; border-radius: var(--pyoristys); background: var(--grafiitti-2); display: grid; place-items: center; font: 400 52px/1 var(--fontti-otsikko); color: var(--harmaa); }
+.henkilo h3 { font-size: 18px; }
+.henkilo p { font-size: 14px; color: var(--harmaa); }
+
+/* Alatunniste */
+.alatunniste { padding-block: var(--osio-vali) 40px; }
+.alatunniste-sisalto { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+.alatunniste h2 { font-size: clamp(48px, 6vw, 88px); line-height: .95; }
+.alatunniste h3 { font: 500 12px/1 var(--fontti-teksti); letter-spacing: .2em; text-transform: uppercase; color: var(--vision-oranssi); margin-bottom: 14px; }
+.alatunniste address { font-style: normal; display: grid; gap: 6px; color: var(--vaalea-2); font-weight: 300; }
+.alatunniste address a { text-decoration: none; color: var(--vaalea); }
+.alatunniste address a:hover { color: var(--vision-oranssi); }
+/* Alatunniste keskitetty: otsikko, logo ja yhteystiedot allekkain */
+.alatunniste-sisalto { justify-items: center; text-align: center; }
+.alalaita { grid-column: 1 / -1; display: grid; justify-items: center; gap: 6px; font-size: 13px; color: var(--vaalea-2); }
+.alalaita-tiedot { display: grid; justify-items: center; gap: 6px; }
+.alalaita-tiedot a { color: var(--vaalea); text-decoration: none; }
+.alalaita-tiedot a:hover { color: var(--vision-oranssi); }
+.alalaita-logo { margin-bottom: 8px; }
+.alalaita-logo img { display: block; width: 68px; height: auto; }
+
+
+/* ---------- Mobiili ---------- */
+@media (max-width: 960px) {
+  .kartta-osio-sisalto, .tarina { grid-template-columns: minmax(0, 1fr); }
+  .kartta { max-width: 600px; width: 100%; justify-self: center; }
+  .kohdekortit { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .palvelut { grid-template-columns: minmax(0, 1fr); }
+  .palvelu, .palvelu + .palvelu { padding: 28px 0; border-left: 0; border-bottom: 1px solid var(--kivi); }
+}
+@media (max-width: 760px) {
+  .valikko-nappi { display: inline-flex; }
+  .valikko {
+    display: none; position: absolute; left: 0; right: 0; top: 100%; z-index: 20;
+    flex-direction: column; gap: 0; background: var(--grafiitti);
+    padding: 8px var(--reuna-o) 24px var(--reuna); border-top: 1px solid var(--grafiitti-3); border-bottom: 1px solid var(--grafiitti-3);
+  }
+  .valikko.auki { display: flex; }
+  .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid var(--grafiitti-3); }
+  .paakuva-kuva.kuvalla { background-image: linear-gradient(0deg, var(--grafiitti) 10%, rgba(31, 34, 41, .75) 60%, rgba(31, 34, 41, .55) 100%), url("../assets/images/hero.jpg"); }
+}
+@media (max-width: 620px) {
+  .kohdekortit { grid-template-columns: minmax(0, 1fr); }
+  /* Kapealla suodattimet kartan alle, ohjaimet kartan sisään */
+  .kartta.haivytys .suodattimet { position: relative; left: auto; bottom: auto; transform: none; width: auto; max-width: none; justify-content: flex-start; }
+  .kartta.haivytys .kartta-ohjaimet { right: 4px; }
+  .tiimi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .nappi, .kohde-kuva img { transition: none; }
+}
+
+/* ---------- Kolme osaamista (etusivu ja palvelusivujen loppu) ---------- */
+.osaamiset-otsikko { font-size: clamp(44px, 6vw, 88px); max-width: 14ch; margin-bottom: clamp(36px, 5vw, 64px); }
+.osaamiset-otsikko .oranssi { display: block; }
+.osaamiset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(36px, 5vw, 72px); }
+.osaamiset-muut { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Yksinkertainen: kuvake, otsikko ja teksti ilman laatikkoa. Koko osaaminen on linkki palvelusivulle. */
+.osaaminen { display: grid; align-content: start; gap: 14px; text-decoration: none; color: inherit; }
+.osaaminen .ikoni { width: 76px; height: 76px; color: var(--vision-oranssi); margin-bottom: 6px; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.osaaminen h3 { font: 400 clamp(32px, 3vw, 44px)/1 var(--fontti-otsikko); transition: color .2s ease; }
+.osaaminen p { color: var(--harmaa); font-weight: 300; max-width: 34ch; }
+.osaaminen:hover .ikoni, .osaaminen:focus-visible .ikoni { transform: translateY(-4px); }
+.osaaminen:hover h3, .osaaminen:focus-visible h3 { color: var(--vision-oranssi); }
+/* Esiintulo (js/valikko.js lisää luokat): osaamiset liukuvat vuorotellen esiin ja kuvakkeiden viivat piirtyvät */
+.js-animaatio .osaaminen { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1); transition-delay: calc(var(--i, 0) * 160ms); }
+.js-animaatio .osaaminen.esiin { opacity: 1; transform: none; }
+.js-animaatio .osaaminen .ikoni :is(path, circle) { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s cubic-bezier(.4, 0, .2, 1) calc(var(--i, 0) * 160ms + .3s); }
+.js-animaatio .osaaminen.esiin .ikoni :is(path, circle) { stroke-dashoffset: 0; }
+/* Kattokolmio (logon aihe) laskeutuu paikalleen, kun viivat on piirretty */
+.js-animaatio .osaaminen .ikoni .katto { opacity: 0; transform: translateY(-5px); transform-box: fill-box; transition: opacity .5s ease, transform .6s cubic-bezier(.2, .8, .2, 1); transition-delay: calc(var(--i, 0) * 160ms + 1.1s); }
+.js-animaatio .osaaminen.esiin .ikoni .katto { opacity: 1; transform: none; }
+
+/* ---------- Palvelusivun yläosa ---------- */
+.alasivu-yla { padding-bottom: clamp(48px, 6vw, 80px); border-bottom: 1px solid var(--grafiitti-3); }
+.alasivu-otsikko { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; padding-top: clamp(48px, 7vw, 104px); }
+.alasivu-otsikko h1 { font-size: clamp(64px, 9vw, 136px); line-height: .9; }
+.murupolku { font: 500 12px/1.4 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: var(--vaalea-2); margin-bottom: 18px; }
+.murupolku a { color: var(--vision-oranssi); text-decoration: none; }
+.alasivu-lede { max-width: 52ch; margin-top: 24px; color: var(--vaalea-2); font-weight: 300; font-size: clamp(17px, 1.6vw, 20px); }
+.alasivu-ikoni .ikoni { width: clamp(96px, 14vw, 180px); height: auto; color: var(--vision-oranssi); }
+.alasivu-sisalto { display: flex; flex-wrap: wrap; gap: 8px 22px; list-style: none; padding: 0; margin: 32px 0 0; font: 500 12px/1.4 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; }
+.alasivu-sisalto li::before { content: "•"; color: var(--vision-oranssi); margin-right: 10px; }
+
+/* ---------- Hintalaskuri ---------- */
+.laskuri-runko { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.laskuri-valinnat { display: grid; gap: clamp(32px, 4vw, 48px); }
+.vaihe { border: 0; margin: 0; padding: 0; min-width: 0; }
+.vaihe-otsikko { display: flex; align-items: center; gap: 14px; padding: 0; margin-bottom: 18px; font: 400 clamp(26px, 2.6vw, 36px)/1.1 var(--fontti-otsikko); }
+.vaihe-nro { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--vision-oranssi); color: var(--vision-oranssi); font: 500 13px/1 var(--fontti-teksti); flex: none; }
+.vaihe-ohje { margin-top: 12px; font-size: 14px; color: var(--harmaa); }
+.ruudut { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.ruudut-palvelut { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+.ruutu {
+  position: relative; display: grid; justify-items: start; align-content: start; gap: 10px; text-align: left;
+  padding: 18px; border: 1px solid var(--grafiitti-3); border-radius: var(--pyoristys); background: var(--grafiitti-2);
+  color: var(--vaalea); font: inherit; cursor: pointer; transition: border-color .15s ease, background-color .15s ease;
+}
+.ruutu:hover { border-color: rgba(247, 156, 9, .5); }
+.ruutu[aria-pressed="true"] { border-color: var(--vision-oranssi); background: rgba(247, 156, 9, .08); }
+.ruutu .ikoni { width: 40px; height: 40px; color: var(--vaalea-2); transition: color .15s ease; }
+.ruutu[aria-pressed="true"] .ikoni { color: var(--vision-oranssi); }
+.ruutu-nimi { font-weight: 500; font-size: 15px; line-height: 1.3; }
+.ruutu-kuvaus { font-size: 13px; line-height: 1.45; color: var(--harmaa); font-weight: 300; }
+.ruutu-hinta { font: 500 11px/1 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; color: var(--vaalea-2); margin-top: 2px; }
+.ruutu-valinta { position: absolute; top: 14px; right: 14px; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--grafiitti-3); }
+.ruutu[aria-pressed="true"] .ruutu-valinta { border-color: var(--vision-oranssi); background: var(--vision-oranssi) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m6 10 3 3 5-6' fill='none' stroke='%231F2229' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat; }
+.liuku { display: flex; align-items: center; gap: 20px; }
+.liuku input { flex: 1; accent-color: var(--vision-oranssi); height: 28px; }
+.liuku output { min-width: 96px; text-align: right; font: 400 32px/1 var(--fontti-otsikko); font-variant-numeric: tabular-nums; }
+
+.laskuri-tulos { position: sticky; top: 24px; display: grid; gap: 16px; padding: clamp(24px, 3vw, 32px); border: 1px solid var(--grafiitti-3); border-radius: var(--pyoristys); background: var(--grafiitti-2); }
+.alv-vaihto { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: var(--grafiitti); }
+.alv-vaihto button { border: 0; border-radius: 999px; padding: 9px 12px; background: none; color: var(--vaalea-2); font: 500 12px/1 var(--fontti-teksti); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.alv-vaihto button[aria-pressed="true"] { background: var(--vision-oranssi); color: var(--teksti-oranssilla); }
+.tulos-otsikko { font: 500 12px/1.4 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; color: var(--vaalea-2); margin-top: 8px; }
+.tulos-otsikko span { letter-spacing: .04em; text-transform: none; font-weight: 400; }
+.tulos-luku { font: 400 clamp(40px, 4vw, 54px)/1 var(--fontti-otsikko); color: var(--vision-oranssi); font-variant-numeric: tabular-nums; }
+.tulos-luku span { font-size: .6em; }
+.tulos-luku .tulos-tyhja { font: 400 16px/1.4 var(--fontti-teksti); color: var(--harmaa); }
+.erittely { list-style: none; margin: 0; padding: 0; display: grid; }
+.erittely li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--grafiitti-3); font-size: 14px; font-variant-numeric: tabular-nums; }
+.erittely li > span:last-child { white-space: nowrap; }
+.erittely small { display: block; color: var(--harmaa); font-size: 12px; }
+.tulos-nappi { justify-content: center; text-align: center; }
+.tulos-huom { font-size: 12px; line-height: 1.5; color: var(--harmaa); }
+
+/* ---------- Tuntihinnat ---------- */
+.tuntihinnat { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.tuntihinta { padding: 24px; border: 1px solid var(--grafiitti-3); border-radius: var(--pyoristys); display: grid; gap: 6px; align-content: start; }
+.tuntihinta-taso { font: 500 12px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: var(--vision-oranssi); }
+.tuntihinta-luku { font: 400 44px/1.1 var(--fontti-otsikko); font-variant-numeric: tabular-nums; margin-top: 8px; }
+.tuntihinta-luku span { font-size: .45em; color: var(--vaalea-2); }
+.tuntihinta-alv { font-size: 13px; color: var(--harmaa); }
+.tuntihinta ul { margin: 12px 0 0; padding: 12px 0 0; border-top: 1px solid var(--grafiitti-3); list-style: none; display: grid; gap: 6px; font-size: 14px; color: var(--vaalea-2); font-weight: 300; }
+.lisakulut-otsikko { margin: 40px 0 12px; font-size: 15px; }
+.lisakulut { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--harmaa); font-size: 14px; font-weight: 300; max-width: 70ch; }
+
+@media (max-width: 960px) {
+  .laskuri-runko { grid-template-columns: minmax(0, 1fr); }
+  .laskuri-tulos { position: static; }
+  .osaamiset { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 620px) {
+  .osaamiset-muut { grid-template-columns: minmax(0, 1fr); }
+  .alasivu-otsikko { grid-template-columns: minmax(0, 1fr); }
+  .alasivu-ikoni { display: none; }
+  .ruudut { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ruudut-palvelut { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Laskurin lisävalinnat ---------- */
+.ruudut-pienet { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+.maaravalitsin { display: inline-flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--grafiitti-3); border-radius: 999px; background: var(--grafiitti-2); }
+.maaravalitsin button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: var(--vaalea); font: 400 22px/1 var(--fontti-teksti); cursor: pointer; }
+.maaravalitsin button:hover:not(:disabled) { background: var(--grafiitti-3); }
+.maaravalitsin button:disabled { color: var(--grafiitti-3); cursor: default; }
+.maaravalitsin output { min-width: 48px; text-align: center; font: 400 32px/1 var(--fontti-otsikko); font-variant-numeric: tabular-nums; }
+
+/* ---------- Havainnekuva (julkisivupiirros) ---------- */
+.havainne-kehys { margin: -4px 0 4px; padding: 0 0 12px; border-bottom: 1px solid var(--grafiitti-3); }
+.havainne { display: block; width: 100%; height: auto; overflow: visible; }
+.havainne-kehys figcaption { margin-top: 6px; font: 500 11px/1.5 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; color: var(--vaalea-2); }
+.havainne * { vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+.hv-maa { fill: none; stroke: var(--vaalea-2); stroke-width: 1.4; }
+.hv-maa-tausta { fill: var(--grafiitti); }
+.hv-viivoitus { fill: none; stroke: var(--grafiitti-3); stroke-width: 1; }
+.hv-runko, .hv-katto { fill: rgba(247, 156, 9, .06); stroke: var(--vision-oranssi); stroke-width: 1.4; }
+.hv-viiva { fill: none; stroke: var(--vision-oranssi); stroke-width: 1.4; }
+.hv-ikkuna, .hv-ovi { fill: var(--grafiitti); stroke: var(--vision-oranssi); stroke-width: 1; }
+.hv-lasi { fill: rgba(247, 156, 9, .14); stroke: var(--vision-oranssi); stroke-width: 1; }
+.hv-sokkeli { fill: rgba(169, 172, 179, .08); stroke: var(--vaalea-2); stroke-width: 1.2; }
+.hv-hoyry { fill: none; stroke: var(--vaalea-2); stroke-width: 1; opacity: .7; }
+.hv-puu line, .hv-puu polygon { fill: none; stroke: var(--grafiitti-3); stroke-width: 1.4; }
+/* Nykyinen rakennus (laajennus) harmaana, korjattava katkoviivalla */
+.hv-vanha { fill: none; stroke: var(--vaalea-2); }
+.hv-korjattava { fill: rgba(247, 156, 9, .04); stroke-dasharray: 5 4; }
+.hv-lisa { fill: rgba(247, 156, 9, .03); }
+/* Muodon vaihtuessa rakennukset nousevat maasta */
+.animoi .hv-rakennukset { animation: hv-nousu .55s cubic-bezier(.2, .8, .2, 1); transform-origin: 50% 100%; transform-box: fill-box; }
+@keyframes hv-nousu { from { opacity: 0; transform: translateY(10px) scaleY(.92); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .animoi .hv-rakennukset { animation: none; } }
+
+/* ---------- Tutkimuslaskurin piirros ---------- */
+.ruutu-vuosi { display: flex; align-items: center; height: 40px; font: 400 26px/1 var(--fontti-otsikko); color: var(--vaalea-2); transition: color .15s ease; }
+.ruutu[aria-pressed="true"] .ruutu-vuosi { color: var(--vision-oranssi); }
+.hv-tutkittava { fill: rgba(247, 156, 9, .07); }
+.hv-kellari { fill: var(--grafiitti); stroke: var(--vaalea-2); stroke-width: 1.2; stroke-dasharray: 4 3; }
+.hv-tuuletus { fill: var(--grafiitti); stroke: var(--vaalea-2); stroke-width: 1; }
+.hv-merkki circle { fill: var(--vision-oranssi); stroke: var(--grafiitti-2); stroke-width: 2; }
+.hv-merkki svg { color: var(--teksti-oranssilla); }
+.hv-merkki svg * { stroke-width: 1.6; }
+.hv-mitta path { fill: none; stroke: var(--vision-oranssi); stroke-width: 1; }
+.hv-mitta rect { fill: var(--grafiitti-2); }
+.hv-mitta text { fill: var(--vision-oranssi); font: 500 10px/1 var(--fontti-teksti); letter-spacing: .06em; text-anchor: middle; }

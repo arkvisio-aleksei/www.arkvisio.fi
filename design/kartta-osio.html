@@ -1,0 +1,30 @@
+<!-- Karttaosio talteen (poistettu etusivulta 17.11.2026). Liitä haluamallesi sivulle <main>-elementin sisään.
+     Sivun loppuun tarvitaan skriptit tässä järjestyksessä:
+       <script src="js/vendor/d3.min.js"></script>
+       <script src="js/vendor/topojson-client.min.js"></script>
+       <script src="data/kartta-data.js"></script>
+       <script src="data/kohteet.js"></script>
+       <script src="js/kartta.js"></script>
+       <script src="js/sivu.js"></script>
+     Tyylit (.kartta-osio, .kartta, .hankelaskuri, .suodatin) ovat yhä css/tyylit.css:ssä. -->
+    <!-- KOHTEET KARTALLA: maapallo lentää Suomeen, kun osio tulee näkyviin -->
+    <section class="osio tumma kartta-osio" id="kohteet">
+      <div class="kehys kartta-osio-sisalto">
+        <div class="kartta-teksti">
+          <p class="ylaotsikko">Kohteemme</p>
+          <h2>Ympäri <span class="oranssi">Suomen.</span></h2>
+          <!-- Hankelaskuri: luku päivittyy suodattimien ja kartan näkymän mukaan -->
+          <div class="hankelaskuri" aria-live="polite">
+            <span class="hankeluku" data-hankeluku>0</span>
+            <span class="hankeselite">hanketta<small data-nakymassa></small></span>
+          </div>
+          <div class="suodattimet" data-suodattimet role="group" aria-label="Näytä kohdetyypit"></div>
+        </div>
+        <div class="kartta" data-kartta data-rajaus="haivytys">
+          <div class="kartta-alue">
+            <canvas aria-label="Maapallo, jolla ArkVision kohteet näkyvät. Vedä siirtääksesi, klikkaa ryhmää lähentääksesi."></canvas>
+            <div class="kartta-vihje" hidden></div>
+          </div>
+        </div>
+      </div>
+    </section>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ArkVisio – Suunniteltu arkeen ja juhlaan</title>
+  <meta name="description" content="ArkVisio on helsinkiläinen suunnittelutoimisto vuodesta 1993. Pääsuunnittelu, arkkitehti- ja rakennesuunnittelu, kuntotarkastukset, vastaava työnjohto ja energiatodistukset.">
+  <link rel="icon" href="assets/logo/logo-musta.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="css/tyylit.css">
+</head>
+<body>
+  <a class="ohita" href="#sisalto">Siirry sisältöön</a>
+
+  <!-- PÄÄKUVA: logo ja valikko ovat kuvan päällä, ei erillistä yläpalkkia.
+       Pääkuva: assets/images/hero.jpg (vaakakuva, n. 2400 px leveä).
+       Kun kuva on lisätty, muuta alla class="paakuva-kuva kuvalla". -->
+  <header class="paakuva tumma">
+    <div class="paakuva-kuva" aria-hidden="true"></div>
+    <div class="kehys">
+      <div class="yla">
+        <a class="logo" href="#"><img src="assets/logo/logo-valkoinen.svg" alt="ArkVisio – etusivulle" width="84" height="40"></a>
+        <nav class="valikko" id="valikko" aria-label="Päävalikko">
+          <a href="#palvelut">Palvelut</a>
+          <a href="#kohteemme">Kohteemme</a>
+          <a href="#yhteys">Yhteys</a>
+        </nav>
+        <button class="valikko-nappi" type="button" aria-expanded="false" aria-controls="valikko">Valikko</button>
+      </div>
+
+      <!-- Iskulause keskellä -->
+      <div class="paakuva-keski">
+        <h1>Suunniteltu <span class="oranssi">arkeen ja juhlaan.</span></h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="sisalto">
+    <!-- Etusivu rakennetaan uudelleen. Karttaosio on tallessa: design/kartta-osio.html -->
+  </main>
+
+  <!-- YHTEYS -->
+  <footer class="alatunniste tumma" id="yhteys">
+    <div class="kehys alatunniste-sisalto">
+      <div>
+        <h2>Suunnitellaan <span class="oranssi">yhdessä.</span></h2>
+      </div>
+      <div class="alalaita">
+        <div class="alalaita-tiedot">
+          <a class="alalaita-logo" href="index.html"><img src="assets/logo/logo-valkoinen.svg" alt="ArkVisio – etusivulle" width="68" height="32"></a>
+          <span>Y-tunnus 0930755-1</span>
+          <a href="mailto:toimisto@arkvisio.fi">toimisto@arkvisio.fi</a>
+          <a href="tel:+35898711281">09 8711 281</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/valikko.js"></script>
+</body>
+</html>
