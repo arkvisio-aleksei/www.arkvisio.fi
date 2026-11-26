@@ -614,3 +614,6 @@ main, .alatunniste { position: relative; z-index: 1; }
   .etusivu .valikko:not(.auki) { transition: transform .4s cubic-bezier(.4, 0, .2, 1) .12s, box-shadow .2s ease, visibility 0s linear .55s; }
   .etusivu .valikko:not(.auki) a { transition: opacity .15s ease, transform 0s linear .15s; }
 }
+/* Palkin kulmat pyöristyvät takaisin vasta, kun valikko on liukunut piiloon (ei vaaleita loveja kulmiin) */
+.etusivu .paakuva, .etusivu .yla::after { transition: box-shadow .3s ease, border-radius .15s ease .5s; }
+.kompakti .etusivu:has(.valikko.auki) .paakuva, .kompakti .etusivu:has(.valikko.auki) .yla::after { transition: box-shadow .3s ease, border-radius 0s; }
