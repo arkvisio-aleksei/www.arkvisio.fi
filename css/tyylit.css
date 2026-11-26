@@ -38,7 +38,7 @@
 /* ---------- Perusta ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background-color: #1F2229; }   /* sama kuin sivu: iPhonen kellon alue samaa tummaa */
 /* Ei venymistä/vedä-päivittääksesi-toimintoa reunoilla: iPhonella venytys siirsi kiinteää yläpalkkia logon päälle */
 html, body { overscroll-behavior-y: none; }
 body {
@@ -107,11 +107,14 @@ a { color: inherit; }
 .yla { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
   box-sizing: border-box; min-height: var(--yla-korkeus);
   padding: 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna)); }
+/* Tausta pysyy paikallaan yläreunassa (Safari näkee valkoisen heti) ja paljastuu ylhäältä alas clip-pathilla.
+   Negatiivinen alareuna lopputilassa, jotta varjo näkyy. */
 .yla-tausta { position: fixed; top: 0; left: 0; right: 0; height: var(--yla-korkeus); z-index: 59; pointer-events: none;
   background-color: #fff; border-radius: 0 0 18px 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
-  transform: translateY(-130%); visibility: hidden;
-  transition: transform var(--liuku), visibility 0s linear .45s; }
-.rullattu .yla-tausta { transform: none; visibility: visible; transition: transform var(--liuku), visibility 0s linear 0s; }
+  -webkit-clip-path: inset(0 0 100% 0); clip-path: inset(0 0 100% 0); visibility: hidden;
+  transition: clip-path var(--liuku), -webkit-clip-path var(--liuku), visibility 0s linear .45s; }
+.rullattu .yla-tausta { -webkit-clip-path: inset(0 -40px -48px -40px); clip-path: inset(0 -40px -48px -40px); visibility: visible;
+  transition: clip-path var(--liuku), -webkit-clip-path var(--liuku), visibility 0s linear 0s; }
 /* Logo: valkoinen ja musta päällekkäin, vaihto pelkällä opacityllä samaan tahtiin liu'un kanssa */
 .logo { position: relative; display: block; line-height: 0; }
 .logo img { transition: opacity var(--liuku); }
