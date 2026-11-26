@@ -51,14 +51,14 @@
     const KESKI = 60, MATKA = 40;                    // object-position x: 60 % ± 40 % (20 %…100 %)
     let tx = KESKI, x = KESKI, kaynnissa = false, lahto = null;
     const piirra = () => {
-      x += (tx - x) * .25;                           // nopea mutta pehmeä seuranta
+      x += (tx - x) * .12;                           // pehmeä seuranta
       video.style.objectPosition = `${x.toFixed(2)}% 50%`;
       if (Math.abs(tx - x) > .05) requestAnimationFrame(piirra); else kaynnissa = false;
     };
     const suunta = e => {
       if (e.gamma == null) return;
       if (lahto === null) lahto = e.gamma;           // ensimmäinen lukema = lähtöasento
-      const n = Math.max(-1, Math.min(1, (e.gamma - lahto) / 15));
+      const n = Math.max(-1, Math.min(1, (e.gamma - lahto) / 22));
       tx = KESKI + n * MATKA;
       if (!kaynnissa) { kaynnissa = true; requestAnimationFrame(piirra); }
     };
