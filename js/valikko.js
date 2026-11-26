@@ -43,46 +43,35 @@
       else suljeValikko();
     });
   }
-  // Kansivideon parallaksi: puhelimen kallistus (DeviceOrientation) tai tietokoneella hiiri siirtää videota hieman.
-  // iPhone vaatii luvan napautuksella (.liike-nappi). Pehmennetty, vain transform (kevyt).
+  // Kansivideon kallistus (vain puhelin): kallistus vasemmalle/oikealle panoroi videota sivusuunnassa
+  // sen omien rajojen sisällä (object-position), ei suurennusta. iPhone vaatii luvan napautuksella (.liike-nappi).
   (() => {
-    const video = document.querySelector('.kansivideo'), alue = document.querySelector('.etusivu .paakuva');
-    if (!video || !alue || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const MX = 14, MY = 10;                          // suurin siirtymä px
-    let tx = 0, ty = 0, x = 0, y = 0, kaynnissa = false, lahto = null;
+    const video = document.querySelector('.kansivideo');
+    if (!video || !matchMedia('(pointer: coarse)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const KESKI = 60, MATKA = 40;                    // object-position x: 60 % ± 40 % (20 %…100 %)
+    let tx = KESKI, x = KESKI, kaynnissa = false, lahto = null;
     const piirra = () => {
-      x += (tx - x) * .08; y += (ty - y) * .08;      // pehmennys
-      video.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(1.08)`;
-      if (Math.abs(tx - x) > .05 || Math.abs(ty - y) > .05) requestAnimationFrame(piirra); else kaynnissa = false;
+      x += (tx - x) * .25;                           // nopea mutta pehmeä seuranta
+      video.style.objectPosition = `${x.toFixed(2)}% 50%`;
+      if (Math.abs(tx - x) > .05) requestAnimationFrame(piirra); else kaynnissa = false;
     };
-    const aseta = (nx, ny) => {                      // nx, ny välillä -1…1
-      tx = -Math.max(-1, Math.min(1, nx)) * MX; ty = -Math.max(-1, Math.min(1, ny)) * MY;
-      if (!kaynnissa) { kaynnissa = true; requestAnimationFrame(piirra); }
-    };
-    video.style.transform = 'scale(1.08)';
     const suunta = e => {
-      if (e.beta == null || e.gamma == null) return;
-      if (!lahto) lahto = { b: e.beta, g: e.gamma }; // ensimmäinen lukema = lähtöasento
-      aseta((e.gamma - lahto.g) / 20, (e.beta - lahto.b) / 20);
+      if (e.gamma == null) return;
+      if (lahto === null) lahto = e.gamma;           // ensimmäinen lukema = lähtöasento
+      const n = Math.max(-1, Math.min(1, (e.gamma - lahto) / 15));
+      tx = KESKI + n * MATKA;
+      if (!kaynnissa) { kaynnissa = true; requestAnimationFrame(piirra); }
     };
     const kuuntele = () => addEventListener('deviceorientation', suunta, { passive: true });
     const nappi = document.querySelector('.liike-nappi');
-    const kosketus = matchMedia('(pointer: coarse)').matches;
-    if (kosketus && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      if (nappi) {                                    // iPhone: lupa napautuksella
+    if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      if (nappi) {                                   // iPhone: lupa napautuksella
         nappi.hidden = false;
         nappi.addEventListener('click', () => {
           DeviceOrientationEvent.requestPermission().then(t => { if (t === 'granted') { kuuntele(); nappi.hidden = true; } }).catch(() => {});
         });
       }
-    } else if (kosketus && 'ondeviceorientation' in window) {
-      kuuntele();                                     // Android
-    }
-    if (matchMedia('(pointer: fine)').matches) {     // tietokone: hiiri
-      alue.addEventListener('mousemove', e => { const r = alue.getBoundingClientRect();
-        aseta((e.clientX - r.left) / r.width * 2 - 1, (e.clientY - r.top) / r.height * 2 - 1); });
-      alue.addEventListener('mouseleave', () => aseta(0, 0));
-    }
+    } else if ('ondeviceorientation' in window) kuuntele();   // Android
   })();
 
   // Kansivideo: "Vähennä liikettä" -asetuksella video pysäytetään (kansikuva näkyy)
