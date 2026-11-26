@@ -665,3 +665,8 @@ main, .alatunniste { position: relative; z-index: 1; }
 @media (max-width: 760px) {
   .etusivu .valikko { height: calc(var(--valikko-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
 }
+/* Puhelin: kansikuva vähemmän zoomattuna (78 % alueen korkeudesta, alareunaan), yläosa liukuu kiinteään tummaan */
+@media (max-width: 760px) {
+  .etusivu .paakuva { background-size: auto 78%; background-position: 58% 100%; }
+  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 22%, rgba(31, 34, 41, .6) 30%, rgba(31, 34, 41, .12) 46%, rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .62) 100%); }
+}
