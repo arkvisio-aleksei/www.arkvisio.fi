@@ -98,23 +98,28 @@ a { color: inherit; }
 }
 /* Yläpalkki seuraa vieritystä kaikilla sivuilla. Sisältö on samassa linjassa kuin .kehys;
    vieritettäessä (js/valikko.js: html.rullattu) palkki saa tumman, sumennetun taustan.
-   Palkin korkeus ei muutu koskaan (ei heilahdusta), vain taustaväri haalistuu.
-   EI backdrop-filteriä: iOS Safari piirsi sumennuksen logon päälle tai välähti harmaana. */
-.yla { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
+   Palkin korkeus ei muutu koskaan (ei heilahdusta). EI backdrop-filteriä (iOS Safari -virheet).
+   Valkoinen tausta on ::before-kerros, joka LIUKUU alas yläreunasta (transform = sulava, näytönohjain hoitaa).
+   Palkin oma background-color on aina läpinäkyvä, mutta sen sävy ohjaa iPhonen kellon alueen väriä
+   (Safari ei välitä läpinäkyvyydestä): alas vieritettäessä sävy vaihtuu valkoiseksi heti, jolloin tausta
+   liukuu valkoisen kellon alueen alta; ylös palattaessa sävy palaa tummaksi vasta liu'un jälkeen. */
+.yla { --liuku: .45s cubic-bezier(.22, .8, .24, 1);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
   padding: 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna));
-  /* Läpinäkyvänäkin sävy = sivun tausta: iOS Safari värjää kellon alueen tämän sävyn mukaan (läpinäkyvyydestä välittämättä) */
-  background-color: rgba(31, 34, 41, 0); box-shadow: 0 8px 24px rgba(0, 0, 0, 0);
-  border-radius: 0 0 18px 18px;               /* näytön levyinen, alakulmat pyöristetty (näkyy kun tausta tulee esiin) */
-  transition: background-color .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s cubic-bezier(.2, .7, .2, 1); }
-/* Vieritettäessä palkki on täysin valkoinen (sama kuin iPhonen kellon alue), tekstit tummiksi.
-   Logo: valkoinen ja musta päällekkäin, vaihto pelkällä opacityllä (sulava, ei filter-laskentaa). */
-.rullattu .yla { background-color: #fff; box-shadow: 0 8px 24px rgba(0, 0, 0, .28); }
+  background-color: rgba(31, 34, 41, 0);
+  transition: background-color 0s linear .45s; }
+.rullattu .yla { background-color: rgba(255, 255, 255, 0); transition-delay: 0s; }
+.yla::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; top: -60px; z-index: -1; pointer-events: none;
+  background: #fff; border-radius: 0 0 18px 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
+  transform: translateY(-110%); transition: transform var(--liuku); will-change: transform; }
+.rullattu .yla::before { transform: translateY(0); }
+/* Logo: valkoinen ja musta päällekkäin, vaihto pelkällä opacityllä samaan tahtiin liu'un kanssa */
 .logo { position: relative; display: block; line-height: 0; }
-.logo img { transition: opacity .35s cubic-bezier(.2, .7, .2, 1); }
+.logo img { transition: opacity var(--liuku); }
 .logo .logo-tumma { position: absolute; left: 0; top: 0; opacity: 0; }
 .rullattu .yla .logo .logo-tumma { opacity: 1; }
 .rullattu .yla .logo .logo-vaalea { opacity: 0; }
-.valikko a, .valikko-nappi { transition: color .35s ease, border-color .35s ease; }
+.valikko a, .valikko-nappi { transition: color var(--liuku), border-color var(--liuku); }
 .rullattu .yla .valikko a { color: #4A4F5A; }
 .rullattu .yla .valikko a:hover { color: var(--grafiitti); }
 .rullattu .yla .valikko-nappi { color: var(--grafiitti); border-color: #D9DBDF; }
@@ -311,7 +316,7 @@ main, .alatunniste { position: relative; z-index: 1; }
   .valikko.auki { display: flex; }
   .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid var(--grafiitti-3); }
   /* Valikon ollessa auki palkki ja valikko ovat yksi kortti: palkin alakulmat suoriksi */
-  .yla:has(.valikko.auki) { border-radius: 0; box-shadow: none; }
+  .yla:has(.valikko.auki)::before { border-radius: 0; box-shadow: none; }
   /* Valkoisen palkin alla myös avautuva valikko on valkoinen */
   .rullattu .yla .valikko { background: #fff; border-top-color: #E6E7EA; box-shadow: 0 12px 28px rgba(0, 0, 0, .22); }
   .rullattu .yla .valikko a { color: var(--grafiitti); border-bottom-color: #E6E7EA; }
