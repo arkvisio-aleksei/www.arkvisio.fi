@@ -782,3 +782,10 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
 /* Kuva-alueen alle selkeämpi varjo */
 .etusivu .paakuva { box-shadow: 0 22px 44px -8px rgba(15, 17, 22, .42), 0 6px 14px rgba(15, 17, 22, .12); }
 .kompakti .etusivu .paakuva { box-shadow: 0 12px 30px -4px rgba(15, 17, 22, .4); }
+/* Puhelin: kuva 90 % alueen korkeudesta (alareunaan), lyhyt häivytys yläreunassa vain siksi,
+   ettei kuvan ja kellon alueen (#1F2229) väliin jää rajaa */
+@media (max-width: 760px) {
+  .etusivu .paakuva { background-size: auto 90%; background-position: 58% 100%; }
+  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 10%, rgba(31, 34, 41, .55) 14%, rgba(31, 34, 41, .12) 22%,
+    rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .62) 100%); }
+}
