@@ -176,14 +176,14 @@ html:has(body.etusivu) { background-color: #F4F1EC; }
   padding: 76px var(--reuna-o) 0 var(--reuna); }
 .etusivu .paakuva h1 { font-size: clamp(36px, 6.8vw, 108px); }
 .etusivu .paakuva > .kehys { position: static; }   /* ei omaa kerrostasoa: palkki (z 60) paneelin päälle */
-.etusivu .yla { z-index: 60; transition: transform .6s cubic-bezier(.45, 0, .2, 1); }
+/* --k = 0…1 (js/valikko.js): paneelin vierityksen edistyminen. Logo pienenee ja palkkirivi nousee samassa tahdissa,
+   joten ne ovat valmiit juuri kun paneeli tarttuu matalaksi palkiksi. */
+.etusivu .yla { z-index: 60; transform: translateY(calc((var(--palkki) - 76px) / 2 * var(--k, 0))); will-change: transform; }
 /* Paneelin värinen kaista palkin alla: iskulause vierii sen alle eikä logon/valikon päälle */
 .etusivu .yla::after { content: ""; position: absolute; left: 0; right: 0; top: -20px; height: calc(var(--palkki) + 26px); z-index: -1;
   background: var(--paneeli); border-radius: 0 0 var(--kulma) var(--kulma); pointer-events: none; }
 /* Matalassa palkissa: koko rivi nousee palkin keskelle ja logo pienenee */
-.kompakti .etusivu .yla { transform: translateY(var(--yla-siirto)); }
-.etusivu .logo { transform-origin: 0 50%; transition: transform .6s cubic-bezier(.45, 0, .2, 1); }
-.kompakti .etusivu .logo { transform: scale(.74); }
+.etusivu .logo { transform-origin: 0 50%; transform: scale(calc(1 - .26 * var(--k, 0))); will-change: transform; }
 /* Hampurilaisnappi (kaikilla sivuilla): puhelimella aina valikon avaajana ("Valikko"-tekstinappi poistettu käytöstä),
    etusivulla tietokoneella vain matalassa palkissa, jolloin valikkolinkit häipyvät tilalta */
 .burgeri { display: none; position: absolute; top: 50%; right: calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o) - 10px);

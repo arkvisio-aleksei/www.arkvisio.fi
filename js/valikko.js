@@ -39,6 +39,8 @@
     let raja = 0, viimeLeveys = 0;
     const paivita = () => {
       const y = window.scrollY, kompakti = juuri.classList.contains('kompakti');
+      // Logon pienennys ja palkkirivin nousu seuraavat vieritystä (vain transform, ei asettelun laskentaa)
+      juuri.style.setProperty('--k', Math.min(1, Math.max(0, y / Math.max(1, raja))).toFixed(3));
       if (!kompakti && y >= raja - 40) juuri.classList.add('kompakti');
       else if (kompakti && y < raja - 90) { juuri.classList.remove('kompakti'); suljeValikko(); }
     };
