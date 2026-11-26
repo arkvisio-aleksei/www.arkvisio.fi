@@ -99,20 +99,19 @@ a { color: inherit; }
 /* Yläpalkki seuraa vieritystä kaikilla sivuilla. Sisältö on samassa linjassa kuin .kehys;
    vieritettäessä (js/valikko.js: html.rullattu) palkki saa tumman, sumennetun taustan.
    Palkin korkeus ei muutu koskaan (ei heilahdusta). EI backdrop-filteriä (iOS Safari -virheet).
-   Valkoinen tausta on ::before-kerros, joka LIUKUU alas yläreunasta (transform = sulava, näytönohjain hoitaa).
-   Palkin oma background-color on aina läpinäkyvä, mutta sen sävy ohjaa iPhonen kellon alueen väriä
-   (Safari ei välitä läpinäkyvyydestä): alas vieritettäessä sävy vaihtuu valkoiseksi heti, jolloin tausta
-   liukuu valkoisen kellon alueen alta; ylös palattaessa sävy palaa tummaksi vasta liu'un jälkeen. */
-.yla { --liuku: .45s cubic-bezier(.22, .8, .24, 1);
-  position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
-  padding: 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna));
-  background-color: rgba(31, 34, 41, 0);
-  transition: background-color 0s linear .45s; }
-.rullattu .yla { background-color: rgba(255, 255, 255, 0); transition-delay: 0s; }
-.yla::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; top: -60px; z-index: -1; pointer-events: none;
-  background: #fff; border-radius: 0 0 18px 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
-  transform: translateY(-110%); transition: transform var(--liuku); will-change: transform; }
-.rullattu .yla::before { transform: translateY(0); }
+   Valkoinen tausta on OMA kiinteä elementti (.yla-tausta), joka LIUKUU alas yläreunasta (transform = sulava).
+   Oma elementti siksi, että iOS Safari värjää kellon alueen vain kiinteän elementin näkyvän taustavärin mukaan
+   (::before-kerrosta tai läpinäkyvää väriä se ei huomioi). Yläreunassa elementti on piilossa (visibility),
+   jolloin kellon alue on sivun värinen; piilotus tapahtuu vasta, kun liuku ylös on valmis. */
+:root { --liuku: .45s cubic-bezier(.22, .8, .24, 1); --yla-korkeus: 76px; }
+.yla { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
+  box-sizing: border-box; min-height: var(--yla-korkeus);
+  padding: 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna)); }
+.yla-tausta { position: fixed; top: 0; left: 0; right: 0; height: var(--yla-korkeus); z-index: 59; pointer-events: none;
+  background-color: #fff; border-radius: 0 0 18px 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
+  transform: translateY(-130%); visibility: hidden;
+  transition: transform var(--liuku), visibility 0s linear .45s; }
+.rullattu .yla-tausta { transform: none; visibility: visible; transition: transform var(--liuku), visibility 0s linear 0s; }
 /* Logo: valkoinen ja musta päällekkäin, vaihto pelkällä opacityllä samaan tahtiin liu'un kanssa */
 .logo { position: relative; display: block; line-height: 0; }
 .logo img { transition: opacity var(--liuku); }
@@ -316,7 +315,7 @@ main, .alatunniste { position: relative; z-index: 1; }
   .valikko.auki { display: flex; }
   .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid var(--grafiitti-3); }
   /* Valikon ollessa auki palkki ja valikko ovat yksi kortti: palkin alakulmat suoriksi */
-  .yla:has(.valikko.auki)::before { border-radius: 0; box-shadow: none; }
+  html:has(.valikko.auki) .yla-tausta { border-radius: 0; box-shadow: none; }
   /* Valkoisen palkin alla myös avautuva valikko on valkoinen */
   .rullattu .yla .valikko { background: #fff; border-top-color: #E6E7EA; box-shadow: 0 12px 28px rgba(0, 0, 0, .22); }
   .rullattu .yla .valikko a { color: var(--grafiitti); border-bottom-color: #E6E7EA; }
