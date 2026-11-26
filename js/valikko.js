@@ -33,7 +33,7 @@
     // Tässä vain vaihdetaan tila kerran, kun paneeli on tarttunut matalaksi palkiksi:
     // html.kompakti = logo pienenee ja hampurilaisnappi tulee valikon tilalle.
     // Paneelin korkeus mitataan vain latautuessa ja koon muuttuessa (ei vierittäessä):
-    // iskulauseen ylä- ja alapuolelle sama tila kuin sen sivuille (24–140 px).
+    // iskulauseen ylä- ja alapuolelle sama tila kuin sen sivuille, enintään 11 % leveydestä / 120 px.
     const otsikko = paneeli.querySelector('h1');
     const YLAPALKKI = 76;
     let raja = 0, viimeLeveys = 0;
@@ -45,7 +45,8 @@
     const mittaa = () => {
       const tyyli = document.body.style;
       if (otsikko) {
-        const rako = Math.min(140, Math.max(24, (paneeli.clientWidth - otsikko.offsetWidth) / 2));
+        const leveys = paneeli.clientWidth;
+        const rako = Math.min(120, leveys * .11, Math.max(24, (leveys - otsikko.offsetWidth) / 2));
         tyyli.setProperty('--paneeli-korkeus', Math.round(YLAPALKKI + rako * 2 + otsikko.offsetHeight) + 'px');
       }
       const palkki = parseFloat(getComputedStyle(document.body).getPropertyValue('--palkki')) || 64;
