@@ -105,12 +105,16 @@ a { color: inherit; }
   /* Läpinäkyvänäkin sävy = sivun tausta: iOS Safari värjää kellon alueen tämän sävyn mukaan (läpinäkyvyydestä välittämättä) */
   background-color: rgba(31, 34, 41, 0); box-shadow: 0 8px 24px rgba(0, 0, 0, 0);
   border-radius: 0 0 18px 18px;               /* näytön levyinen, alakulmat pyöristetty (näkyy kun tausta tulee esiin) */
-  transition: background-color .3s ease, box-shadow .3s ease; }
-/* Vieritettäessä palkki on valkoinen: logo kääntyy mustaksi (invert), tekstit tummiksi */
-.rullattu .yla { background-color: rgba(255, 255, 255, .98); box-shadow: 0 8px 24px rgba(0, 0, 0, .28); }
-.logo img { transition: filter .3s ease; }
-.rullattu .yla .logo img { filter: invert(1); }
-.valikko a, .valikko-nappi { transition: color .3s ease, border-color .3s ease; }
+  transition: background-color .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s cubic-bezier(.2, .7, .2, 1); }
+/* Vieritettäessä palkki on täysin valkoinen (sama kuin iPhonen kellon alue), tekstit tummiksi.
+   Logo: valkoinen ja musta päällekkäin, vaihto pelkällä opacityllä (sulava, ei filter-laskentaa). */
+.rullattu .yla { background-color: #fff; box-shadow: 0 8px 24px rgba(0, 0, 0, .28); }
+.logo { position: relative; display: block; line-height: 0; }
+.logo img { transition: opacity .35s cubic-bezier(.2, .7, .2, 1); }
+.logo .logo-tumma { position: absolute; left: 0; top: 0; opacity: 0; }
+.rullattu .yla .logo .logo-tumma { opacity: 1; }
+.rullattu .yla .logo .logo-vaalea { opacity: 0; }
+.valikko a, .valikko-nappi { transition: color .35s ease, border-color .35s ease; }
 .rullattu .yla .valikko a { color: #4A4F5A; }
 .rullattu .yla .valikko a:hover { color: var(--grafiitti); }
 .rullattu .yla .valikko-nappi { color: var(--grafiitti); border-color: #D9DBDF; }
