@@ -181,7 +181,7 @@ html:has(body.etusivu) { background-color: #F4F1EC; }
 .etusivu .yla::after { content: ""; position: absolute; left: 0; right: 0; top: -20px; height: calc(var(--palkki) + 26px); z-index: -1;
   background: var(--paneeli); border-radius: 0 0 var(--kulma) var(--kulma); pointer-events: none; }
 /* Matalassa palkissa: koko rivi nousee palkin keskelle ja logo pienenee */
-.kompakti .etusivu .yla { transform: translateY(calc((var(--palkki) - 76px) / 2)); }
+.kompakti .etusivu .yla { transform: translateY(var(--yla-siirto)); }
 .etusivu .logo { transform-origin: 0 50%; transition: transform .6s cubic-bezier(.45, 0, .2, 1); }
 .kompakti .etusivu .logo { transform: scale(.74); }
 /* Hampurilaisnappi: näkyy vain matalassa palkissa, valikkolinkit/Valikko-tekstinappi häipyvät tilalta */
@@ -534,17 +534,20 @@ main, .alatunniste { position: relative; z-index: 1; }
 
 /* Etusivu: valikko näytön levyisenä palkin jatkeena. Liukuu alas palkin alta (transform; palkin kaista peittää sen),
    linkit tulevat esiin vuorotellen. Käytössä matalassa palkissa (kaikki leveydet) ja puhelimella aina. */
-.etusivu { --valikko-yla: 76px; }
-.kompakti .etusivu { --valikko-yla: calc(var(--palkki) + (76px - var(--palkki)) / 2 - 1px); }
+/* Valikko alkaa palkin alta ja päättyy täsmälleen iskulausealueen alareunaan (--paneeli-korkeus),
+   oli palkki kutistunut tai ei. --yla-siirto = palkkirivin siirto ylös matalassa tilassa. */
+.etusivu { --valikko-yla: 76px; --yla-siirto: 0px; }
+.kompakti .etusivu { --valikko-yla: calc(var(--palkki) - var(--yla-siirto) - 1px); --yla-siirto: calc((var(--palkki) - 76px) / 2); }
 .kompakti .etusivu .valikko {
-  display: flex; flex-direction: column; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
+  box-sizing: border-box; height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
   padding: 4px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 22px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna));
   background: var(--paneeli); border: 0; border-radius: 0 0 var(--kulma) var(--kulma); box-shadow: 0 14px 30px rgba(15, 17, 22, 0);
   transform: translateY(-100%); visibility: hidden; opacity: 1;
   transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease, visibility 0s linear .45s; }
 .kompakti .etusivu .valikko.auki { transform: none; visibility: visible; box-shadow: 0 14px 30px rgba(15, 17, 22, .28);
   transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .15s, visibility 0s linear 0s; }
-.kompakti .etusivu .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid rgba(244, 241, 236, .12);
+.kompakti .etusivu .valikko a { padding-block: 12px; font-size: 15px; text-align: right; color: var(--vaalea); border-bottom: 0;
   opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .3s ease; }
 .kompakti .etusivu .valikko a:last-child { border-bottom: 0; }
 .kompakti .etusivu .valikko.auki a { opacity: 1; transform: none; }
@@ -553,14 +556,15 @@ main, .alatunniste { position: relative; z-index: 1; }
 .kompakti .etusivu .valikko.auki a:nth-child(3) { transition-delay: .2s; }
 @media (max-width: 760px) {
   .etusivu .valikko {
-    display: flex; flex-direction: column; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
+  box-sizing: border-box; height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
     padding: 4px var(--reuna-o) 22px var(--reuna);
     background: var(--paneeli); border: 0; border-radius: 0 0 var(--kulma) var(--kulma); box-shadow: 0 14px 30px rgba(15, 17, 22, 0);
     transform: translateY(-100%); visibility: hidden;
     transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease, visibility 0s linear .45s; }
   .etusivu .valikko.auki { transform: none; visibility: visible; box-shadow: 0 14px 30px rgba(15, 17, 22, .28);
     transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .15s, visibility 0s linear 0s; }
-  .etusivu .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid rgba(244, 241, 236, .12);
+  .etusivu .valikko a { padding-block: 12px; font-size: 15px; text-align: right; color: var(--vaalea); border-bottom: 0;
     opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .3s ease; }
   .etusivu .valikko a:last-child { border-bottom: 0; }
   .etusivu .valikko.auki a { opacity: 1; transform: none; }
@@ -570,4 +574,6 @@ main, .alatunniste { position: relative; z-index: 1; }
 }
 /* Valikon ollessa auki palkki ja valikko ovat yhtä: palkin alakulmat suoriksi */
 .etusivu .paakuva, .etusivu .yla::after { transition: box-shadow .3s ease, border-radius .2s ease; }
-.etusivu:has(.valikko.auki) .paakuva, .etusivu:has(.valikko.auki) .yla::after { border-radius: 0; }
+/* Matalassa palkissa valikko jatkaa palkkia: palkin kulmat suoriksi. Yläreunassa valikko peittää iskulausealueen
+   täsmälleen, joten paneelin kulmat pysyvät pyöreinä (sama --kulma kaikissa). */
+.kompakti .etusivu:has(.valikko.auki) .paakuva, .kompakti .etusivu:has(.valikko.auki) .yla::after { border-radius: 0; }
