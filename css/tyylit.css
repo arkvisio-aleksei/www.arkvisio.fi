@@ -657,3 +657,7 @@ main, .alatunniste { position: relative; z-index: 1; }
   .etusivu .paakuva h1 { animation: etusivu-iskulause-pois linear both; animation-timeline: scroll(root block);
     animation-range: calc((var(--paneeli-korkeus) - var(--palkki)) * .3) calc((var(--paneeli-korkeus) - var(--palkki)) * .62); }
 }
+/* iPhonen kellon alue värjäytyy paneelin taustavärin mukaan: väri = kuvan yläreunan sävy (kuva peittää sen sivulla),
+   jolloin kellon alue sulautuu kuvaan. Matalassa palkissa tumma, kuten palkki. */
+.etusivu .paakuva { background-color: #45505A; }
+.kompakti .etusivu .paakuva { background-color: #1F2229; }
