@@ -811,3 +811,11 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
 .etusivu main .tumma { --grafiitti: #1F2229; --grafiitti-2: #292D35; --grafiitti-3: #363B45; --vaalea: #F4F1EC; --vaalea-2: #A9ACB3; }
 /* Alasivun otsikon oranssi piste samalle riville */
 .etusivu.alasivu .paakuva h1 .oranssi { display: inline; }
+
+/* ---------- Etusivu: kansivideo kansikuvan tilalla ----------
+   Video samoilla rajauksilla kuin kuva: tietokoneella koko alue, puhelimella 90 % alareunaan. Häivytys (::before) videon päällä. */
+.kansivideo { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; z-index: 0;
+  object-fit: cover; object-position: 52% 62%; pointer-events: none; }
+.etusivu .paakuva::before { z-index: 1; }
+.etusivu .paneeli { z-index: 2; }
+@media (max-width: 760px) { .kansivideo { height: 90%; object-position: 58% 50%; } }

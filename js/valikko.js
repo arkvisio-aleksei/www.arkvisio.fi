@@ -43,6 +43,9 @@
       else suljeValikko();
     });
   }
+  // Kansivideo: "Vähennä liikettä" -asetuksella video pysäytetään (kansikuva näkyy)
+  const kansivideo = document.querySelector('.kansivideo');
+  if (kansivideo && matchMedia('(prefers-reduced-motion: reduce)').matches) { kansivideo.removeAttribute('autoplay'); kansivideo.pause(); }
   document.querySelectorAll('[data-vuosi]').forEach(el => el.textContent = new Date().getFullYear());
 
   // Yläpalkki saa valkoisen taustan, kun sivua on vieritetty. Eri rajat alas (80 px) ja ylös (40 px),
