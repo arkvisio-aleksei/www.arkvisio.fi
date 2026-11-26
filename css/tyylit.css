@@ -184,11 +184,16 @@ html:has(body.etusivu) { background-color: #F4F1EC; }
 .kompakti .etusivu .yla { transform: translateY(var(--yla-siirto)); }
 .etusivu .logo { transform-origin: 0 50%; transition: transform .6s cubic-bezier(.45, 0, .2, 1); }
 .kompakti .etusivu .logo { transform: scale(.74); }
-/* Hampurilaisnappi: näkyy vain matalassa palkissa, valikkolinkit/Valikko-tekstinappi häipyvät tilalta */
-.burgeri { display: none; }
-.etusivu .burgeri { display: block; position: absolute; top: 50%; right: calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o) - 10px);
+/* Hampurilaisnappi (kaikilla sivuilla): puhelimella aina valikon avaajana ("Valikko"-tekstinappi poistettu käytöstä),
+   etusivulla tietokoneella vain matalassa palkissa, jolloin valikkolinkit häipyvät tilalta */
+.burgeri { display: none; position: absolute; top: 50%; right: calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o) - 10px);
   width: 44px; height: 44px; margin-top: -22px; padding: 0; border: 0; background: none; color: var(--vaalea); cursor: pointer;
-  opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+  transition: color .45s ease; }
+.rullattu .yla .burgeri { color: var(--grafiitti); }            /* alasivujen valkoinen palkki */
+.valikko-nappi { display: none !important; }
+@media (max-width: 760px) { .burgeri { display: block; } }
+.etusivu .burgeri { display: block; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+@media (max-width: 760px) { .etusivu .burgeri { opacity: 1; visibility: visible; transition: none; } }
 .burgeri span { position: absolute; left: 11px; right: 11px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .3s ease, opacity .2s ease; }
 .burgeri span:nth-child(1) { top: 15px; } .burgeri span:nth-child(2) { top: 21px; } .burgeri span:nth-child(3) { top: 27px; }
 .burgeri[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -547,9 +552,10 @@ main, .alatunniste { position: relative; z-index: 1; }
   transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease, visibility 0s linear .45s; }
 .kompakti .etusivu .valikko.auki { transform: none; visibility: visible; box-shadow: 0 14px 30px rgba(15, 17, 22, .28);
   transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .15s, visibility 0s linear 0s; }
-.kompakti .etusivu .valikko a { padding-block: 12px; font-size: 15px; text-align: right; color: var(--vaalea); border-bottom: 0;
+.kompakti .etusivu .valikko a { padding-block: 4px; font: 400 30px/1.1 var(--fontti-otsikko); letter-spacing: 0; text-transform: none; text-align: right; color: var(--vaalea); border-bottom: 0;
   opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .3s ease; }
 .kompakti .etusivu .valikko a:last-child { border-bottom: 0; }
+.kompakti .etusivu .valikko a:hover, .kompakti .etusivu .valikko a:focus-visible { color: var(--vision-oranssi); }
 .kompakti .etusivu .valikko.auki a { opacity: 1; transform: none; }
 .kompakti .etusivu .valikko.auki a:nth-child(1) { transition-delay: .08s; }
 .kompakti .etusivu .valikko.auki a:nth-child(2) { transition-delay: .14s; }
@@ -564,9 +570,10 @@ main, .alatunniste { position: relative; z-index: 1; }
     transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease, visibility 0s linear .45s; }
   .etusivu .valikko.auki { transform: none; visibility: visible; box-shadow: 0 14px 30px rgba(15, 17, 22, .28);
     transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .15s, visibility 0s linear 0s; }
-  .etusivu .valikko a { padding-block: 12px; font-size: 15px; text-align: right; color: var(--vaalea); border-bottom: 0;
+  .etusivu .valikko a { padding-block: 4px; font: 400 30px/1.1 var(--fontti-otsikko); letter-spacing: 0; text-transform: none; text-align: right; color: var(--vaalea); border-bottom: 0;
     opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .3s ease; }
   .etusivu .valikko a:last-child { border-bottom: 0; }
+  .etusivu .valikko a:hover, .etusivu .valikko a:focus-visible { color: var(--vision-oranssi); }
   .etusivu .valikko.auki a { opacity: 1; transform: none; }
   .etusivu .valikko.auki a:nth-child(1) { transition-delay: .08s; }
   .etusivu .valikko.auki a:nth-child(2) { transition-delay: .14s; }
