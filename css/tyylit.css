@@ -1010,3 +1010,5 @@ html:has(body.etusivu) { background: #F4F1EC; }
   .avattava .tulos-nappi { grid-column: 2; grid-row: 2 / span 2; padding: 10px 14px; font-size: 10px; white-space: normal; max-width: 140px; }
 }
 @media (max-width: 760px) { .avattava .tulos-luku { font-size: 28px; white-space: nowrap; } .avattava .tulos-otsikko span { display: block; } }
+/* Valikon ollessa auki palkin tumma tausta aina kokonaan näkyvissä (ei videokaistaletta logon alla) */
+html:has(.valikko.auki) .etusivu .palkkitausta { animation: none !important; -webkit-clip-path: inset(0 -40px -48px -40px) !important; clip-path: inset(0 -40px -48px -40px) !important; }

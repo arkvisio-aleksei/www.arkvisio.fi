@@ -101,8 +101,8 @@
         juuri.style.setProperty('--vy', Math.min(Math.max(0, y), raja).toFixed(1));   // isosta palkista avattu valikko vierii mukana
       }
       // Isosta palkista avattu valikko on tässä vaiheessa jo palkin takana: suljetaan se, kun palkki kutistuu
-      if (!kompakti && y >= raja - 40) { vaihdaTila(true); }
-      else if (kompakti && y < raja - 90) { vaihdaTila(false); }
+      if (!kompakti && y >= raja - 1) { vaihdaTila(true); }
+      else if (kompakti && y < raja - 30) { vaihdaTila(false); }
     };
     // Tilanvaihto ilman valikon siirtymiä (vaakalinkit <-> pudotusvalikko vaihtuvat välittömästi)
     let vaihtoAjastin;
