@@ -605,3 +605,12 @@ main, .alatunniste { position: relative; z-index: 1; }
   .etusivu .valikko a::before { counter-increment: valikko; content: "0" counter(valikko);
     font: 400 14px/1 var(--fontti-teksti); letter-spacing: .1em; color: var(--vision-oranssi); }
 }
+
+/* Valikon sulkeutuminen: linkit häipyvät ensin paikoillaan, sitten tyhjä valikko liukuu ylös (ei päällekkäisiä liikkeitä).
+   Avautuminen: valikko liukuu alas, linkit tulevat esiin vuorotellen (yllä olevat .auki-säännöt). */
+.kompakti .etusivu .valikko:not(.auki) { transition: transform .4s cubic-bezier(.4, 0, .2, 1) .12s, box-shadow .2s ease, visibility 0s linear .55s; }
+.kompakti .etusivu .valikko:not(.auki) a { transition: opacity .15s ease, transform 0s linear .15s; }
+@media (max-width: 760px) {
+  .etusivu .valikko:not(.auki) { transition: transform .4s cubic-bezier(.4, 0, .2, 1) .12s, box-shadow .2s ease, visibility 0s linear .55s; }
+  .etusivu .valikko:not(.auki) a { transition: opacity .15s ease, transform 0s linear .15s; }
+}
