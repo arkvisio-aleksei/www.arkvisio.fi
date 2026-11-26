@@ -904,3 +904,16 @@ html:has(body.etusivu) { background-color: #1F2229; }
 /* Häivytys minimiin: tumma kellon alueen korkeudelta, sitten 28 px pehmeä liuku videoon */
 .etusivu:not(.alasivu) .paakuva::before { background: linear-gradient(180deg, #1F2229 0, #1F2229 var(--kello),
   rgba(31, 34, 41, 0) calc(var(--kello) + 28px), rgba(31, 34, 41, .05) 55%, rgba(31, 34, 41, .6) 100%) !important; }
+
+/* Häivytys kellon alueen alla pysyy paikallaan koko ajan (kiinteä), sisältö liukuu sen alle.
+   Väistyy, kun pieni palkki tulee esiin. Paneelin oma yläreunan häivytys pois (ei tuplana). */
+.etusivu:not(.alasivu) .paakuva > .kehys::before { content: ""; position: fixed; z-index: 58; pointer-events: none;
+  top: var(--kello); height: 28px; left: max(0px, calc((100% - var(--sivu)) / 2)); right: max(0px, calc((100% - var(--sivu)) / 2));
+  background: linear-gradient(180deg, #1F2229, rgba(31, 34, 41, 0)); }
+.kompakti .etusivu:not(.alasivu) .paakuva > .kehys::before { opacity: 0; }
+@keyframes etusivu-haivytys-pois { from { opacity: 1; } to { opacity: 0; } }
+@supports (animation-timeline: scroll()) {
+  .etusivu:not(.alasivu) .paakuva > .kehys::before { animation: etusivu-haivytys-pois linear both; animation-timeline: scroll(root block);
+    animation-range: calc(var(--paneeli-korkeus) - var(--palkki) - 40px) calc(var(--paneeli-korkeus) - var(--palkki)); }
+}
+.etusivu:not(.alasivu) .paakuva::before { background: linear-gradient(180deg, rgba(31, 34, 41, 0) 0, rgba(31, 34, 41, .05) 55%, rgba(31, 34, 41, .6) 100%) !important; }
