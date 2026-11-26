@@ -94,24 +94,21 @@ a { color: inherit; }
     url("../assets/images/hero.jpg");
   background-size: cover; background-position: center right;
 }
-/* Yläpalkki: valkoinen, pyöreäkulmainen kortti, joka kelluu sivun päällä kaikilla sivuilla.
-   Leveys on sama kuin .kehys-sisällöllä; vieritettäessä (js/valikko.js: html.rullattu) se nousee lähemmäs yläreunaa. */
-.yla { position: fixed; top: 0; left: var(--reuna); right: var(--reuna-o); z-index: 60;
-  max-width: calc(var(--leveys) - 40px); margin-inline: auto;
-  display: flex; align-items: center; gap: 32px; padding: 18px 14px 14px 24px;
-  background: #fff; border-radius: 0 0 16px 16px; box-shadow: 0 6px 24px rgba(15, 17, 22, .18);
-  transition: padding .25s ease, box-shadow .25s ease; }
-.rullattu .yla { padding-top: 12px; padding-bottom: 10px; box-shadow: 0 8px 28px rgba(15, 17, 22, .26); }
-.yla + * { margin-top: 112px; }              /* tila kiinteän palkin alla */
+/* Yläpalkki seuraa vieritystä kaikilla sivuilla. Sisältö on samassa linjassa kuin .kehys;
+   vieritettäessä (js/valikko.js: html.rullattu) palkki tiivistyy ja saa tumman, sumennetun taustan. */
+.yla { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
+  padding: 28px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 28px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna));
+  border-bottom: 1px solid transparent; transition: padding .25s ease, background-color .25s ease, border-color .25s ease; }
+.rullattu .yla { padding-block: 14px; background: rgba(31, 34, 41, .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom-color: var(--grafiitti-3); }
+.yla + * { margin-top: 96px; }               /* tila kiinteän palkin alla */
 /* Palkki on yläosan sisällä: yläosa pääsisällön (main, z-index 1) yläpuolelle, ettei sisältö peitä palkkia */
 .paakuva, .alasivu-yla { position: relative; z-index: 2; }
 html { scroll-padding-top: 84px; }
-.logo { display: block; line-height: 0; }
-.logo img { width: 72px; height: auto; }
-.valikko { display: flex; gap: 30px; margin-left: auto; padding-right: 10px; }
-.valikko a { text-decoration: none; font: 500 12px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: #4A4F5A; padding-block: 8px; border-bottom: 1px solid transparent; }
-.valikko a:hover { color: var(--grafiitti); border-bottom-color: var(--vision-oranssi); }
-.valikko-nappi { display: none; margin-left: auto; background: none; border: 1px solid #D9DBDF; color: var(--grafiitti); border-radius: 10px; padding: 11px 14px; font: 500 12px/1 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; cursor: pointer; }
+.logo img { width: 84px; height: auto; }
+.valikko { display: flex; gap: 30px; margin-left: auto; }
+.valikko a { text-decoration: none; font: 500 12px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: var(--vaalea-2); padding-block: 8px; border-bottom: 1px solid transparent; }
+.valikko a:hover { color: var(--vaalea); border-bottom-color: var(--vision-oranssi); }
+.valikko-nappi { display: none; margin-left: auto; background: none; border: 1px solid var(--grafiitti-3); color: var(--vaalea); border-radius: var(--pyoristys); padding: 11px 14px; font: 500 12px/1 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; cursor: pointer; }
 
 /* Pääkuvassa iskulause keskellä */
 .paakuva-keski { min-height: calc(100svh - 96px); display: grid; place-content: center; text-align: center; padding-block: clamp(40px, 6vw, 80px); }
@@ -287,14 +284,12 @@ main, .alatunniste { position: relative; z-index: 1; }
 @media (max-width: 760px) {
   .valikko-nappi { display: inline-flex; }
   .valikko {
-    display: none; position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 20;
-    flex-direction: column; gap: 0; background: #fff; border-radius: 16px;
-    padding: 8px 24px 16px; box-shadow: 0 10px 30px rgba(15, 17, 22, .22);
+    display: none; position: absolute; left: 0; right: 0; top: 100%; z-index: 20;
+    flex-direction: column; gap: 0; background: var(--grafiitti);
+    padding: 8px var(--reuna-o) 24px var(--reuna); border-top: 1px solid var(--grafiitti-3); border-bottom: 1px solid var(--grafiitti-3);
   }
   .valikko.auki { display: flex; }
-  .valikko a { padding-block: 16px; font-size: 14px; color: var(--grafiitti); border-bottom: 1px solid #E6E7EA; }
-  .valikko a:last-child { border-bottom: 0; }
-  .yla { padding: 14px 10px 10px 18px; }
+  .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid var(--grafiitti-3); }
   .paakuva-kuva.kuvalla { background-image: linear-gradient(0deg, var(--grafiitti) 10%, rgba(31, 34, 41, .75) 60%, rgba(31, 34, 41, .55) 100%), url("../assets/images/hero.jpg"); }
 }
 @media (max-width: 620px) {
