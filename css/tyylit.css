@@ -581,9 +581,6 @@ main, .alatunniste { position: relative; z-index: 1; }
 }
 /* Valikon ollessa auki palkki ja valikko ovat yhtä: palkin alakulmat suoriksi */
 .etusivu .paakuva, .etusivu .yla::after { transition: box-shadow .3s ease, border-radius .2s ease; }
-/* Matalassa palkissa valikko jatkaa palkkia: palkin kulmat suoriksi. Yläreunassa valikko peittää iskulausealueen
-   täsmälleen, joten paneelin kulmat pysyvät pyöreinä (sama --kulma kaikissa). */
-.kompakti .etusivu:has(.valikko.auki) .paakuva, .kompakti .etusivu:has(.valikko.auki) .yla::after { border-radius: 0; }
 
 /* Etusivu: logon pienennys ja palkkirivin nousu sidottu suoraan sivun vieritykseen (scroll-driven animation).
    Selain ajaa sen vierityksen mukana näytönohjaimella, joten se ei nyi. Vanhemmissa selaimissa js asettaa --k:n. */
@@ -614,6 +611,12 @@ main, .alatunniste { position: relative; z-index: 1; }
   .etusivu .valikko:not(.auki) { transition: transform .4s cubic-bezier(.4, 0, .2, 1) .12s, box-shadow .2s ease, visibility 0s linear .55s; }
   .etusivu .valikko:not(.auki) a { transition: opacity .15s ease, transform 0s linear .15s; }
 }
-/* Palkin kulmat pyöristyvät takaisin vasta, kun valikko on liukunut piiloon (ei vaaleita loveja kulmiin) */
-.etusivu .paakuva, .etusivu .yla::after { transition: box-shadow .3s ease, border-radius .15s ease .5s; }
-.kompakti .etusivu:has(.valikko.auki) .paakuva, .kompakti .etusivu:has(.valikko.auki) .yla::after { transition: box-shadow .3s ease, border-radius 0s; }
+
+/* Palkin kulmat pysyvät aina pyöreinä (ei välähdyksiä): valikko alkaa --kulma verran palkin alareunan yläpuolelta
+   palkin takaa, jolloin se täyttää kulmien kohdat samalla värillä ja palkki + valikko näyttävät yhdeltä. */
+.kompakti .etusivu .valikko { top: calc(var(--valikko-yla) - var(--kulma)); padding-top: calc(4px + var(--kulma));
+  height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
+@media (max-width: 760px) {
+  .etusivu .valikko { top: calc(var(--valikko-yla) - var(--kulma)); padding-top: calc(4px + var(--kulma));
+    height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
+}
