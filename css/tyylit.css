@@ -337,7 +337,7 @@ main, .alatunniste { position: relative; z-index: 1; }
 /* Alatunniste */
 .alatunniste { padding-block: var(--osio-vali) 40px; }
 .alatunniste-sisalto { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
-.alatunniste h2 { font-size: clamp(36px, 4.6vw, 68px); line-height: .95; }
+.alatunniste h2 { font-size: clamp(28px, 3.4vw, 50px); line-height: .95; }
 .alatunniste h3 { font: 500 12px/1 var(--fontti-teksti); letter-spacing: .2em; text-transform: uppercase; color: var(--vision-oranssi); margin-bottom: 14px; }
 .alatunniste address { font-style: normal; display: grid; gap: 6px; color: var(--vaalea-2); font-weight: 300; }
 .alatunniste address a { text-decoration: none; color: var(--vaalea); }
@@ -633,5 +633,5 @@ main, .alatunniste { position: relative; z-index: 1; }
 }
 
 /* Alaosan yhteystiedot samalla tyylillä kuin valikko (tyyli F): Jost-versaali, harvennettu */
-.alalaita-tiedot { gap: 12px; }
-.alalaita-tiedot > span, .alalaita-tiedot > a:not(.alalaita-logo) { font: 500 12px/1.2 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; }
+.alalaita-tiedot { gap: 10px; }
+.alalaita-tiedot > span, .alalaita-tiedot > a:not(.alalaita-logo) { font: 500 10px/1.2 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; }
