@@ -17,9 +17,18 @@
   }
   document.querySelectorAll('[data-vuosi]').forEach(el => el.textContent = new Date().getFullYear());
 
-  // Yläpalkki saa taustan, kun sivua on vieritetty
-  const rullattu = () => document.documentElement.classList.toggle('rullattu', window.scrollY > 12);
-  addEventListener('scroll', rullattu, { passive: true }); rullattu();
+  // Yläpalkki saa taustan, kun sivua on vieritetty. Eri rajat alas (40 px) ja ylös (8 px),
+  // ettei tila välky edestakaisin yläreunan lähellä (esim. iPhonen jousto-vierityksessä).
+  const juuri = document.documentElement;
+  let ajastettu = false;
+  const rullattu = () => {
+    ajastettu = false;
+    const y = window.scrollY, paalla = juuri.classList.contains('rullattu');
+    if (!paalla && y > 40) juuri.classList.add('rullattu');
+    else if (paalla && y < 8) juuri.classList.remove('rullattu');
+  };
+  addEventListener('scroll', () => { if (!ajastettu) { ajastettu = true; requestAnimationFrame(rullattu); } }, { passive: true });
+  rullattu();
 
   // Osaamiset liukuvat esiin ja kuvakkeet piirtyvät, kun osio tulee näkyviin.
   // Ilman skriptiä tai "Vähennä liikettä" -asetuksella kaikki näkyy heti.

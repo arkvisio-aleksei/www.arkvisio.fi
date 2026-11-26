@@ -95,11 +95,15 @@ a { color: inherit; }
   background-size: cover; background-position: center right;
 }
 /* Yläpalkki seuraa vieritystä kaikilla sivuilla. Sisältö on samassa linjassa kuin .kehys;
-   vieritettäessä (js/valikko.js: html.rullattu) palkki tiivistyy ja saa tumman, sumennetun taustan. */
+   vieritettäessä (js/valikko.js: html.rullattu) palkki saa tumman, sumennetun taustan.
+   Palkin korkeus ei muutu koskaan (ei heilahdusta). Tausta ja sumennus ovat omassa kerroksessaan (::before),
+   joka vain haalistuu: näin iOS Safari ei piirrä harmaata välivaihetta logon päälle. */
 .yla { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
-  padding: 28px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 28px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna));
-  border-bottom: 1px solid transparent; transition: padding .25s ease, background-color .25s ease, border-color .25s ease; }
-.rullattu .yla { padding-block: 14px; background: rgba(31, 34, 41, .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom-color: var(--grafiitti-3); }
+  padding: 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna)); }
+.yla::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: rgba(31, 34, 41, .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--grafiitti-3); opacity: 0; transition: opacity .3s ease; }
+.rullattu .yla::before { opacity: 1; }
 .yla + * { margin-top: 96px; }               /* tila kiinteän palkin alla */
 /* Palkki on yläosan sisällä: yläosa pääsisällön (main, z-index 1) yläpuolelle, ettei sisältö peitä palkkia */
 .paakuva, .alasivu-yla { position: relative; z-index: 2; }
