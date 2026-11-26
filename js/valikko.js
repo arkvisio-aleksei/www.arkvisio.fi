@@ -27,24 +27,22 @@
   // ja poistetaan HETI ylös palatessa, kun sivu on vielä liikkeessä (Safari päivittää värin vain vierityksen
   // aikana). Näkyvä liuku ylös tehdään palkin ::before-kerroksella (css/tyylit.css).
   const juuri = document.documentElement;
-  const paneeli = document.querySelector('.etusivu .paneeli');
+  const paneeli = document.querySelector('.etusivu .paakuva');
   if (paneeli) {
-    // ETUSIVU: harmaa paneeli kutistuu vierityksen tahdissa täydestä korkeudesta matalaksi palkiksi.
-    // Paneelin alareuna kulkee sisällön mukana (kutistuu yhtä paljon kuin sivua vieritetään).
-    const yla = paneeli.closest('.paakuva');
-    const MATALA = 76;
-    let tayskorkeus = 0;
+    // ETUSIVU: paneeli on CSS:ssä position: sticky, joten selain vierittää sen itse (sulava).
+    // Tässä vain vaihdetaan tila kerran, kun paneeli on tarttunut matalaksi palkiksi:
+    // html.kompakti = logo pienenee ja hampurilaisnappi tulee valikon tilalle.
+    let raja = 0;
     const paivita = () => {
-      const matka = Math.max(1, tayskorkeus - MATALA);
-      const p = Math.min(1, Math.max(0, window.scrollY / matka));
-      paneeli.style.height = (tayskorkeus - matka * p) + 'px';
-      juuri.style.setProperty('--p', p.toFixed(4));
-      juuri.style.setProperty('--y', (matka * p).toFixed(1));
-      const kompakti = juuri.classList.contains('kompakti');
-      if (!kompakti && p >= .97) juuri.classList.add('kompakti');
-      else if (kompakti && p < .9) { juuri.classList.remove('kompakti'); suljeValikko(); }
+      const y = window.scrollY, kompakti = juuri.classList.contains('kompakti');
+      if (!kompakti && y >= raja - 4) juuri.classList.add('kompakti');
+      else if (kompakti && y < raja - 48) { juuri.classList.remove('kompakti'); suljeValikko(); }
     };
-    const mittaa = () => { tayskorkeus = yla.offsetHeight; paivita(); };
+    const mittaa = () => {
+      const palkki = parseFloat(getComputedStyle(document.body).getPropertyValue('--palkki')) || 64;
+      raja = paneeli.offsetHeight - palkki;
+      paivita();
+    };
     addEventListener('scroll', paivita, { passive: true });
     addEventListener('resize', mittaa);
     mittaa();

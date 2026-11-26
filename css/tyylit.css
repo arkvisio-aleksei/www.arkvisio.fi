@@ -156,26 +156,33 @@ html { scroll-padding-top: 84px; }
 .paakuva h1 { font-size: clamp(60px, 10.5vw, 168px); line-height: .92; letter-spacing: -.01em; }
 .paakuva h1 .oranssi { display: block; }
 
-/* ---------- ETUSIVU: harmaa paneeli, joka kutistuu matalaksi palkiksi ----------
-   .paakuva on paikanvaraaja (täysi korkeus), .paneeli on kiinteä harmaa laatta, jonka korkeuden
-   js/valikko.js asettaa vierityksen mukaan. --p = 0 (täysi) … 1 (matala palkki). html.kompakti = matala. */
-/* Paneeli ulottuu iskulauseen alle; muu sivu on murrettu valkoinen. */
-.etusivu { --paneeli: #353A44; --murrettu: #F4F1EC; --paneeli-korkeus: clamp(440px, 64svh, 720px); background: var(--murrettu); }
+/* ---------- ETUSIVU: tumma paneeli, joka vierii ylös ja jää matalaksi palkiksi ----------
+   Paneeli (.paakuva) on position: sticky ja negatiivinen top: se vierii ylös kuten muu sivu,
+   kunnes vain matala palkki (--palkki) jää näkyviin. Selain hoitaa liikkeen itse (sulava, ei skriptiä).
+   js/valikko.js lisää html.kompakti, kun paneeli on tarttunut: logo pienenee, hampurilaisnappi esiin.
+   Muu sivu on murrettu valkoinen. */
+.etusivu { --paneeli: #1F2229; --murrettu: #F4F1EC; --palkki: 64px; --paneeli-korkeus: clamp(420px, 62svh, 700px);
+  background: var(--murrettu); }
 html:has(body.etusivu) { background-color: #F4F1EC; }
-.etusivu .paakuva { height: var(--paneeli-korkeus); overflow: visible; background: none; }
-.etusivu .paneeli { position: fixed; top: 0; left: 0; right: 0; z-index: 55; height: var(--paneeli-korkeus); min-height: 76px;
-  background: var(--paneeli); border-radius: 0 0 28px 28px; overflow: hidden;
-  box-shadow: 0 10px 30px rgba(15, 17, 22, calc(.12 + var(--p, 0) * .2)); }
-/* Iskulause paneelin alaosassa: vierittäessä nousee ja puolittuu (skaalautuu puoleen),
-   paneelin nouseva alareuna leikkaa sen, häipyy lopussa */
-.etusivu .paakuva-keski { height: var(--paneeli-korkeus); min-height: 0; box-sizing: border-box;
-  display: grid; place-content: end center; padding-block: 76px clamp(36px, 6svh, 64px);
-  transform-origin: 50% 100%; will-change: transform, opacity;
-  /* --y = vieritys px (js): nousee 80 % reunan nopeudesta, joten reuna leikkaa tekstiä vähitellen */
-  transform: translateY(calc(var(--y, 0) * -.8px)) scale(calc(1 - var(--p, 0) * .5));
-  opacity: calc(1 - max(0, var(--p, 0) - .55) * 2.2); }
-.etusivu .paakuva > .kehys { position: static; }   /* ei omaa kerrostasoa: palkki (z 60) paneelin (z 55) päälle */
-.etusivu .yla { z-index: 60; }
+.etusivu .paakuva { position: sticky; top: calc(var(--palkki) - var(--paneeli-korkeus)); z-index: 55;
+  height: var(--paneeli-korkeus); overflow: hidden; isolation: isolate;
+  background: var(--paneeli); border-radius: 0 0 28px 28px;
+  box-shadow: 0 10px 30px rgba(15, 17, 22, .14); transition: box-shadow .3s ease; }
+.kompakti .etusivu .paakuva { box-shadow: 0 10px 30px rgba(15, 17, 22, .3); }
+.etusivu .paneeli { height: 100%; }
+/* Iskulause keskellä paneelia (palkin alla olevassa tilassa), vierii piiloon paneelin mukana */
+.etusivu .paakuva-keski { height: 100%; min-height: 0; box-sizing: border-box; display: grid; place-content: center;
+  padding: 76px var(--reuna-o) 28px var(--reuna); }
+.etusivu .paakuva h1 { font-size: clamp(44px, 8.2vw, 124px); }
+.etusivu .paakuva > .kehys { position: static; }   /* ei omaa kerrostasoa: palkki (z 60) paneelin päälle */
+.etusivu .yla { z-index: 60; transition: transform .35s cubic-bezier(.22, .8, .24, 1); }
+/* Paneelin värinen kaista palkin alla: iskulause vierii sen alle eikä logon/valikon päälle */
+.etusivu .yla::after { content: ""; position: absolute; left: 0; right: 0; top: -20px; height: calc(var(--palkki) + 26px); z-index: -1;
+  background: var(--paneeli); border-radius: 0 0 28px 28px; pointer-events: none; }
+/* Matalassa palkissa: koko rivi nousee palkin keskelle ja logo pienenee */
+.kompakti .etusivu .yla { transform: translateY(calc((var(--palkki) - 76px) / 2)); }
+.etusivu .logo { transform-origin: 0 50%; transition: transform .35s cubic-bezier(.22, .8, .24, 1); }
+.kompakti .etusivu .logo { transform: scale(.74); }
 /* Hampurilaisnappi: näkyy vain matalassa palkissa, valikkolinkit/Valikko-tekstinappi häipyvät tilalta */
 .burgeri { display: none; }
 .etusivu .burgeri { display: block; position: absolute; top: 50%; right: calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o) - 10px);
@@ -195,9 +202,9 @@ html:has(body.etusivu) { background-color: #F4F1EC; }
   border-radius: 0 0 18px 18px; box-shadow: 0 12px 28px rgba(0, 0, 0, .35); }
 .kompakti .etusivu .valikko.auki a { padding-block: 14px; font-size: 13px; color: var(--vaalea); border-bottom: 1px solid rgba(244, 241, 236, .12); }
 .kompakti .etusivu .valikko.auki a:last-child { border-bottom: 0; }
-/* Riittävä vieritysmatka: yhteysosio täyttää näkymän matalan palkin alla */
-.etusivu .alatunniste { min-height: calc(100svh - 76px); box-sizing: border-box; display: grid; align-content: center;
-  background: var(--murrettu); color: var(--grafiitti); }
+/* Valkoista tilaa tulevalle sisällölle, jottei sivu lopu kesken */
+.etusivu main { min-height: 110svh; }
+.etusivu .alatunniste { background: var(--murrettu); color: var(--grafiitti); }
 .etusivu .alalaita { color: #5B6070; }
 .etusivu .alalaita-tiedot a { color: var(--grafiitti); }
 .etusivu .alalaita-tiedot a:hover { color: #B86F00; }
