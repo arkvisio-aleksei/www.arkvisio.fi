@@ -670,3 +670,15 @@ main, .alatunniste { position: relative; z-index: 1; }
   .etusivu .paakuva { background-size: auto 78%; background-position: 58% 100%; }
   .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 22%, rgba(31, 34, 41, .6) 30%, rgba(31, 34, 41, .12) 46%, rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .62) 100%); }
 }
+
+/* Paikkamerkki tulevalle videolle kuvan keskellä (poistetaan, kun video lisätään) */
+.etusivu .paneeli { position: relative; }
+.video-paikka { position: absolute; left: 50%; top: 30%; z-index: 2; transform: translate(-50%, -50%); pointer-events: none;
+  padding: 14px 26px; border: 1px solid rgba(244, 241, 236, .7); border-radius: var(--kulma, 16px);
+  background: rgba(31, 34, 41, .35); color: var(--vaalea);
+  font: 500 13px/1 var(--fontti-teksti); letter-spacing: .24em; text-transform: uppercase; }
+@media (max-width: 760px) { .video-paikka { top: 50%; } }
+@supports (animation-timeline: scroll()) {
+  .video-paikka { animation: etusivu-iskulause-pois linear both; animation-timeline: scroll(root block);
+    animation-range: 0px calc((var(--paneeli-korkeus) - var(--palkki)) * .4); }
+}
