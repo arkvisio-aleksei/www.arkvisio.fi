@@ -4,15 +4,20 @@
 // ============================================================
 
 (function () {
+  // Valikon avaus: tekstinappi (mobiili) ja hampurilaisnappi (etusivun kutistunut palkki) ohjaavat samaa valikkoa
   const valikko = document.getElementById('valikko');
-  const valikkoNappi = document.querySelector('.valikko-nappi');
-  if (valikko && valikkoNappi) {
-    const suljeValikko = () => { valikko.classList.remove('auki'); valikkoNappi.setAttribute('aria-expanded', 'false'); valikkoNappi.textContent = 'Valikko'; };
-    valikkoNappi.addEventListener('click', () => {
-      const auki = valikko.classList.toggle('auki');
-      valikkoNappi.setAttribute('aria-expanded', auki);
-      valikkoNappi.textContent = auki ? 'Sulje' : 'Valikko';
+  const napit = document.querySelectorAll('[aria-controls="valikko"]');
+  const asetaValikko = auki => {
+    if (!valikko) return;
+    valikko.classList.toggle('auki', auki);
+    napit.forEach(n => {
+      n.setAttribute('aria-expanded', auki);
+      if (n.classList.contains('valikko-nappi')) n.textContent = auki ? 'Sulje' : 'Valikko';
     });
+  };
+  const suljeValikko = () => asetaValikko(false);
+  if (valikko) {
+    napit.forEach(n => n.addEventListener('click', () => asetaValikko(!valikko.classList.contains('auki'))));
     valikko.addEventListener('click', e => { if (e.target.closest('a')) suljeValikko(); });
   }
   document.querySelectorAll('[data-vuosi]').forEach(el => el.textContent = new Date().getFullYear());
@@ -22,19 +27,42 @@
   // ja poistetaan HETI ylös palatessa, kun sivu on vielä liikkeessä (Safari päivittää värin vain vierityksen
   // aikana). Näkyvä liuku ylös tehdään palkin ::before-kerroksella (css/tyylit.css).
   const juuri = document.documentElement;
-  const tausta = document.querySelector('.yla-tausta');
-  const rullattu = () => {
-    const y = window.scrollY, paalla = juuri.classList.contains('rullattu');
-    if (!paalla && y > 80) {
-      if (tausta) { tausta.style.display = 'block'; void tausta.offsetHeight; }  // asetteluun ennen animaatiota
-      juuri.classList.add('rullattu');
-    } else if (paalla && y < 40) {
-      if (tausta) tausta.style.display = 'none';
-      juuri.classList.remove('rullattu');
-    }
-  };
-  addEventListener('scroll', rullattu, { passive: true });
-  rullattu();
+  const paneeli = document.querySelector('.etusivu .paneeli');
+  if (paneeli) {
+    // ETUSIVU: harmaa paneeli kutistuu vierityksen tahdissa täydestä korkeudesta matalaksi palkiksi.
+    // Paneelin alareuna kulkee sisällön mukana (kutistuu yhtä paljon kuin sivua vieritetään).
+    const yla = paneeli.closest('.paakuva');
+    const MATALA = 76;
+    let tayskorkeus = 0;
+    const paivita = () => {
+      const matka = Math.max(1, tayskorkeus - MATALA);
+      const p = Math.min(1, Math.max(0, window.scrollY / matka));
+      paneeli.style.height = (tayskorkeus - matka * p) + 'px';
+      juuri.style.setProperty('--p', p.toFixed(4));
+      const kompakti = juuri.classList.contains('kompakti');
+      if (!kompakti && p >= .97) juuri.classList.add('kompakti');
+      else if (kompakti && p < .9) { juuri.classList.remove('kompakti'); suljeValikko(); }
+    };
+    const mittaa = () => { tayskorkeus = yla.offsetHeight; paivita(); };
+    addEventListener('scroll', paivita, { passive: true });
+    addEventListener('resize', mittaa);
+    mittaa();
+  } else {
+    // ALASIVUT: valkoinen palkki liukuu esiin vierittäessä
+    const tausta = document.querySelector('.yla-tausta');
+    const rullattu = () => {
+      const y = window.scrollY, paalla = juuri.classList.contains('rullattu');
+      if (!paalla && y > 80) {
+        if (tausta) { tausta.style.display = 'block'; void tausta.offsetHeight; }  // asetteluun ennen animaatiota
+        juuri.classList.add('rullattu');
+      } else if (paalla && y < 40) {
+        if (tausta) tausta.style.display = 'none';
+        juuri.classList.remove('rullattu');
+      }
+    };
+    addEventListener('scroll', rullattu, { passive: true });
+    rullattu();
+  }
 
   // Osaamiset liukuvat esiin ja kuvakkeet piirtyvät, kun osio tulee näkyviin.
   // Ilman skriptiä tai "Vähennä liikettä" -asetuksella kaikki näkyy heti.

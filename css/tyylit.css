@@ -156,6 +156,43 @@ html { scroll-padding-top: 84px; }
 .paakuva h1 { font-size: clamp(60px, 10.5vw, 168px); line-height: .92; letter-spacing: -.01em; }
 .paakuva h1 .oranssi { display: block; }
 
+/* ---------- ETUSIVU: harmaa paneeli, joka kutistuu matalaksi palkiksi ----------
+   .paakuva on paikanvaraaja (täysi korkeus), .paneeli on kiinteä harmaa laatta, jonka korkeuden
+   js/valikko.js asettaa vierityksen mukaan. --p = 0 (täysi) … 1 (matala palkki). html.kompakti = matala. */
+.etusivu { --paneeli: #353A44; }
+.etusivu .paakuva { height: calc(100svh - 48px); min-height: 460px; overflow: visible; background: none; }
+.etusivu .paneeli { position: fixed; top: 0; left: 0; right: 0; z-index: 55; height: calc(100svh - 48px); min-height: 76px;
+  background: var(--paneeli); border-radius: 0 0 28px 28px; overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, calc(var(--p, 0) * .35)); }
+/* Iskulause: nousee ja puolittuu (skaalautuu puoleen), paneelin alareuna leikkaa sen, häipyy lopussa */
+.etusivu .paakuva-keski { height: calc(100svh - 48px); min-height: 460px; padding-block: 76px 0; box-sizing: border-box;
+  transform-origin: 50% 0; will-change: transform, opacity;
+  transform: translateY(calc(var(--p, 0) * -18svh)) scale(calc(1 - var(--p, 0) * .5));
+  opacity: calc(1 - var(--p, 0) * 1.25); }
+.etusivu .paakuva > .kehys { position: static; }   /* ei omaa kerrostasoa: palkki (z 60) paneelin (z 55) päälle */
+.etusivu .yla { z-index: 60; }
+/* Hampurilaisnappi: näkyy vain matalassa palkissa, valikkolinkit/Valikko-tekstinappi häipyvät tilalta */
+.burgeri { display: none; }
+.etusivu .burgeri { display: block; position: absolute; top: 50%; right: calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o) - 10px);
+  width: 44px; height: 44px; margin-top: -22px; padding: 0; border: 0; background: none; color: var(--vaalea); cursor: pointer;
+  opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+.burgeri span { position: absolute; left: 11px; right: 11px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .3s ease, opacity .2s ease; }
+.burgeri span:nth-child(1) { top: 15px; } .burgeri span:nth-child(2) { top: 21px; } .burgeri span:nth-child(3) { top: 27px; }
+.burgeri[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burgeri[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.burgeri[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.etusivu .valikko, .etusivu .valikko-nappi { transition: opacity .3s ease, visibility 0s linear 0s; }
+.kompakti .etusivu .burgeri { opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s linear 0s; }
+.kompakti .etusivu .valikko:not(.auki), .kompakti .etusivu .valikko-nappi { opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+/* Matalan palkin valikko aukeaa palkin alle pudotusvalikoksi (myös tietokoneella) */
+.kompakti .etusivu .valikko.auki { display: flex; position: absolute; top: 100%; left: auto; right: calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o));
+  min-width: 240px; flex-direction: column; gap: 0; margin: 0; padding: 8px 24px 16px; background: var(--paneeli);
+  border-radius: 0 0 18px 18px; box-shadow: 0 12px 28px rgba(0, 0, 0, .35); }
+.kompakti .etusivu .valikko.auki a { padding-block: 14px; font-size: 13px; color: var(--vaalea); border-bottom: 1px solid rgba(244, 241, 236, .12); }
+.kompakti .etusivu .valikko.auki a:last-child { border-bottom: 0; }
+/* Riittävä vieritysmatka: yhteysosio täyttää näkymän matalan palkin alla */
+.etusivu .alatunniste { min-height: calc(100svh - 76px); box-sizing: border-box; display: grid; align-content: center; }
+
 /* Karttaosio: otsikko, hankelaskuri ja suodattimet vasemmalla, kartta oikealla */
 .kartta-osio { overflow: hidden; }
 .kartta-osio-sisalto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
@@ -480,3 +517,10 @@ main, .alatunniste { position: relative; z-index: 1; }
 .hv-mitta path { fill: none; stroke: var(--vision-oranssi); stroke-width: 1; }
 .hv-mitta rect { fill: var(--grafiitti-2); }
 .hv-mitta text { fill: var(--vision-oranssi); font: 500 10px/1 var(--fontti-teksti); letter-spacing: .06em; text-anchor: middle; }
+
+/* Etusivu: Valikko-nappi ja mobiilin pudotusvalikko harmaan paneelin sävyissä */
+.etusivu .valikko-nappi { border-color: rgba(244, 241, 236, .28); }
+@media (max-width: 760px) {
+  .etusivu .valikko { background: var(--paneeli); border-top-color: rgba(244, 241, 236, .12); }
+  .etusivu .valikko a { border-bottom-color: rgba(244, 241, 236, .12); }
+}
