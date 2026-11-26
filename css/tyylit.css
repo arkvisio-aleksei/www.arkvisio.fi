@@ -747,15 +747,35 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
 /* Etusivu: hampurilaisnappi ja valikon linkit sivun reunaan (ei --leveys-laskentaa, sivu voi olla sitä leveämpi) */
 .etusivu .burgeri { right: calc(var(--reuna-o) - 10px); }
 .etusivu .valikko, .kompakti .etusivu .valikko { padding-left: var(--reuna); padding-right: var(--reuna-o); }
-/* Kansikuva loitommaksi.
-   Puhelin: kuva 60 % alueen korkeudesta keskellä, yläpuolella ja alapuolella tumma, johon kuva liukuu; iskulause alla.
-   Tietokone: alueen korkeus kuvan mittasuhteessa (16:9), koko kuva näkyy. */
-@media (max-width: 760px) {
-  .etusivu .paakuva { background-size: auto 60%; background-position: 58% 42%; }
-  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 18%, rgba(31, 34, 41, .55) 23%, rgba(31, 34, 41, .1) 33%,
-    rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .65) 70%, #1F2229 78%, #1F2229 100%); }
-  .etusivu .video-paikka { top: 47%; }
-}
+/* Tietokone: kuva-alueen korkeus kuvan mittasuhteessa (16:9), koko kuva näkyy. Puhelimessa kuva alas asti (yllä). */
 @media (min-width: 761px) {
   .etusivu { --paneeli-korkeus: max(480px, min(calc(100svh - 36px), calc(min(100vw, var(--sivu)) * .5625))); }
 }
+
+/* ---------- Etusivu: palvelut kolmena laatikkona, joissa vain oranssit kulmat ---------- */
+.palvelut-osio { padding: clamp(56px, 8vw, 104px) var(--reuna-o) clamp(40px, 6vw, 72px) var(--reuna); }
+.palvelut-osio .ylaotsikko { margin-bottom: 22px; color: #B86F00; }
+.palvelulaatikot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); }
+@media (max-width: 760px) { .palvelulaatikot { grid-template-columns: minmax(0, 1fr); } }
+.palvelulaatikko { --k: var(--vision-oranssi); --kp: 22px; --kv: 2px;
+  position: relative; display: grid; align-content: start; gap: 12px; padding: 30px 28px 28px;
+  color: var(--grafiitti); text-decoration: none;
+  /* vain kulmat: 8 lyhyttä viivaa liukuväreinä */
+  background:
+    linear-gradient(var(--k), var(--k)) left top / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) left top / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) right top / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) right top / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) left bottom / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) left bottom / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) right bottom / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) right bottom / var(--kv) var(--kp) no-repeat;
+  transition: background-size .3s ease; }
+.palvelulaatikko:hover, .palvelulaatikko:focus-visible { --kp: 34px; }
+.palvelulaatikko .ikoni { width: 30px; height: 30px; color: var(--vision-oranssi); }
+.palvelulaatikko .nro { font: 400 12px/1 var(--fontti-teksti); letter-spacing: .12em; color: #B86F00; }
+.palvelulaatikko h3 { font: 400 32px/1 var(--fontti-otsikko); letter-spacing: -.01em; }
+.palvelulaatikko p { font: 300 15px/1.55 var(--fontti-teksti); color: #4A4F5A; }
+.palvelulaatikko .lisaa { display: block; justify-self: start; margin-top: 6px; font: 500 11px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: var(--grafiitti); }
+.palvelulaatikko .lisaa::after { content: " →"; color: var(--vision-oranssi); }
+.etusivu main:has(.palvelut-osio) { min-height: calc(100svh - var(--palkki)); }   /* riittävä vieritys palkin kutistumiseen */
