@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
-  <link rel="stylesheet" href="css/tyylit.css?v=20261126zzl">
+  <link rel="stylesheet" href="css/tyylit.css?v=20261126zzm">
 </head>
 <body class="etusivu alasivu">
   <a class="ohita" href="#sisalto">Siirry sisältöön</a>
@@ -24,11 +24,8 @@
             <div>
               <p class="murupolku"><a href="index.html#palvelut">Kolme osaamista</a> / Toteutus</p>
               <h1>Toteutus<span class="oranssi">.</span></h1>
-              <p class="alasivu-lede">Vastaava työnjohto, rakennuttaminen ja valvonta. Pidämme rakentamisen aikataulussa ja suunnitelmassa – ja hoidamme viranomaistarkastukset.</p>
             </div>
-            <div class="alasivu-ikoni"><svg class="ikoni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17.5h18"/><path d="M4.5 17.5a7.5 7.5 0 0 1 15 0"/><path d="M10 10.5V6.5h4v4"/><path d="M3 20.5h18"/></svg></div>
           </div>
-          <ul class="alasivu-sisalto"><li>Vastaava työnjohto</li><li>Rakennuttaminen ja valvonta</li><li>Urakoiden kilpailutus</li><li>Viranomaistarkastukset</li></ul>
       </div>
     </div>
     <div class="kehys">
@@ -48,29 +45,34 @@
 
   <main id="sisalto">
 
-    <!-- HINTALASKURI: vaihtoehdot ja tuntiarviot tiedostossa data/hinnasto.js -->
-    <section class="osio" id="hintalaskuri">
+    <!-- PALVELUN SISÄLTÖ (vaalealla) -->
+    <section class="osio alasivu-intro">
       <div class="kehys">
-        <div class="osio-otsikko">
-          <p class="ylaotsikko">Hintalaskuri</p>
-          <h2>Laske toteutuksen hinta.</h2>
-          <p>Valitse kuvakkeista kohde ja tarvitsemasi palvelut – hinta muodostuu hinnastomme tuntihinnoista.</p>
-        </div>
-        <div data-laskuri="tyomaa"></div>
+              <p class="alasivu-lede">Vastaava työnjohto, rakennuttaminen ja valvonta. Pidämme rakentamisen aikataulussa ja suunnitelmassa – ja hoidamme viranomaistarkastukset.</p>
+          <ul class="alasivu-sisalto"><li>Vastaava työnjohto</li><li>Rakennuttaminen ja valvonta</li><li>Urakoiden kilpailutus</li><li>Viranomaistarkastukset</li></ul>
       </div>
     </section>
 
-    <!-- TUNTIHINNAT -->
-    <section class="osio" id="tuntihinnat" style="padding-top:0">
+    <!-- HINNAT: laskuri ja tuntihinnat avattavina lisätietoina. Laskurin data: data/hinnasto.js -->
+    <section class="osio hinnat-osio" id="hintalaskuri">
       <div class="kehys">
-        <div class="osio-otsikko">
-          <p class="ylaotsikko">Hinnasto 2026 · Etelä-Suomi</p>
-          <h2>Tuntihinnat.</h2>
-          <p>Käytetään tehtävissä, joista ei ole sovittu kiinteää palkkiota. Hinnat sisältävät alv:n 25,5 %.</p>
-        </div>
+        <p class="ylaotsikko">Hinnat</p>
+        <details class="avattava">
+          <summary><span>Laske toteutuksen hinta</span><small>Suuntaa-antava hinta muutamalla valinnalla</small></summary>
+          <div class="avattava-sisalto">
+
+        <div data-laskuri="tyomaa"></div>
+          </div>
+        </details>
+        <details class="avattava" id="tuntihinnat">
+          <summary><span>Tuntihinnat ja lisäkustannukset</span><small>Hinnasto 2026 · Etelä-Suomi · sis. alv 25,5 %</small></summary>
+          <div class="avattava-sisalto">
+
         <div class="tuntihinnat" data-tuntihinnat="skol2,skol3"></div>
         <h3 class="lisakulut-otsikko">Lisäkustannukset</h3>
         <ul class="lisakulut" data-lisakulut></ul>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -109,9 +111,9 @@
     </div>
   </footer>
 
-  <script src="data/hinnasto.js?v=20261126zzl"></script>
-  <script src="js/ikonit.js?v=20261126zzl"></script>
-  <script src="js/laskuri.js?v=20261126zzl"></script>
-  <script src="js/valikko.js?v=20261126zzl"></script>
+  <script src="data/hinnasto.js?v=20261126zzm"></script>
+  <script src="js/ikonit.js?v=20261126zzm"></script>
+  <script src="js/laskuri.js?v=20261126zzm"></script>
+  <script src="js/valikko.js?v=20261126zzm"></script>
 </body>
 </html>
