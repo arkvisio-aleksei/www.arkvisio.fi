@@ -661,3 +661,10 @@ main, .alatunniste { position: relative; z-index: 1; }
    jolloin kellon alue sulautuu kuvaan. Matalassa palkissa tumma, kuten palkki. */
 .etusivu .paakuva { background-color: #45505A; }
 .kompakti .etusivu .paakuva { background-color: #1F2229; }
+/* Valikko on aina pienen palkin alla ja entisen kokoinen (ei koko kansikuvan korkuinen):
+   kansikuvan ollessa näkyvissä js vierittää ensin kuvan piiloon ja avaa valikon sitten. */
+.etusivu { --valikko-korkeus: clamp(230px, 30svh, 420px); }
+.kompakti .etusivu .valikko { height: calc(var(--valikko-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
+@media (max-width: 760px) {
+  .etusivu .valikko { height: calc(var(--valikko-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
+}

@@ -6,6 +6,7 @@
 (function () {
   // Valikon avaus: tekstinappi (mobiili) ja hampurilaisnappi (etusivun kutistunut palkki) ohjaavat samaa valikkoa
   const juuriEl = document.documentElement;
+  let avaaPienena = null;   // etusivu asettaa (alla)
   const valikko = document.getElementById('valikko');
   const napit = document.querySelectorAll('[aria-controls="valikko"]');
   const asetaValikko = auki => {
@@ -27,7 +28,12 @@
     setTimeout(() => osat.forEach(o => { o.style.transition = ''; }), 60);
   };
   if (valikko) {
-    napit.forEach(n => n.addEventListener('click', () => asetaValikko(!valikko.classList.contains('auki'))));
+    napit.forEach(n => n.addEventListener('click', () => {
+      const auki = valikko.classList.contains('auki');
+      // Etusivu: jos kansikuva on näkyvissä, vieritetään ensin kuva piiloon ja avataan valikko vasta pienestä palkista
+      if (!auki && avaaPienena && avaaPienena()) return;
+      asetaValikko(!auki);
+    }));
     valikko.addEventListener('click', e => {
       if (!e.target.closest('a')) return;
       // Etusivun iso palkki puhelimella: valikkoa ei suljeta erikseen, vaan se vierii paneelin mukana palkin taakse
@@ -70,6 +76,17 @@
       raja = paneeli.offsetHeight - palkki;
       viimeLeveys = innerWidth;
       paivita();
+    };
+    avaaPienena = () => {
+      if (juuri.classList.contains('kompakti')) return false;
+      window.scrollTo({ top: raja + 2, behavior: 'smooth' });
+      let kerrat = 0;
+      const odota = () => {
+        if (juuri.classList.contains('kompakti')) asetaValikko(true);
+        else if (kerrat++ < 40) setTimeout(odota, 50);
+      };
+      setTimeout(odota, 50);
+      return true;
     };
     addEventListener('scroll', paivita, { passive: true });
     // iPhonen osoitepalkki muuttaa korkeutta vierittäessä: mitataan uudelleen vain leveyden muuttuessa
