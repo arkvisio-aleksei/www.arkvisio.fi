@@ -747,3 +747,15 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
 /* Etusivu: hampurilaisnappi ja valikon linkit sivun reunaan (ei --leveys-laskentaa, sivu voi olla sitä leveämpi) */
 .etusivu .burgeri { right: calc(var(--reuna-o) - 10px); }
 .etusivu .valikko, .kompakti .etusivu .valikko { padding-left: var(--reuna); padding-right: var(--reuna-o); }
+/* Kansikuva loitommaksi.
+   Puhelin: kuva 60 % alueen korkeudesta keskellä, yläpuolella ja alapuolella tumma, johon kuva liukuu; iskulause alla.
+   Tietokone: alueen korkeus kuvan mittasuhteessa (16:9), koko kuva näkyy. */
+@media (max-width: 760px) {
+  .etusivu .paakuva { background-size: auto 60%; background-position: 58% 42%; }
+  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 18%, rgba(31, 34, 41, .55) 23%, rgba(31, 34, 41, .1) 33%,
+    rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .65) 70%, #1F2229 78%, #1F2229 100%); }
+  .etusivu .video-paikka { top: 47%; }
+}
+@media (min-width: 761px) {
+  .etusivu { --paneeli-korkeus: max(480px, min(calc(100svh - 36px), calc(min(100vw, var(--sivu)) * .5625))); }
+}
