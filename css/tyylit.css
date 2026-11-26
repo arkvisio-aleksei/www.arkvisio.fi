@@ -631,3 +631,7 @@ main, .alatunniste { position: relative; z-index: 1; }
       animation-range: 0px calc(var(--paneeli-korkeus) - var(--palkki)); }
   }
 }
+
+/* Alaosan yhteystiedot samalla tyylillä kuin valikko (tyyli F): Jost-versaali, harvennettu */
+.alalaita-tiedot { gap: 12px; }
+.alalaita-tiedot > span, .alalaita-tiedot > a:not(.alalaita-logo) { font: 500 12px/1.2 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; }
