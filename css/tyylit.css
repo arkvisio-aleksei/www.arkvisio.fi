@@ -933,3 +933,15 @@ html:has(body.etusivu) { background: #1F2229 linear-gradient(180deg, #1F2229 0, 
 /* Juuritausta murrettu valkoinen kokonaan (myös sivun alapuolella Safarin alapalkin takana -> ei tummaa viivaa).
    Kellon alueen tummuuden hoitaa .palkkitausta-kaista. */
 html:has(body.etusivu) { background: #F4F1EC; }
+
+/* ---------- Kansivideon parallaksi ----------
+   Video omassa kehyksessään: kehys rajaa pyöristetyt kulmat (myös iOS Safarissa, mask) vaikka video liikkuu. */
+.kansivideo-kehys { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  border-radius: 0 0 var(--kulma) var(--kulma); -webkit-mask-image: -webkit-radial-gradient(white, black); }
+.kansivideo-kehys .kansivideo { border-radius: 0; will-change: transform; }
+/* iPhonen lupanappi videon oikeassa alakulmassa */
+.liike-nappi { position: absolute; right: 14px; bottom: 14px; z-index: 3; width: 40px; height: 40px; padding: 9px;
+  border: 1px solid rgba(244, 241, 236, .45); border-radius: 50%; background: rgba(31, 34, 41, .35); color: var(--vaalea); cursor: pointer;
+  -webkit-backdrop-filter: none; }
+.liike-nappi svg { width: 100%; height: 100%; display: block; }
+.liike-nappi[hidden] { display: none; }

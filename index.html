@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
-  <link rel="stylesheet" href="css/tyylit.css?v=20261126zzi">
+  <link rel="stylesheet" href="css/tyylit.css?v=20261126zzj">
 </head>
 <body class="etusivu">
   <a class="ohita" href="#sisalto">Siirry sisältöön</a>
@@ -20,9 +20,15 @@
        Toiminta: js/valikko.js (paneelin korkeus, --p = 0…1, html.kompakti). -->
   <header class="paakuva tumma">
     <!-- Kansivideo: äänetön silmukka; kansikuva näkyy latautuessa ja "Vähennä liikettä" -asetuksella -->
-    <video class="kansivideo" autoplay muted loop playsinline preload="auto" poster="assets/images/kansikuva.jpg?v=1080" aria-hidden="true">
-      <source src="assets/video/kansi.mp4?v=1080" type="video/mp4">
-    </video>
+    <div class="kansivideo-kehys" aria-hidden="true">
+      <video class="kansivideo" autoplay muted loop playsinline preload="auto" poster="assets/images/kansikuva.jpg?v=1080">
+        <source src="assets/video/kansi.mp4?v=1080" type="video/mp4">
+      </video>
+    </div>
+    <!-- iPhone: liikeanturin lupa (näytetään vain, jos selain vaatii luvan) -->
+    <button class="liike-nappi" type="button" hidden aria-label="Ota käyttöön: liikuta videota kallistamalla puhelinta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.2" transform="rotate(-14 12 12)"/><path d="M3 9.5a9 9 0 0 1 2.5-4.5M21 14.5a9 9 0 0 1-2.5 4.5"/></svg>
+    </button>
     <div class="paneeli">
       <div class="paakuva-keski">
         <h1>Suunniteltu <span class="oranssi">arkeen ja juhlaan.</span></h1>
@@ -90,6 +96,6 @@
     </div>
   </footer>
 
-  <script src="js/valikko.js?v=20261126zzi"></script>
+  <script src="js/valikko.js?v=20261126zzj"></script>
 </body>
 </html>
