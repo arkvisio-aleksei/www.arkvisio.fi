@@ -162,7 +162,7 @@ html { scroll-padding-top: 84px; }
    js/valikko.js lisää html.kompakti, kun paneeli on tarttunut: logo pienenee, hampurilaisnappi esiin.
    Muu sivu on murrettu valkoinen. */
 /* --paneeli-korkeus: js/valikko.js laskee niin, että iskulauseen ylä- ja alapuolelle jää yhtä paljon tilaa kuin sivuille */
-.etusivu { --paneeli: #1F2229; --murrettu: #F4F1EC; --palkki: 64px; --kulma: 16px; --paneeli-korkeus: clamp(320px, 46svh, 560px);
+.etusivu { --paneeli: #1F2229; --murrettu: #F4F1EC; --palkki: 64px; --kulma: 22px; --paneeli-korkeus: clamp(320px, 46svh, 560px);
   background: var(--murrettu); }
 html:has(body.etusivu) { background-color: #F4F1EC; }
 .etusivu .paakuva { position: sticky; top: calc(var(--palkki) - var(--paneeli-korkeus)); z-index: 55;
@@ -644,7 +644,7 @@ main, .alatunniste { position: relative; z-index: 1; }
 @media (max-width: 760px) { .etusivu .paakuva { background-position: 60% 50%; } }
 .etusivu .paakuva::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   /* yläreuna kiinteää tummaa (#1F2229) = sama kuin iPhonen kellon alue, liukuu kuvaan */
-  background: linear-gradient(180deg, #1F2229 0%, rgba(31, 34, 41, .92) 7%, rgba(31, 34, 41, .45) 18%, rgba(31, 34, 41, .1) 34%, rgba(31, 34, 41, .1) 55%, rgba(31, 34, 41, .62) 100%); }
+  background: linear-gradient(180deg, #1F2229 0%, rgba(31, 34, 41, .85) 5%, rgba(31, 34, 41, .35) 12%, rgba(31, 34, 41, .1) 24%, rgba(31, 34, 41, .1) 55%, rgba(31, 34, 41, .62) 100%); }
 .etusivu .paneeli { position: relative; z-index: 1; }
 .etusivu .paakuva-keski { place-content: end center; padding-bottom: clamp(36px, 7svh, 72px); }
 .etusivu .paakuva h1 { text-shadow: 0 2px 24px rgba(0, 0, 0, .35); }
@@ -665,10 +665,10 @@ main, .alatunniste { position: relative; z-index: 1; }
 @media (max-width: 760px) {
   .etusivu .valikko { height: calc(var(--valikko-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
 }
-/* Puhelin: kansikuva vähemmän zoomattuna (78 % alueen korkeudesta, alareunaan), yläosa liukuu kiinteään tummaan */
+/* Puhelin: kansikuva vähemmän zoomattuna (86 % alueen korkeudesta, alareunaan), yläosa liukuu kiinteään tummaan */
 @media (max-width: 760px) {
-  .etusivu .paakuva { background-size: auto 78%; background-position: 58% 100%; }
-  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 22%, rgba(31, 34, 41, .6) 30%, rgba(31, 34, 41, .12) 46%, rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .62) 100%); }
+  .etusivu .paakuva { background-size: auto 86%; background-position: 58% 100%; }
+  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 14%, rgba(31, 34, 41, .55) 19%, rgba(31, 34, 41, .12) 30%, rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .62) 100%); }
 }
 
 /* Paikkamerkki tulevalle videolle kuvan keskellä (poistetaan, kun video lisätään) */
