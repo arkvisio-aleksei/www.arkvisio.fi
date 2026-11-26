@@ -917,3 +917,8 @@ html:has(body.etusivu) { background-color: #1F2229; }
     animation-range: calc(var(--paneeli-korkeus) - var(--palkki) - 40px) calc(var(--paneeli-korkeus) - var(--palkki)); }
 }
 .etusivu:not(.alasivu) .paakuva::before { background: linear-gradient(180deg, rgba(31, 34, 41, 0) 0, rgba(31, 34, 41, .05) 55%, rgba(31, 34, 41, .6) 100%) !important; }
+/* Valikon avautuminen hieman rauhallisemmin */
+.kompakti .etusivu .valikko.auki { transition: transform .55s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .2s, visibility 0s linear 0s; }
+.kompakti .etusivu .valikko.auki a:nth-child(1) { transition-delay: .14s; }
+.kompakti .etusivu .valikko.auki a:nth-child(2) { transition-delay: .22s; }
+.kompakti .etusivu .valikko.auki a:nth-child(3) { transition-delay: .3s; }

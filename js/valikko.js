@@ -91,15 +91,21 @@
       viimeLeveys = innerWidth;
       paivita();
     };
+    // Hampurilainen videon ollessa esillä: vieritetään rauhallisesti (oma pehmeä animaatio ~0,9 s)
+    // video piiloon ja avataan valikko vasta, kun vieritys on valmis.
+    const pehmeaVieritys = (kohde, kesto, valmis) => {
+      const alku = window.scrollY, matka = kohde - alku, t0 = performance.now();
+      const pehmennys = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;   // hidas alku ja loppu
+      const askel = nyt => {
+        const t = Math.min(1, (nyt - t0) / kesto);
+        window.scrollTo({ top: alku + matka * pehmennys(t), behavior: 'instant' });
+        if (t < 1) requestAnimationFrame(askel); else if (valmis) valmis();
+      };
+      requestAnimationFrame(askel);
+    };
     avaaPienena = () => {
       if (juuri.classList.contains('kompakti')) return false;
-      window.scrollTo({ top: raja + 2, behavior: 'smooth' });
-      let kerrat = 0;
-      const odota = () => {
-        if (juuri.classList.contains('kompakti')) asetaValikko(true);
-        else if (kerrat++ < 40) setTimeout(odota, 50);
-      };
-      setTimeout(odota, 50);
+      pehmeaVieritys(raja + 2, 900, () => setTimeout(() => asetaValikko(true), 60));
       return true;
     };
     addEventListener('scroll', paivita, { passive: true });
