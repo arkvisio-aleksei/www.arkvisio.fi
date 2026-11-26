@@ -892,3 +892,15 @@ html:has(body.etusivu) { background-color: #1F2229; }
     animation-range: calc(var(--paneeli-korkeus) - var(--palkki) - 40px) calc(var(--paneeli-korkeus) - var(--palkki)); }
 }
 .etusivu.alasivu .palkkitausta { animation: none; -webkit-clip-path: none; clip-path: none; }
+
+/* Kellon alue: kiinteä tumma kaista tasan kellon alueen korkuisena (safe-area-inset-top), sen alla vain lyhyt häivytys.
+   Yläreunassa palkin taustasta näkyy vain tämä kaista; vierittäessä se paljastuu täydeksi palkiksi. */
+.etusivu { --kello: max(1px, env(safe-area-inset-top, 0px)); }
+@keyframes etusivu-palkki-esiin { from { -webkit-clip-path: inset(0 0 calc(100% - var(--kello)) 0); clip-path: inset(0 0 calc(100% - var(--kello)) 0); }
+  to { -webkit-clip-path: inset(0 -40px -48px -40px); clip-path: inset(0 -40px -48px -40px); } }
+.etusivu .palkkitausta { -webkit-clip-path: inset(0 0 calc(100% - var(--kello)) 0); clip-path: inset(0 0 calc(100% - var(--kello)) 0); }
+.kompakti .etusivu .palkkitausta { -webkit-clip-path: inset(0 -40px -48px -40px); clip-path: inset(0 -40px -48px -40px); }
+.etusivu.alasivu .palkkitausta { -webkit-clip-path: none; clip-path: none; }
+/* Häivytys minimiin: tumma kellon alueen korkeudelta, sitten 28 px pehmeä liuku videoon */
+.etusivu:not(.alasivu) .paakuva::before { background: linear-gradient(180deg, #1F2229 0, #1F2229 var(--kello),
+  rgba(31, 34, 41, 0) calc(var(--kello) + 28px), rgba(31, 34, 41, .05) 55%, rgba(31, 34, 41, .6) 100%) !important; }
