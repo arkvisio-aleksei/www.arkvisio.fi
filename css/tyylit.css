@@ -635,3 +635,25 @@ main, .alatunniste { position: relative; z-index: 1; }
 /* Alaosan yhteystiedot samalla tyylillä kuin valikko (tyyli F): Jost-versaali, harvennettu */
 .alalaita-tiedot { gap: 10px; }
 .alalaita-tiedot > span, .alalaita-tiedot > a:not(.alalaita-logo) { font: 500 10px/1.2 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; }
+
+/* ---------- Etusivu: havainnekuva iskulausealueen taustana (tulevaisuudessa video) ----------
+   Alue on kuvan takia korkeampi. Kuvaa tummennettu ylä- ja alareunasta, jotta logo ja iskulause erottuvat.
+   Vierittäessä iskulause häipyy ennen palkkia ja palkin tumma tausta tulee esiin vasta lopussa. */
+.etusivu { --paneeli-korkeus: clamp(460px, 64svh, 780px); }
+.etusivu .paakuva { background: #1F2229 url("../assets/images/kansikuva.jpg") 52% 62% / cover no-repeat; }
+@media (max-width: 760px) { .etusivu .paakuva { background-position: 60% 50%; } }
+.etusivu .paakuva::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(31, 34, 41, .55) 0%, rgba(31, 34, 41, .08) 30%, rgba(31, 34, 41, .1) 55%, rgba(31, 34, 41, .62) 100%); }
+.etusivu .paneeli { position: relative; z-index: 1; }
+.etusivu .paakuva-keski { place-content: end center; padding-bottom: clamp(36px, 7svh, 72px); }
+.etusivu .paakuva h1 { text-shadow: 0 2px 24px rgba(0, 0, 0, .35); }
+.etusivu .yla::after { opacity: 0; }
+.kompakti .etusivu .yla::after { opacity: 1; }
+@keyframes etusivu-kaista { from { opacity: 0; } to { opacity: 1; } }
+@keyframes etusivu-iskulause-pois { from { opacity: 1; } to { opacity: 0; } }
+@supports (animation-timeline: scroll()) {
+  .etusivu .yla::after { animation: etusivu-kaista linear both; animation-timeline: scroll(root block);
+    animation-range: calc(var(--paneeli-korkeus) - var(--palkki) - 70px) calc(var(--paneeli-korkeus) - var(--palkki)); }
+  .etusivu .paakuva h1 { animation: etusivu-iskulause-pois linear both; animation-timeline: scroll(root block);
+    animation-range: calc((var(--paneeli-korkeus) - var(--palkki)) * .3) calc((var(--paneeli-korkeus) - var(--palkki)) * .62); }
+}

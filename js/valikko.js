@@ -50,10 +50,7 @@
     // ETUSIVU: paneeli on CSS:ssä position: sticky, joten selain vierittää sen itse (sulava).
     // Tässä vain vaihdetaan tila kerran, kun paneeli on tarttunut matalaksi palkiksi:
     // html.kompakti = logo pienenee ja hampurilaisnappi tulee valikon tilalle.
-    // Paneelin korkeus mitataan vain latautuessa ja koon muuttuessa (ei vierittäessä):
-    // iskulauseen ylä- ja alapuolelle sama tila kuin sen sivuille, enintään 11 % leveydestä / 120 px.
-    const otsikko = paneeli.querySelector('h1');
-    const YLAPALKKI = 76;
+    // Paneelin korkeus (CSS: --paneeli-korkeus) mitataan vain latautuessa ja koon muuttuessa (ei vierittäessä).
     let raja = 0, viimeLeveys = 0;
     // Uudet selaimet ajavat logon pienennyksen CSS:n vieritysanimaationa; muille --k skriptillä
     const vieritysAnimaatio = window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()');
@@ -69,12 +66,6 @@
       else if (kompakti && y < raja - 90) { juuri.classList.remove('kompakti'); suljeValikko(); }
     };
     const mittaa = () => {
-      const tyyli = document.body.style;
-      if (otsikko) {
-        const leveys = paneeli.clientWidth;
-        const rako = Math.min(120, leveys * .11, Math.max(24, (leveys - otsikko.offsetWidth) / 2));
-        tyyli.setProperty('--paneeli-korkeus', Math.round(YLAPALKKI + rako * 2 + otsikko.offsetHeight) + 'px');
-      }
       const palkki = parseFloat(getComputedStyle(document.body).getPropertyValue('--palkki')) || 64;
       raja = paneeli.offsetHeight - palkki;
       viimeLeveys = innerWidth;
