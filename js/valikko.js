@@ -18,9 +18,9 @@
   document.querySelectorAll('[data-vuosi]').forEach(el => el.textContent = new Date().getFullYear());
 
   // Yläpalkki saa valkoisen taustan, kun sivua on vieritetty. Eri rajat alas (80 px) ja ylös (40 px),
-  // ettei tila välky. Ylös palatessa tausta vetäytyy jo 40 px:n kohdalla, jotta animaatio ehtii
-  // valmistua vierityksen aikana, ja lopuksi tausta poistetaan asettelusta (display: none):
-  // iPhonen Safari päivittää kellon alueen värin vain, kun se huomaa muutoksen.
+  // ettei tila välky. .yla-tausta ohjaa iPhonen kellon alueen väriä: se näytetään heti alas vieritettäessä
+  // ja poistetaan HETI ylös palatessa, kun sivu on vielä liikkeessä (Safari päivittää värin vain vierityksen
+  // aikana). Näkyvä liuku ylös tehdään palkin ::before-kerroksella (css/tyylit.css).
   const juuri = document.documentElement;
   const tausta = document.querySelector('.yla-tausta');
   const rullattu = () => {
@@ -29,15 +29,10 @@
       if (tausta) { tausta.style.display = 'block'; void tausta.offsetHeight; }  // asetteluun ennen animaatiota
       juuri.classList.add('rullattu');
     } else if (paalla && y < 40) {
+      if (tausta) tausta.style.display = 'none';
       juuri.classList.remove('rullattu');
-      // Animaatio kestää 0,45 s; sen jälkeen pois asettelusta (myös jos transitionend ei tule)
-      clearTimeout(piilotus);
-      piilotus = setTimeout(piilota, 500);
     }
   };
-  let piilotus;
-  const piilota = () => { if (tausta && !juuri.classList.contains('rullattu')) tausta.style.display = 'none'; };
-  if (tausta) tausta.addEventListener('transitionend', piilota);
   addEventListener('scroll', rullattu, { passive: true });
   rullattu();
 

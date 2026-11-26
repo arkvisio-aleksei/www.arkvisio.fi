@@ -97,25 +97,25 @@ a { color: inherit; }
   background-size: cover; background-position: center right;
 }
 /* Yläpalkki seuraa vieritystä kaikilla sivuilla. Sisältö on samassa linjassa kuin .kehys;
-   vieritettäessä (js/valikko.js: html.rullattu) palkki saa tumman, sumennetun taustan.
+   vieritettäessä (js/valikko.js: html.rullattu) palkki saa valkoisen taustan, joka liukuu yläreunasta.
    Palkin korkeus ei muutu koskaan (ei heilahdusta). EI backdrop-filteriä (iOS Safari -virheet).
-   Valkoinen tausta on OMA kiinteä elementti (.yla-tausta), joka LIUKUU alas yläreunasta (transform = sulava).
-   Oma elementti siksi, että iOS Safari värjää kellon alueen vain kiinteän elementin näkyvän taustavärin mukaan
-   (::before-kerrosta tai läpinäkyvää väriä se ei huomioi). Yläreunassa elementti on piilossa (visibility),
-   jolloin kellon alue on sivun värinen; piilotus tapahtuu vasta, kun liuku ylös on valmis. */
+   Kaksi päällekkäistä valkoista kerrosta, sama clip-path-animaatio:
+   - .yla::before = näkyvä liuku molempiin suuntiin (Safari ei huomioi ::before-kerrosta kellon alueen värissä)
+   - .yla-tausta = oma kiinteä elementti, jonka mukaan iOS Safari värjää kellon alueen. JS näyttää sen heti
+     alas vieritettäessä ja poistaa sen HETI ylös palatessa (Safari päivittää värin vain vierityksen aikana). */
 :root { --liuku: .45s cubic-bezier(.22, .8, .24, 1); --yla-korkeus: 76px; }
 .yla { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center; gap: 32px;
   box-sizing: border-box; min-height: var(--yla-korkeus);
   padding: 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 18px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna)); }
-/* Tausta pysyy paikallaan yläreunassa (Safari näkee valkoisen heti) ja paljastuu ylhäältä alas clip-pathilla.
+/* Molemmat kerrokset pysyvät paikallaan yläreunassa ja paljastuvat ylhäältä alas clip-pathilla.
    Negatiivinen alareuna lopputilassa, jotta varjo näkyy. */
-.yla-tausta { display: none;                 /* js/valikko.js näyttää vierittäessä ja piilottaa yläreunassa */
-  position: fixed; top: 0; left: 0; right: 0; height: var(--yla-korkeus); z-index: 59; pointer-events: none;
+.yla::before, .yla-tausta { content: ""; position: absolute; top: 0; left: 0; right: 0; height: var(--yla-korkeus); pointer-events: none;
   background-color: #fff; border-radius: 0 0 18px 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
-  -webkit-clip-path: inset(0 0 100% 0); clip-path: inset(0 0 100% 0); visibility: hidden;  /* js/valikko.js lisää display:none animaation jälkeen */
-  transition: clip-path var(--liuku), -webkit-clip-path var(--liuku), visibility 0s linear .45s; }
-.rullattu .yla-tausta { -webkit-clip-path: inset(0 -40px -48px -40px); clip-path: inset(0 -40px -48px -40px); visibility: visible;
-  transition: clip-path var(--liuku), -webkit-clip-path var(--liuku), visibility 0s linear 0s; }
+  -webkit-clip-path: inset(0 0 100% 0); clip-path: inset(0 0 100% 0);
+  transition: clip-path var(--liuku), -webkit-clip-path var(--liuku); }
+.yla::before { z-index: -1; }
+.yla-tausta { display: none; position: fixed; z-index: 59; }   /* js/valikko.js näyttää/poistaa */
+.rullattu .yla::before, .rullattu .yla-tausta { -webkit-clip-path: inset(0 -40px -48px -40px); clip-path: inset(0 -40px -48px -40px); }
 /* Logo: valkoinen ja musta päällekkäin, vaihto pelkällä opacityllä samaan tahtiin liu'un kanssa */
 .logo { position: relative; display: block; line-height: 0; }
 .logo img { transition: opacity var(--liuku); }
@@ -319,7 +319,7 @@ main, .alatunniste { position: relative; z-index: 1; }
   .valikko.auki { display: flex; }
   .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid var(--grafiitti-3); }
   /* Valikon ollessa auki palkki ja valikko ovat yksi kortti: palkin alakulmat suoriksi */
-  html:has(.valikko.auki) .yla-tausta { border-radius: 0; box-shadow: none; }
+  html:has(.valikko.auki) .yla-tausta, .yla:has(.valikko.auki)::before { border-radius: 0; box-shadow: none; }
   /* Valkoisen palkin alla myös avautuva valikko on valkoinen */
   .rullattu .yla .valikko { background: #fff; border-top-color: #E6E7EA; box-shadow: 0 12px 28px rgba(0, 0, 0, .22); }
   .rullattu .yla .valikko a { color: var(--grafiitti); border-bottom-color: #E6E7EA; }
