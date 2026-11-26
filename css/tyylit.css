@@ -640,7 +640,7 @@ main, .alatunniste { position: relative; z-index: 1; }
    Alue on kuvan takia korkeampi. Kuvaa tummennettu ylä- ja alareunasta, jotta logo ja iskulause erottuvat.
    Vierittäessä iskulause häipyy ennen palkkia ja palkin tumma tausta tulee esiin vasta lopussa. */
 .etusivu { --paneeli-korkeus: clamp(460px, 64svh, 780px); }
-.etusivu .paakuva { background: #1F2229 url("../assets/images/kansikuva.jpg") 52% 62% / cover no-repeat; }
+.etusivu .paakuva { background: #1F2229 url("../assets/images/kansikuva.jpg?v=1080") 52% 62% / cover no-repeat; }
 @media (max-width: 760px) { .etusivu .paakuva { background-position: 60% 50%; } }
 .etusivu .paakuva::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   /* yläreuna kiinteää tummaa (#1F2229) = sama kuin iPhonen kellon alue, liukuu kuvaan */
