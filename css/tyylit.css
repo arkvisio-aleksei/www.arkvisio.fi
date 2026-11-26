@@ -874,3 +874,8 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
   .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, rgba(31, 34, 41, .5) 4%, rgba(31, 34, 41, .08) 12%,
     rgba(31, 34, 41, .05) 55%, rgba(31, 34, 41, .55) 100%); }
 }
+
+/* iPhonen kellon alue: Safari ottaa värin sivun juuritaustasta -> tumma. Sisältö (body) pysyy murrettuna valkoisena. */
+html:has(body.etusivu) { background-color: #1F2229; }
+/* Tilanvaihto (iso palkki <-> pieni palkki): ei siirtymiä valikolle, ettei pudotusvalikko välähdä palkin yli */
+.tilavaihto .etusivu .valikko, .tilavaihto .etusivu .valikko a, .tilavaihto .etusivu .burgeri { transition: none !important; }

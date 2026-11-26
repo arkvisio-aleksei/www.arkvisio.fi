@@ -70,8 +70,18 @@
         juuri.style.setProperty('--vy', Math.min(Math.max(0, y), raja).toFixed(1));   // isosta palkista avattu valikko vierii mukana
       }
       // Isosta palkista avattu valikko on tässä vaiheessa jo palkin takana: suljetaan se, kun palkki kutistuu
-      if (!kompakti && y >= raja - 40) { suljeHeti(); juuri.classList.add('kompakti'); }
-      else if (kompakti && y < raja - 90) { juuri.classList.remove('kompakti'); suljeValikko(); }
+      if (!kompakti && y >= raja - 40) { vaihdaTila(true); }
+      else if (kompakti && y < raja - 90) { vaihdaTila(false); }
+    };
+    // Tilanvaihto ilman valikon siirtymiä (vaakalinkit <-> pudotusvalikko vaihtuvat välittömästi)
+    let vaihtoAjastin;
+    const vaihdaTila = kompaktiksi => {
+      juuri.classList.add('tilavaihto');
+      suljeHeti();
+      juuri.classList.toggle('kompakti', kompaktiksi);
+      void juuri.offsetHeight;
+      clearTimeout(vaihtoAjastin);
+      vaihtoAjastin = setTimeout(() => juuri.classList.remove('tilavaihto'), 80);
     };
     const mittaa = () => {
       // Alasivuilla paneelin korkeus tulee sisällöstä: kerrotaan se CSS:lle (sticky-paneelin yläraja ja animaatiot)
