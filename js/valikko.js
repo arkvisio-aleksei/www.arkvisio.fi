@@ -16,6 +16,15 @@
     });
   };
   const suljeValikko = () => asetaValikko(false);
+  // Sulkeminen ilman animaatiota (kun valikko on jo piilossa palkin takana eikä sen saa välähtää)
+  const suljeHeti = () => {
+    if (!valikko || !valikko.classList.contains('auki')) return;
+    const osat = [valikko, ...valikko.querySelectorAll('a')];
+    osat.forEach(o => { o.style.transition = 'none'; });
+    suljeValikko();
+    void valikko.offsetHeight;
+    setTimeout(() => osat.forEach(o => { o.style.transition = ''; }), 60);
+  };
   if (valikko) {
     napit.forEach(n => n.addEventListener('click', () => asetaValikko(!valikko.classList.contains('auki'))));
     valikko.addEventListener('click', e => { if (e.target.closest('a')) suljeValikko(); });
@@ -42,8 +51,12 @@
     const paivita = () => {
       const y = window.scrollY, kompakti = juuri.classList.contains('kompakti');
       // Logon pienennys ja palkkirivin nousu seuraavat vieritystä (vain transform, ei asettelun laskentaa)
-      if (!vieritysAnimaatio) juuri.style.setProperty('--k', Math.min(1, Math.max(0, y / Math.max(1, raja))).toFixed(3));
-      if (!kompakti && y >= raja - 40) juuri.classList.add('kompakti');
+      if (!vieritysAnimaatio) {
+        juuri.style.setProperty('--k', Math.min(1, Math.max(0, y / Math.max(1, raja))).toFixed(3));
+        juuri.style.setProperty('--vy', Math.min(Math.max(0, y), raja).toFixed(1));   // isosta palkista avattu valikko vierii mukana
+      }
+      // Isosta palkista avattu valikko on tässä vaiheessa jo palkin takana: suljetaan se, kun palkki kutistuu
+      if (!kompakti && y >= raja - 40) { suljeHeti(); juuri.classList.add('kompakti'); }
       else if (kompakti && y < raja - 90) { juuri.classList.remove('kompakti'); suljeValikko(); }
     };
     const mittaa = () => {

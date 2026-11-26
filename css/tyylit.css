@@ -620,3 +620,14 @@ main, .alatunniste { position: relative; z-index: 1; }
   .etusivu .valikko { top: calc(var(--valikko-yla) - var(--kulma)); padding-top: calc(4px + var(--kulma));
     height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
 }
+
+/* Puhelin, iso palkki: avattu valikko vierii paneelin mukana ylös palkin taakse kuten iskulause.
+   Erillinen translate-ominaisuus, joten se ei sotke avaus-/sulkuliukua (transform). Matalassa palkissa ei käytössä. */
+@keyframes etusivu-valikko-vierii { from { translate: 0 0; } to { translate: 0 calc(var(--palkki) - var(--paneeli-korkeus)); } }
+@media (max-width: 760px) {
+  html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); }   /* varakeino: js asettaa --vy */
+  @supports (animation-timeline: scroll()) {
+    html:not(.kompakti) .etusivu .valikko { animation: etusivu-valikko-vierii linear both; animation-timeline: scroll(root block);
+      animation-range: 0px calc(var(--paneeli-korkeus) - var(--palkki)); }
+  }
+}
