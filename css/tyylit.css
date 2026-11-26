@@ -928,3 +928,5 @@ html:has(body.etusivu) { background-color: #1F2229; }
 .kompakti .etusivu .valikko.auki a:nth-child(1) { transition-delay: .22s; }
 .kompakti .etusivu .valikko.auki a:nth-child(2) { transition-delay: .32s; }
 .kompakti .etusivu .valikko.auki a:nth-child(3) { transition-delay: .42s; }
+/* Juuritausta: väri tumma (kellon alue), mutta alaosa piirretään murrettuna valkoisena, ettei sisällön alta pilkistä tummaa viivaa */
+html:has(body.etusivu) { background: #1F2229 linear-gradient(180deg, #1F2229 0, #1F2229 50%, #F4F1EC 50%, #F4F1EC 100%) no-repeat; background-size: 100% 100%; min-height: 100%; }
