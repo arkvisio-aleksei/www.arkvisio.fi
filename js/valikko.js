@@ -36,10 +36,9 @@
     }));
     valikko.addEventListener('click', e => {
       if (!e.target.closest('a')) return;
-      // Etusivun iso palkki puhelimella: valikkoa ei suljeta erikseen, vaan se vierii paneelin mukana palkin taakse
+      // Etusivun iso palkki (kaikilla näytöillä): valikkoa ei suljeta erikseen, vaan se vierii paneelin mukana palkin taakse
       // ja suljetaan huomaamatta palkin kutistuessa (ei päällekkäisiä animaatioita). Varmistus, jos sivu ei vieri.
-      const isoPalkki = document.body.classList.contains('etusivu') && !juuriEl.classList.contains('kompakti')
-        && matchMedia('(max-width: 760px)').matches;
+      const isoPalkki = document.body.classList.contains('etusivu') && !juuriEl.classList.contains('kompakti');
       if (isoPalkki) setTimeout(() => { if (!juuriEl.classList.contains('kompakti')) suljeValikko(); }, 1000);
       else suljeValikko();
     });

@@ -684,3 +684,53 @@ main, .alatunniste { position: relative; z-index: 1; }
 }
 /* Puhelin: kuva-alue korkeampi (jatkuu alemmas) */
 @media (max-width: 760px) { .etusivu { --paneeli-korkeus: clamp(480px, 72svh, 780px); } }
+
+
+/* ================= ETUSIVU = PUHELINMALLI KAIKILLA NÄYTÖILLÄ =================
+   Tietokoneella etusivu toimii täsmälleen kuten puhelimessa: puhelimen levyinen (enintään --sivu) keskellä,
+   sivuilla taustan väriset raamit. Alla olevat säännöt ovat puhelimen @media-sääntöjen kopiot ilman ehtoa
+   (päivitettäessä muuta molempia, tai siirrä kokonaan tänne). */
+.etusivu .burgeri { opacity: 1; visibility: visible; transition: none; }
+.etusivu .valikko {
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
+  box-sizing: border-box; height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
+    padding: 4px var(--reuna-o) 22px var(--reuna);
+    background: var(--paneeli); border: 0; border-radius: 0 0 var(--kulma) var(--kulma); box-shadow: 0 14px 30px rgba(15, 17, 22, 0);
+    transform: translateY(-100%); visibility: hidden;
+    transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease, visibility 0s linear .45s; }
+.etusivu .valikko.auki { transform: none; visibility: visible; box-shadow: 0 14px 30px rgba(15, 17, 22, .28);
+    transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .15s, visibility 0s linear 0s; }
+.etusivu .valikko a { display: flex; align-items: center; gap: 14px; padding-block: 11px; font: 500 14px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; text-align: right; color: var(--vaalea); border-bottom: 0;
+    opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .3s ease; }
+.etusivu .valikko a:last-child { border-bottom: 0; }
+.etusivu .valikko a:hover, .etusivu .valikko a:focus-visible { color: var(--vision-oranssi); }
+.etusivu .valikko.auki a { opacity: 1; transform: none; }
+.etusivu .valikko.auki a:nth-child(1) { transition-delay: .08s; }
+.etusivu .valikko.auki a:nth-child(2) { transition-delay: .14s; }
+.etusivu .valikko.auki a:nth-child(3) { transition-delay: .2s; }
+.etusivu .valikko { counter-reset: valikko; }
+.etusivu .valikko a::before { counter-increment: valikko; content: "0" counter(valikko);
+    font: 400 14px/1 var(--fontti-teksti); letter-spacing: .1em; color: var(--vision-oranssi); }
+.etusivu .valikko:not(.auki) { transition: transform .4s cubic-bezier(.4, 0, .2, 1) .12s, box-shadow .2s ease, visibility 0s linear .55s; }
+.etusivu .valikko:not(.auki) a { transition: opacity .15s ease, transform 0s linear .15s; }
+.etusivu .valikko { top: calc(var(--valikko-yla) - var(--kulma)); padding-top: calc(4px + var(--kulma));
+    height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
+html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); }
+@supports (animation-timeline: scroll()) {
+    html:not(.kompakti) .etusivu .valikko { animation: etusivu-valikko-vierii linear both; animation-timeline: scroll(root block);
+      animation-range: 0px calc(var(--paneeli-korkeus) - var(--palkki)); }
+  }
+.etusivu .paakuva { background-position: 60% 50%; }
+.etusivu .valikko { height: calc(var(--valikko-korkeus) - var(--valikko-yla) - var(--yla-siirto) + var(--kulma)); }
+.etusivu .paakuva { background-size: auto 78%; background-position: 58% 100%; }
+.etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 22%, rgba(31, 34, 41, .6) 30%, rgba(31, 34, 41, .12) 46%, rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .62) 100%); }
+.etusivu { --paneeli-korkeus: clamp(480px, 72svh, 780px); }
+.etusivu { --sivu: 480px; max-width: var(--sivu); margin-inline: auto; }
+/* kiinteä palkki samaan leveyteen sivun kanssa */
+.etusivu .yla { left: max(0px, calc((100% - var(--sivu)) / 2)); right: max(0px, calc((100% - var(--sivu)) / 2)); gap: 0;
+  padding-left: var(--reuna); padding-right: var(--reuna-o); }   /* % laskettaisiin näytön leveydestä */
+.etusivu .burgeri { display: block; opacity: 1; visibility: visible; transition: none; }
+.etusivu .paakuva h1 { font-size: 36px; }
+.etusivu .alatunniste h2 { font-size: 28px; }
+/* Kuva-alue mahdollisimman iso: täyttää näytön, alareunasta pilkistää kaistale sisältöä */
+.etusivu { --paneeli-korkeus: max(480px, calc(100svh - 36px)); }
