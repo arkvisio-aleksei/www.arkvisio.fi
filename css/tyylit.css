@@ -969,3 +969,44 @@ html:has(body.etusivu) { background: #F4F1EC; }
 .avattava[open] summary::after { transform: rotate(45deg); }
 .avattava summary:hover span { color: #B86F00; }
 .avattava-sisalto { padding: 4px 0 32px; }
+
+/* ================= Tiivis hintalaskuri: mahtuu yhteen näyttöön =================
+   Jokainen vaihe on yksi rivi: pieni otsikko + vaakasuunnassa vieritettävät "pillerit" (ei kuvakkeita/kuvauksia).
+   Tulos tiiviinä alla (puhelin) tai vieressä (kone). */
+.avattava .laskuri-runko { gap: 16px clamp(20px, 3vw, 40px); align-items: start; }
+.avattava .laskuri-valinnat { gap: 12px; }
+.avattava .vaihe-otsikko { margin-bottom: 6px; gap: 8px; font: 500 11px/1.2 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; color: var(--harmaa); }
+.avattava .vaihe-nro { width: 18px; height: 18px; font-size: 10px; letter-spacing: 0; }
+.avattava .vaihe-ohje { display: none; }
+.avattava .ruudut, .avattava .ruudut-pienet, .avattava .ruudut-palvelut {
+  display: flex; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--reuna)); padding-inline: var(--reuna);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--reuna), #000 calc(100% - 24px), transparent); }
+.avattava .ruudut::-webkit-scrollbar { display: none; }
+.avattava .ruutu { flex: 0 0 auto; display: inline-flex; flex-direction: row; align-items: center; gap: 6px; min-height: 0;
+  padding: 8px 13px; border-radius: 999px; }
+.avattava .ruutu .ikoni, .avattava .ruutu-kuvaus, .avattava .ruutu-hinta, .avattava .ruutu-valinta { display: none; }
+.avattava .ruutu-vuosi { display: none; }
+.avattava .ruutu-nimi { font-size: 13px; font-weight: 500; white-space: nowrap; }
+.avattava .liuku { gap: 12px; }
+.avattava .liuku input { height: 22px; }
+.avattava .liuku output { min-width: 76px; font-size: 22px; }
+.avattava .maaravalitsin button { width: 34px; height: 34px; font-size: 18px; }
+.avattava .maaravalitsin output { min-width: 34px; font-size: 22px; }
+/* Tulos tiiviinä */
+.avattava .laskuri-tulos { gap: 8px; padding: 16px 18px; top: calc(var(--palkki) + 12px); }
+.avattava .havainne-kehys, .avattava .tulos-huom { display: none; }
+.avattava .alv-vaihto button { padding: 7px 10px; font-size: 11px; }
+.avattava .tulos-otsikko { margin-top: 2px; font-size: 11px; }
+.avattava .tulos-luku { font-size: clamp(30px, 3vw, 40px); }
+.avattava .erittely li { padding: 6px 0; font-size: 13px; }
+.avattava .erittely li small { display: none; }
+.avattava .tulos-nappi { padding-block: 12px; }
+@media (max-width: 760px) {
+  .avattava .laskuri-runko { grid-template-columns: minmax(0, 1fr); }
+  .avattava .erittely { display: none; }
+  .avattava .laskuri-tulos { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 12px; padding: 14px 16px; position: static; }
+  .avattava .laskuri-tulos .alv-vaihto { grid-column: 1 / -1; }
+  .avattava .tulos-otsikko, .avattava .tulos-luku { grid-column: 1; margin: 0; }
+  .avattava .tulos-nappi { grid-column: 2; grid-row: 2 / span 2; padding: 10px 14px; font-size: 10px; white-space: normal; max-width: 140px; }
+}
+@media (max-width: 760px) { .avattava .tulos-luku { font-size: 28px; white-space: nowrap; } .avattava .tulos-otsikko span { display: block; } }
