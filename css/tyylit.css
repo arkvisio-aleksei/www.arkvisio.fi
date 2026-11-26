@@ -879,3 +879,16 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
 html:has(body.etusivu) { background-color: #1F2229; }
 /* Tilanvaihto (iso palkki <-> pieni palkki): ei siirtymiä valikolle, ettei pudotusvalikko välähdä palkin yli */
 .tilavaihto .etusivu .valikko, .tilavaihto .etusivu .valikko a, .tilavaihto .etusivu .burgeri { transition: none !important; }
+
+/* iPhonen kellon alue tummaksi myös yläreunassa: palkin tausta on AINA näkyvä (opacity 1), mutta yläreunassa
+   siitä näkyy vain 1 px (clip-path). Safari tunnistaa sen kiinteäksi palkiksi -> kellon alue #1F2229, video ei näy kellon alla.
+   Vierittäessä tausta paljastuu ylhäältä alas täyteen palkkiin. */
+@keyframes etusivu-palkki-esiin { from { -webkit-clip-path: inset(0 0 calc(100% - 1px) 0); clip-path: inset(0 0 calc(100% - 1px) 0); }
+  to { -webkit-clip-path: inset(0 -40px -48px -40px); clip-path: inset(0 -40px -48px -40px); } }
+.etusivu .palkkitausta { opacity: 1; -webkit-clip-path: inset(0 0 calc(100% - 1px) 0); clip-path: inset(0 0 calc(100% - 1px) 0); }
+.kompakti .etusivu .palkkitausta { -webkit-clip-path: inset(0 -40px -48px -40px); clip-path: inset(0 -40px -48px -40px); }
+@supports (animation-timeline: scroll()) {
+  .etusivu .palkkitausta { animation: etusivu-palkki-esiin linear both; animation-timeline: scroll(root block);
+    animation-range: calc(var(--paneeli-korkeus) - var(--palkki) - 40px) calc(var(--paneeli-korkeus) - var(--palkki)); }
+}
+.etusivu.alasivu .palkkitausta { animation: none; -webkit-clip-path: none; clip-path: none; }
