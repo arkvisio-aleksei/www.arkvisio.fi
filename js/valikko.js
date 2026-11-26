@@ -17,17 +17,28 @@
   }
   document.querySelectorAll('[data-vuosi]').forEach(el => el.textContent = new Date().getFullYear());
 
-  // Yläpalkki saa taustan, kun sivua on vieritetty. Eri rajat alas (40 px) ja ylös (8 px),
-  // ettei tila välky edestakaisin yläreunan lähellä (esim. iPhonen jousto-vierityksessä).
+  // Yläpalkki saa valkoisen taustan, kun sivua on vieritetty. Eri rajat alas (80 px) ja ylös (40 px),
+  // ettei tila välky. Ylös palatessa tausta vetäytyy jo 40 px:n kohdalla, jotta animaatio ehtii
+  // valmistua vierityksen aikana, ja lopuksi tausta poistetaan asettelusta (display: none):
+  // iPhonen Safari päivittää kellon alueen värin vain, kun se huomaa muutoksen.
   const juuri = document.documentElement;
-  let ajastettu = false;
+  const tausta = document.querySelector('.yla-tausta');
   const rullattu = () => {
-    ajastettu = false;
     const y = window.scrollY, paalla = juuri.classList.contains('rullattu');
-    if (!paalla && y > 40) juuri.classList.add('rullattu');
-    else if (paalla && y < 8) juuri.classList.remove('rullattu');
+    if (!paalla && y > 80) {
+      if (tausta) { tausta.style.display = 'block'; void tausta.offsetHeight; }  // asetteluun ennen animaatiota
+      juuri.classList.add('rullattu');
+    } else if (paalla && y < 40) {
+      juuri.classList.remove('rullattu');
+      // Animaatio kestää 0,45 s; sen jälkeen pois asettelusta (myös jos transitionend ei tule)
+      clearTimeout(piilotus);
+      piilotus = setTimeout(piilota, 500);
+    }
   };
-  addEventListener('scroll', () => { if (!ajastettu) { ajastettu = true; requestAnimationFrame(rullattu); } }, { passive: true });
+  let piilotus;
+  const piilota = () => { if (tausta && !juuri.classList.contains('rullattu')) tausta.style.display = 'none'; };
+  if (tausta) tausta.addEventListener('transitionend', piilota);
+  addEventListener('scroll', rullattu, { passive: true });
   rullattu();
 
   // Osaamiset liukuvat esiin ja kuvakkeet piirtyvät, kun osio tulee näkyviin.
