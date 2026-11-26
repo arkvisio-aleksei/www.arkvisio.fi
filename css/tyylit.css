@@ -106,7 +106,14 @@ a { color: inherit; }
   background-color: rgba(31, 34, 41, 0); box-shadow: 0 8px 24px rgba(0, 0, 0, 0);
   border-radius: 0 0 18px 18px;               /* näytön levyinen, alakulmat pyöristetty (näkyy kun tausta tulee esiin) */
   transition: background-color .3s ease, box-shadow .3s ease; }
-.rullattu .yla { background-color: rgba(41, 45, 53, .97); box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
+/* Vieritettäessä palkki on valkoinen: logo kääntyy mustaksi (invert), tekstit tummiksi */
+.rullattu .yla { background-color: rgba(255, 255, 255, .98); box-shadow: 0 8px 24px rgba(0, 0, 0, .28); }
+.logo img { transition: filter .3s ease; }
+.rullattu .yla .logo img { filter: invert(1); }
+.valikko a, .valikko-nappi { transition: color .3s ease, border-color .3s ease; }
+.rullattu .yla .valikko a { color: #4A4F5A; }
+.rullattu .yla .valikko a:hover { color: var(--grafiitti); }
+.rullattu .yla .valikko-nappi { color: var(--grafiitti); border-color: #D9DBDF; }
 .yla + * { margin-top: 96px; }               /* tila kiinteän palkin alla */
 /* Palkki on yläosan sisällä: yläosa pääsisällön (main, z-index 1) yläpuolelle, ettei sisältö peitä palkkia */
 .paakuva, .alasivu-yla { position: relative; z-index: 2; }
@@ -299,6 +306,11 @@ main, .alatunniste { position: relative; z-index: 1; }
   .valikko a:last-child { border-bottom: 0; }
   .valikko.auki { display: flex; }
   .valikko a { padding-block: 16px; font-size: 14px; color: var(--vaalea); border-bottom: 1px solid var(--grafiitti-3); }
+  /* Valikon ollessa auki palkki ja valikko ovat yksi kortti: palkin alakulmat suoriksi */
+  .yla:has(.valikko.auki) { border-radius: 0; box-shadow: none; }
+  /* Valkoisen palkin alla myös avautuva valikko on valkoinen */
+  .rullattu .yla .valikko { background: #fff; border-top-color: #E6E7EA; box-shadow: 0 12px 28px rgba(0, 0, 0, .22); }
+  .rullattu .yla .valikko a { color: var(--grafiitti); border-bottom-color: #E6E7EA; }
   .paakuva-kuva.kuvalla { background-image: linear-gradient(0deg, var(--grafiitti) 10%, rgba(31, 34, 41, .75) 60%, rgba(31, 34, 41, .55) 100%), url("../assets/images/hero.jpg"); }
 }
 @media (max-width: 620px) {
