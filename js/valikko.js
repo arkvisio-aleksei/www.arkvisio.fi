@@ -91,21 +91,25 @@
       viimeLeveys = innerWidth;
       paivita();
     };
-    // Hampurilainen videon ollessa esillä: vieritetään rauhallisesti (oma pehmeä animaatio ~0,9 s)
+    // Hampurilainen videon ollessa esillä: vieritetään rauhallisesti (oma pehmeä animaatio ~1,4 s)
     // video piiloon ja avataan valikko vasta, kun vieritys on valmis.
     const pehmeaVieritys = (kohde, kesto, valmis) => {
       const alku = window.scrollY, matka = kohde - alku, t0 = performance.now();
+      // Sivun oma pehmeä vieritys (CSS scroll-behavior) pois animaation ajaksi, muuten Safari käyttää omaa nopeaa vieritystään
+      const html = document.documentElement, ennen = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
       const pehmennys = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;   // hidas alku ja loppu
       const askel = nyt => {
         const t = Math.min(1, (nyt - t0) / kesto);
-        window.scrollTo({ top: alku + matka * pehmennys(t), behavior: 'instant' });
-        if (t < 1) requestAnimationFrame(askel); else if (valmis) valmis();
+        window.scrollTo(0, alku + matka * pehmennys(t));
+        if (t < 1) requestAnimationFrame(askel);
+        else { html.style.scrollBehavior = ennen; if (valmis) valmis(); }
       };
       requestAnimationFrame(askel);
     };
     avaaPienena = () => {
       if (juuri.classList.contains('kompakti')) return false;
-      pehmeaVieritys(raja + 2, 900, () => setTimeout(() => asetaValikko(true), 60));
+      pehmeaVieritys(raja + 2, 1400, () => setTimeout(() => asetaValikko(true), 120));
       return true;
     };
     addEventListener('scroll', paivita, { passive: true });
