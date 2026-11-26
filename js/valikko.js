@@ -5,6 +5,7 @@
 
 (function () {
   // Valikon avaus: tekstinappi (mobiili) ja hampurilaisnappi (etusivun kutistunut palkki) ohjaavat samaa valikkoa
+  const juuriEl = document.documentElement;
   const valikko = document.getElementById('valikko');
   const napit = document.querySelectorAll('[aria-controls="valikko"]');
   const asetaValikko = auki => {
@@ -27,7 +28,15 @@
   };
   if (valikko) {
     napit.forEach(n => n.addEventListener('click', () => asetaValikko(!valikko.classList.contains('auki'))));
-    valikko.addEventListener('click', e => { if (e.target.closest('a')) suljeValikko(); });
+    valikko.addEventListener('click', e => {
+      if (!e.target.closest('a')) return;
+      // Etusivun iso palkki puhelimella: valikkoa ei suljeta erikseen, vaan se vierii paneelin mukana palkin taakse
+      // ja suljetaan huomaamatta palkin kutistuessa (ei päällekkäisiä animaatioita). Varmistus, jos sivu ei vieri.
+      const isoPalkki = document.body.classList.contains('etusivu') && !juuriEl.classList.contains('kompakti')
+        && matchMedia('(max-width: 760px)').matches;
+      if (isoPalkki) setTimeout(() => { if (!juuriEl.classList.contains('kompakti')) suljeValikko(); }, 1000);
+      else suljeValikko();
+    });
   }
   document.querySelectorAll('[data-vuosi]').forEach(el => el.textContent = new Date().getFullYear());
 
