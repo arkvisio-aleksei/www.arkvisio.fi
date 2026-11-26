@@ -161,27 +161,28 @@ html { scroll-padding-top: 84px; }
    kunnes vain matala palkki (--palkki) jää näkyviin. Selain hoitaa liikkeen itse (sulava, ei skriptiä).
    js/valikko.js lisää html.kompakti, kun paneeli on tarttunut: logo pienenee, hampurilaisnappi esiin.
    Muu sivu on murrettu valkoinen. */
-.etusivu { --paneeli: #1F2229; --murrettu: #F4F1EC; --palkki: 64px; --paneeli-korkeus: clamp(420px, 62svh, 700px);
+/* --paneeli-korkeus: js/valikko.js laskee niin, että iskulauseen ylä- ja alapuolelle jää yhtä paljon tilaa kuin sivuille */
+.etusivu { --paneeli: #1F2229; --murrettu: #F4F1EC; --palkki: 64px; --kulma: 16px; --paneeli-korkeus: clamp(320px, 46svh, 560px);
   background: var(--murrettu); }
 html:has(body.etusivu) { background-color: #F4F1EC; }
 .etusivu .paakuva { position: sticky; top: calc(var(--palkki) - var(--paneeli-korkeus)); z-index: 55;
   height: var(--paneeli-korkeus); overflow: hidden; isolation: isolate;
-  background: var(--paneeli); border-radius: 0 0 28px 28px;
+  background: var(--paneeli); border-radius: 0 0 var(--kulma) var(--kulma);
   box-shadow: 0 10px 30px rgba(15, 17, 22, .14); transition: box-shadow .3s ease; }
 .kompakti .etusivu .paakuva { box-shadow: 0 10px 30px rgba(15, 17, 22, .3); }
 .etusivu .paneeli { height: 100%; }
 /* Iskulause keskellä paneelia (palkin alla olevassa tilassa), vierii piiloon paneelin mukana */
 .etusivu .paakuva-keski { height: 100%; min-height: 0; box-sizing: border-box; display: grid; place-content: center;
-  padding: 76px var(--reuna-o) 28px var(--reuna); }
+  padding: 76px var(--reuna-o) 0 var(--reuna); }
 .etusivu .paakuva h1 { font-size: clamp(44px, 8.2vw, 124px); }
 .etusivu .paakuva > .kehys { position: static; }   /* ei omaa kerrostasoa: palkki (z 60) paneelin päälle */
-.etusivu .yla { z-index: 60; transition: transform .35s cubic-bezier(.22, .8, .24, 1); }
+.etusivu .yla { z-index: 60; transition: transform .6s cubic-bezier(.45, 0, .2, 1); }
 /* Paneelin värinen kaista palkin alla: iskulause vierii sen alle eikä logon/valikon päälle */
 .etusivu .yla::after { content: ""; position: absolute; left: 0; right: 0; top: -20px; height: calc(var(--palkki) + 26px); z-index: -1;
-  background: var(--paneeli); border-radius: 0 0 28px 28px; pointer-events: none; }
+  background: var(--paneeli); border-radius: 0 0 var(--kulma) var(--kulma); pointer-events: none; }
 /* Matalassa palkissa: koko rivi nousee palkin keskelle ja logo pienenee */
 .kompakti .etusivu .yla { transform: translateY(calc((var(--palkki) - 76px) / 2)); }
-.etusivu .logo { transform-origin: 0 50%; transition: transform .35s cubic-bezier(.22, .8, .24, 1); }
+.etusivu .logo { transform-origin: 0 50%; transition: transform .6s cubic-bezier(.45, 0, .2, 1); }
 .kompakti .etusivu .logo { transform: scale(.74); }
 /* Hampurilaisnappi: näkyy vain matalassa palkissa, valikkolinkit/Valikko-tekstinappi häipyvät tilalta */
 .burgeri { display: none; }
@@ -199,7 +200,7 @@ html:has(body.etusivu) { background-color: #F4F1EC; }
 /* Matalan palkin valikko aukeaa palkin alle pudotusvalikoksi (myös tietokoneella) */
 .kompakti .etusivu .valikko.auki { display: flex; position: absolute; top: 100%; left: auto; right: calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o));
   min-width: 240px; flex-direction: column; gap: 0; margin: 0; padding: 8px 24px 16px; background: var(--paneeli);
-  border-radius: 0 0 18px 18px; box-shadow: 0 12px 28px rgba(0, 0, 0, .35); }
+  border-radius: 0 0 var(--kulma) var(--kulma); box-shadow: 0 12px 28px rgba(0, 0, 0, .35); }
 .kompakti .etusivu .valikko.auki a { padding-block: 14px; font-size: 13px; color: var(--vaalea); border-bottom: 1px solid rgba(244, 241, 236, .12); }
 .kompakti .etusivu .valikko.auki a:last-child { border-bottom: 0; }
 /* Valkoista tilaa tulevalle sisällölle, jottei sivu lopu kesken */

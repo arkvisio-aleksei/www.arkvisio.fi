@@ -32,20 +32,32 @@
     // ETUSIVU: paneeli on CSS:ssä position: sticky, joten selain vierittää sen itse (sulava).
     // Tässä vain vaihdetaan tila kerran, kun paneeli on tarttunut matalaksi palkiksi:
     // html.kompakti = logo pienenee ja hampurilaisnappi tulee valikon tilalle.
-    let raja = 0;
+    // Paneelin korkeus mitataan vain latautuessa ja koon muuttuessa (ei vierittäessä):
+    // iskulauseen ylä- ja alapuolelle sama tila kuin sen sivuille (24–140 px).
+    const otsikko = paneeli.querySelector('h1');
+    const YLAPALKKI = 76;
+    let raja = 0, viimeLeveys = 0;
     const paivita = () => {
       const y = window.scrollY, kompakti = juuri.classList.contains('kompakti');
-      if (!kompakti && y >= raja - 4) juuri.classList.add('kompakti');
-      else if (kompakti && y < raja - 48) { juuri.classList.remove('kompakti'); suljeValikko(); }
+      if (!kompakti && y >= raja - 40) juuri.classList.add('kompakti');
+      else if (kompakti && y < raja - 90) { juuri.classList.remove('kompakti'); suljeValikko(); }
     };
     const mittaa = () => {
+      const tyyli = document.body.style;
+      if (otsikko) {
+        const rako = Math.min(140, Math.max(24, (paneeli.clientWidth - otsikko.offsetWidth) / 2));
+        tyyli.setProperty('--paneeli-korkeus', Math.round(YLAPALKKI + rako * 2 + otsikko.offsetHeight) + 'px');
+      }
       const palkki = parseFloat(getComputedStyle(document.body).getPropertyValue('--palkki')) || 64;
       raja = paneeli.offsetHeight - palkki;
+      viimeLeveys = innerWidth;
       paivita();
     };
     addEventListener('scroll', paivita, { passive: true });
-    addEventListener('resize', mittaa);
+    // iPhonen osoitepalkki muuttaa korkeutta vierittäessä: mitataan uudelleen vain leveyden muuttuessa
+    addEventListener('resize', () => { if (innerWidth !== viimeLeveys) mittaa(); });
     mittaa();
+    if (document.fonts) document.fonts.ready.then(mittaa);   // fontti muuttaa iskulauseen kokoa
   } else {
     // ALASIVUT: valkoinen palkki liukuu esiin vierittäessä
     const tausta = document.querySelector('.yla-tausta');
