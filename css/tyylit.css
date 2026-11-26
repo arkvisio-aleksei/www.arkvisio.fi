@@ -779,3 +779,6 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
 .palvelulaatikko .lisaa { display: block; justify-self: start; margin-top: 6px; font: 500 11px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; color: var(--grafiitti); }
 .palvelulaatikko .lisaa::after { content: " →"; color: var(--vision-oranssi); }
 .etusivu main:has(.palvelut-osio) { min-height: calc(100svh - var(--palkki)); }   /* riittävä vieritys palkin kutistumiseen */
+/* Kuva-alueen alle selkeämpi varjo */
+.etusivu .paakuva { box-shadow: 0 22px 44px -8px rgba(15, 17, 22, .42), 0 6px 14px rgba(15, 17, 22, .12); }
+.kompakti .etusivu .paakuva { box-shadow: 0 12px 30px -4px rgba(15, 17, 22, .4); }
