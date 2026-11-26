@@ -39,6 +39,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
+/* Ei venymistä/vedä-päivittääksesi-toimintoa reunoilla: iPhonella venytys siirsi kiinteää yläpalkkia logon päälle */
+html, body { overscroll-behavior-y: none; }
 body {
   margin: 0;
   background: var(--kalkki);
