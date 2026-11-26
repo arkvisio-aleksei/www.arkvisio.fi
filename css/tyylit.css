@@ -159,16 +159,21 @@ html { scroll-padding-top: 84px; }
 /* ---------- ETUSIVU: harmaa paneeli, joka kutistuu matalaksi palkiksi ----------
    .paakuva on paikanvaraaja (täysi korkeus), .paneeli on kiinteä harmaa laatta, jonka korkeuden
    js/valikko.js asettaa vierityksen mukaan. --p = 0 (täysi) … 1 (matala palkki). html.kompakti = matala. */
-.etusivu { --paneeli: #353A44; }
-.etusivu .paakuva { height: calc(100svh - 48px); min-height: 460px; overflow: visible; background: none; }
-.etusivu .paneeli { position: fixed; top: 0; left: 0; right: 0; z-index: 55; height: calc(100svh - 48px); min-height: 76px;
+/* Paneeli ulottuu iskulauseen alle; muu sivu on murrettu valkoinen. */
+.etusivu { --paneeli: #353A44; --murrettu: #F4F1EC; --paneeli-korkeus: clamp(440px, 64svh, 720px); background: var(--murrettu); }
+html:has(body.etusivu) { background-color: #F4F1EC; }
+.etusivu .paakuva { height: var(--paneeli-korkeus); overflow: visible; background: none; }
+.etusivu .paneeli { position: fixed; top: 0; left: 0; right: 0; z-index: 55; height: var(--paneeli-korkeus); min-height: 76px;
   background: var(--paneeli); border-radius: 0 0 28px 28px; overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, calc(var(--p, 0) * .35)); }
-/* Iskulause: nousee ja puolittuu (skaalautuu puoleen), paneelin alareuna leikkaa sen, häipyy lopussa */
-.etusivu .paakuva-keski { height: calc(100svh - 48px); min-height: 460px; padding-block: 76px 0; box-sizing: border-box;
-  transform-origin: 50% 0; will-change: transform, opacity;
-  transform: translateY(calc(var(--p, 0) * -18svh)) scale(calc(1 - var(--p, 0) * .5));
-  opacity: calc(1 - var(--p, 0) * 1.25); }
+  box-shadow: 0 10px 30px rgba(15, 17, 22, calc(.12 + var(--p, 0) * .2)); }
+/* Iskulause paneelin alaosassa: vierittäessä nousee ja puolittuu (skaalautuu puoleen),
+   paneelin nouseva alareuna leikkaa sen, häipyy lopussa */
+.etusivu .paakuva-keski { height: var(--paneeli-korkeus); min-height: 0; box-sizing: border-box;
+  display: grid; place-content: end center; padding-block: 76px clamp(36px, 6svh, 64px);
+  transform-origin: 50% 100%; will-change: transform, opacity;
+  /* --y = vieritys px (js): nousee 80 % reunan nopeudesta, joten reuna leikkaa tekstiä vähitellen */
+  transform: translateY(calc(var(--y, 0) * -.8px)) scale(calc(1 - var(--p, 0) * .5));
+  opacity: calc(1 - max(0, var(--p, 0) - .55) * 2.2); }
 .etusivu .paakuva > .kehys { position: static; }   /* ei omaa kerrostasoa: palkki (z 60) paneelin (z 55) päälle */
 .etusivu .yla { z-index: 60; }
 /* Hampurilaisnappi: näkyy vain matalassa palkissa, valikkolinkit/Valikko-tekstinappi häipyvät tilalta */
@@ -191,7 +196,11 @@ html { scroll-padding-top: 84px; }
 .kompakti .etusivu .valikko.auki a { padding-block: 14px; font-size: 13px; color: var(--vaalea); border-bottom: 1px solid rgba(244, 241, 236, .12); }
 .kompakti .etusivu .valikko.auki a:last-child { border-bottom: 0; }
 /* Riittävä vieritysmatka: yhteysosio täyttää näkymän matalan palkin alla */
-.etusivu .alatunniste { min-height: calc(100svh - 76px); box-sizing: border-box; display: grid; align-content: center; }
+.etusivu .alatunniste { min-height: calc(100svh - 76px); box-sizing: border-box; display: grid; align-content: center;
+  background: var(--murrettu); color: var(--grafiitti); }
+.etusivu .alalaita { color: #5B6070; }
+.etusivu .alalaita-tiedot a { color: var(--grafiitti); }
+.etusivu .alalaita-tiedot a:hover { color: #B86F00; }
 
 /* Karttaosio: otsikko, hankelaskuri ja suodattimet vasemmalla, kartta oikealla */
 .kartta-osio { overflow: hidden; }

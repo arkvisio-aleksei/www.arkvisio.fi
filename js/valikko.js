@@ -39,6 +39,7 @@
       const p = Math.min(1, Math.max(0, window.scrollY / matka));
       paneeli.style.height = (tayskorkeus - matka * p) + 'px';
       juuri.style.setProperty('--p', p.toFixed(4));
+      juuri.style.setProperty('--y', (matka * p).toFixed(1));
       const kompakti = juuri.classList.contains('kompakti');
       if (!kompakti && p >= .97) juuri.classList.add('kompakti');
       else if (kompakti && p < .9) { juuri.classList.remove('kompakti'); suljeValikko(); }
