@@ -552,7 +552,7 @@ main, .alatunniste { position: relative; z-index: 1; }
   transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease, visibility 0s linear .45s; }
 .kompakti .etusivu .valikko.auki { transform: none; visibility: visible; box-shadow: 0 14px 30px rgba(15, 17, 22, .28);
   transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .15s, visibility 0s linear 0s; }
-.kompakti .etusivu .valikko a { padding-block: 4px; font: 400 30px/1.1 var(--fontti-otsikko); letter-spacing: 0; text-transform: none; text-align: right; color: var(--vaalea); border-bottom: 0;
+.kompakti .etusivu .valikko a { display: flex; align-items: center; gap: 14px; padding-block: 11px; font: 500 14px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; text-align: right; color: var(--vaalea); border-bottom: 0;
   opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .3s ease; }
 .kompakti .etusivu .valikko a:last-child { border-bottom: 0; }
 .kompakti .etusivu .valikko a:hover, .kompakti .etusivu .valikko a:focus-visible { color: var(--vision-oranssi); }
@@ -570,7 +570,7 @@ main, .alatunniste { position: relative; z-index: 1; }
     transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease, visibility 0s linear .45s; }
   .etusivu .valikko.auki { transform: none; visibility: visible; box-shadow: 0 14px 30px rgba(15, 17, 22, .28);
     transition: transform .45s cubic-bezier(.22, .8, .24, 1), box-shadow .3s ease .15s, visibility 0s linear 0s; }
-  .etusivu .valikko a { padding-block: 4px; font: 400 30px/1.1 var(--fontti-otsikko); letter-spacing: 0; text-transform: none; text-align: right; color: var(--vaalea); border-bottom: 0;
+  .etusivu .valikko a { display: flex; align-items: center; gap: 14px; padding-block: 11px; font: 500 14px/1 var(--fontti-teksti); letter-spacing: .18em; text-transform: uppercase; text-align: right; color: var(--vaalea); border-bottom: 0;
     opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .3s ease; }
   .etusivu .valikko a:last-child { border-bottom: 0; }
   .etusivu .valikko a:hover, .etusivu .valikko a:focus-visible { color: var(--vision-oranssi); }
@@ -594,4 +594,14 @@ main, .alatunniste { position: relative; z-index: 1; }
     animation-range: 0px calc(var(--paneeli-korkeus) - var(--palkki)); }
   .etusivu .yla { animation: etusivu-rivi linear both; animation-timeline: scroll(root block);
     animation-range: 0px calc(var(--paneeli-korkeus) - var(--palkki)); }
+}
+
+/* Valikon tyyli F: Jost-versaali ja oranssit järjestysnumerot (01, 02, 03) CSS-laskurilla, ei HTML-muutoksia */
+.kompakti .etusivu .valikko { counter-reset: valikko; }
+.kompakti .etusivu .valikko a::before { counter-increment: valikko; content: "0" counter(valikko);
+  font: 400 14px/1 var(--fontti-teksti); letter-spacing: .1em; color: var(--vision-oranssi); }
+@media (max-width: 760px) {
+  .etusivu .valikko { counter-reset: valikko; }
+  .etusivu .valikko a::before { counter-increment: valikko; content: "0" counter(valikko);
+    font: 400 14px/1 var(--fontti-teksti); letter-spacing: .1em; color: var(--vision-oranssi); }
 }
