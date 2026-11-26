@@ -836,3 +836,41 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
   html:not(.kompakti) .etusivu .burgeri { opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
   .kompakti .etusivu .burgeri { opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s linear 0s; }
 }
+
+/* ================= Sulava vieritys iPhonella: paneeli EI tartu (ei sticky) =================
+   Paneeli vierii pois tavallisena sivun osana. Pieni palkki on erillinen kiinteä tausta (.palkkitausta),
+   joka tulee esiin juuri kun paneelin alareuna saavuttaa sen. Oma elementti myös siksi, että iOS Safari
+   värjää kellon alueen kiinteän elementin taustavärin mukaan (pysyy tummana). */
+.etusivu .paakuva { position: relative; top: auto; }
+.etusivu .yla::after { content: none; }
+.palkkitausta { display: none; }
+.etusivu .palkkitausta { display: block; position: fixed; top: 0; z-index: 59; pointer-events: none;
+  left: max(0px, calc((100% - var(--sivu)) / 2)); right: max(0px, calc((100% - var(--sivu)) / 2));
+  height: var(--palkki); background: #1F2229; border-radius: 0 0 var(--kulma) var(--kulma);
+  box-shadow: 0 12px 30px -4px rgba(15, 17, 22, .4); opacity: 0; }
+.kompakti .etusivu .palkkitausta { opacity: 1; }                 /* varakeino ilman vieritysanimaatioita */
+@supports (animation-timeline: scroll()) {
+  .etusivu .palkkitausta { animation: etusivu-kaista linear both; animation-timeline: scroll(root block);
+    animation-range: calc(var(--paneeli-korkeus) - var(--palkki) - 40px) calc(var(--paneeli-korkeus) - var(--palkki)); }
+}
+.etusivu.alasivu .palkkitausta { opacity: 1; animation: none; box-shadow: none; }   /* alasivu: paneelin värinen, teksti vierii alle */
+.kompakti .etusivu.alasivu .palkkitausta { box-shadow: 0 12px 30px -4px rgba(15, 17, 22, .4); }
+/* Valikko liukuu palkin taustan alta */
+.etusivu .yla { z-index: 60; }
+
+/* Pyöristetyt kulmat myös videolle (iOS Safari ei rajaa videota laatikon kulmiin) */
+.kansivideo { border-radius: 0 0 var(--kulma) var(--kulma); }
+.etusivu .paakuva::before { border-radius: 0 0 var(--kulma) var(--kulma); }
+
+/* Puhelin: video koko alueelle ylhäältä asti, logo videon päällä; vain kapea häivytys yläreunassa */
+@media (max-width: 760px) {
+  .kansivideo { height: 100%; object-position: 60% 50%; }
+  .etusivu .paakuva { background-size: cover; background-position: 60% 50%; }
+  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, rgba(31, 34, 41, .55) 4%, rgba(31, 34, 41, .12) 11%,
+    rgba(31, 34, 41, .05) 55%, rgba(31, 34, 41, .62) 100%); }
+}
+/* Tietokone: häivytys minimiin */
+@media (min-width: 761px) {
+  .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, rgba(31, 34, 41, .5) 4%, rgba(31, 34, 41, .08) 12%,
+    rgba(31, 34, 41, .05) 55%, rgba(31, 34, 41, .55) 100%); }
+}
