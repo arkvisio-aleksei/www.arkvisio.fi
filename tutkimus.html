@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
-  <link rel="stylesheet" href="css/tyylit.css?v=20261126zzo">
+  <link rel="stylesheet" href="css/tyylit.css?v=20261126zzp">
 </head>
 <body class="etusivu alasivu">
   <a class="ohita" href="#sisalto">Siirry sisältöön</a>
@@ -22,8 +22,8 @@
       <div class="paakuva-keski">
           <div class="alasivu-otsikko">
             <div>
-              <p class="murupolku"><a href="index.html#palvelut">Kolme osaamista</a> / Tutkimus</p>
-              <h1>Tutkimus<span class="oranssi">.</span></h1>
+              <p class="murupolku"><a href="index.html#palvelut">Palvelumme</a> / Tutkimus</p>
+              <h1><span class="otsikko-nro">03</span>Tutkimus<span class="oranssi">.</span></h1>
             </div>
           </div>
       </div>
@@ -46,10 +46,48 @@
   <main id="sisalto">
 
     <!-- PALVELUN SISÄLTÖ (vaalealla) -->
-    <section class="osio alasivu-intro">
+    <section class="osio palvelu-intro">
+      <div class="kehys palvelu-intro-runko">
+        <p class="palvelu-lede">Kaupantekohan se on mielessä – mutta tutkitaan nyt ensin. Asuntokaupan kuntotarkastukset ja kosteustekninen osaaminen ovat olleet erikoisalaamme vuodesta 1996, jolloin kuntotarkastukset yleistyivät Suomessa. Olemme olleet kehittämässä niitä alusta asti.</p>
+        <dl class="palvelu-faktat"><div><dt>1996</dt><dd>kuntotarkastuksia vuodesta</dd></div><div><dt>5 000+</dt><dd>tutkimusta</dd></div><div><dt>KH 90-00393</dt><dd>mukaiset tarkastukset</dd></div></dl>
+      </div>
+    </section>
+
+    <section class="osio palvelu-osio" aria-label="Mitä tutkimme">
       <div class="kehys">
-              <p class="alasivu-lede">Kuntotarkastukset asuntokauppaan, kosteusmittaukset ja kosteusvauriotutkimukset sekä energiatodistukset – erikoisalaamme vuodesta 1996.</p>
-          <ul class="alasivu-sisalto"><li>Kuntotarkastukset</li><li>Kosteusmittaukset</li><li>Kosteusvauriotutkimukset</li><li>Energiatodistukset</li><li>Pinta-alamittaukset</li></ul>
+        <p class="ylaotsikko">Mitä tutkimme</p>
+        <div class="palvelukortit">
+          <article class="palvelukortti"><span class="nro">01</span><h3>Asuntokaupan kuntotarkastus</h3><p>Aistinvarainen, rakenteita rikkomaton tarkastus KH 90-00393 -ohjeen mukaan. Kirjallinen raportti kuvineen kertoo havainnot, riskirakenteet ja jatkotutkimustarpeet.</p></article>
+          <article class="palvelukortti"><span class="nro">02</span><h3>Kosteusmittaus</h3><p>Kevyempi tarkastus erityisesti kerrostalohuoneistoihin: kylpyhuone, sauna, WC, kodinhoitohuone ja keittiö mitataan pintakosteusmittarilla. Raportti noin 10–15 sivua.</p></article>
+          <article class="palvelukortti"><span class="nro">03</span><h3>Kosteusvauriotutkimus</h3><p>Kun epäily herää: porareikämittaukset, rakenneavaukset sekä mikrobi- ja asbestinäytteet. Lopputuloksena vaurion laajuus ja korjausehdotus.</p></article>
+          <article class="palvelukortti"><span class="nro">04</span><h3>Energiatodistus ja -selvitys</h3><p>Energiatodistus tarvitaan myynti- ja vuokrailmoituksiin, ja se on voimassa 10 vuotta. Uudisrakennukseen laadimme energiaselvityksen ja E-luvun laskennan.</p></article>
+          <article class="palvelukortti"><span class="nro">05</span><h3>Pinta-alamittaus ja 3D-kuvaus</h3><p>Huoneisto- ja kerrosalan mittaus sekä kohteen 3D-kuvaus, jota voi selata verkossa ja käyttää korjaussuunnittelun pohjana.</p></article>
+          <article class="palvelukortti"><span class="nro">06</span><h3>Korjausrakentamisen suunnittelu</h3><p>Tutkimuksesta suoraan korjaukseen: samasta toimistosta korjaussuunnitelmat, lupa-asiat ja tarvittaessa työmaan valvonta.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TALON LEIKKAUS: pyöritettävä malli ja tarkastuskohdat (js/leikkaus.js), samat valinnat kuin hintalaskurissa -->
+    <section class="osio leikkaus-osio" id="leikkaus" aria-labelledby="leikkaus-otsikko">
+      <div class="kehys">
+        <p class="ylaotsikko">Mitä tarkastamme</p>
+        <div class="leikkaus-johdanto">
+          <h2 id="leikkaus-otsikko">Talo leikkauksena<span class="oranssi">.</span></h2>
+          <p>Valitse talon tyyppi, ikä ja alapohja. Leikkaus muuttuu niiden mukaiseksi ja näyttää kohdat, jotka käymme läpi – ja rakennusajalle tyypilliset riskirakenteet.</p>
+        </div>
+        <div data-leikkaus></div>
+      </div>
+    </section>
+
+    <section class="osio vaiheet-osio" aria-label="Näin työ etenee">
+      <div class="kehys">
+        <p class="ylaotsikko">Näin työ etenee</p>
+        <ol class="vaiheet">
+          <li><h3>Tilaus</h3><p>Kohteen tiedot, piirustukset, isännöitsijäntodistus ja aiemmat raportit.</p></li>
+          <li><h3>Tarkastus</h3><p>Käynti kohteessa. Myyjä ja ostaja voivat olla mukana ja kysyä.</p></li>
+          <li><h3>Raportti</h3><p>Kirjallinen raportti kuvineen, havainnot ja suositukset selkokielellä.</p></li>
+          <li><h3>Jatkotoimet</h3><p>Tarvittaessa rakennetutkimus, korjaussuunnitelma ja valvonta.</p></li>
+        </ol>
       </div>
     </section>
 
@@ -76,21 +114,6 @@
       </div>
     </section>
 
-    <!-- MUUT OSAAMISET -->
-    <section class="osio" style="padding-top:0">
-      <div class="kehys">
-        <div class="osaamiset osaamiset-muut">
-          <a class="osaaminen" href="suunnittelu.html">
-            <svg class="ikoni" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="katto" fill="currentColor" stroke="none" d="M11.5 19 24 8.5 36.5 19z"/><path d="M14 22v15h20V22"/><path d="M21.5 37v-7h5v7"/><path d="M17 25.5h3v3h-3zM28 25.5h3v3h-3z"/><path d="M14 42.5h20M14 41v3M34 41v3"/><path d="M8.5 22v15M7 22h3M7 37h3"/></svg>
-            <h3>Suunnittelu</h3>
-          </a>
-          <a class="osaaminen" href="tyomaa.html">
-            <svg class="ikoni" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="katto" fill="currentColor" stroke="none" d="M31.5 12 34 7l2.5 5z"/><path d="M5 41h38"/><path d="M34 41V12"/><path d="M19 12h24"/><path d="M24 12v7"/><path d="M21.5 19h5v3.5h-5z"/><path d="M7 31 15.5 24.5 24 31"/><path d="M9 33v8M15.5 33v8M22 33v8M9 33h13"/></svg>
-            <h3>Toteutus</h3>
-          </a>
-        </div>
-      </div>
-    </section>
 
   </main>
 
@@ -111,10 +134,11 @@
     </div>
   </footer>
 
-  <script src="data/hinnasto.js?v=20261126zzo"></script>
-  <script src="js/ikonit.js?v=20261126zzo"></script>
-  <script src="js/havainne.js?v=20261126zzo"></script>
-  <script src="js/laskuri.js?v=20261126zzo"></script>
-  <script src="js/valikko.js?v=20261126zzo"></script>
+  <script src="data/hinnasto.js?v=20261126zzp"></script>
+  <script src="js/ikonit.js?v=20261126zzp"></script>
+  <script src="js/havainne.js?v=20261126zzp"></script>
+  <script src="js/laskuri.js?v=20261126zzp"></script>
+  <script src="js/leikkaus.js?v=20261126zzp"></script>
+  <script src="js/valikko.js?v=20261126zzp"></script>
 </body>
 </html>

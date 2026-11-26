@@ -195,6 +195,9 @@
         rivit.length ? `Laskurin arvio: ${vali(ala / jako, yla / jako, 50)} € ${tila.alv ? 'sis. alv' : 'alv 0 %'}` : null,
         '', 'Kohteen osoite:', 'Aikataulu:', 'Puhelinnumero:', '',
       ].filter(r => r !== null).join('\n');
+      // Tutkimussivun leikkauskuva (js/leikkaus.js) seuraa samoja valintoja
+      juuri.laskuriTila = { kohde: tila.kohde.id, valinnat: Object.assign({}, tila.valinnat), palvelut: [...tila.palvelut] };
+      juuri.dispatchEvent(new CustomEvent('laskuri:muutos', { detail: juuri.laskuriTila }));
       $('[data-tarjous]').href = `mailto:myynti@arkvisio.fi?subject=${encodeURIComponent('Tarjouspyyntö: ' + tila.kohde.nimi)}&body=${encodeURIComponent(viesti)}`;
     }
 
@@ -213,6 +216,12 @@
       }
       const alv = e.target.closest('[data-alv]');
       if (alv) { tila.alv = alv.dataset.alv === '1'; return piirra(); }
+    });
+    juuri.addEventListener('laskuri:aseta', e => {
+      const x = e.detail || {};
+      if (x.kohde && x.kohde !== tila.kohde.id) { const k = L.kohteet.find(k => k.id === x.kohde); if (k) asetaKohde(k); }
+      Object.keys(x.valinnat || {}).forEach(id => { if (lisavalinnat.some(v => v.id === id)) tila.valinnat[id] = x.valinnat[id]; });
+      piirra();
     });
     m2.addEventListener('input', () => { tila.m2 = +m2.value; piirra(); });
     if (km) km.addEventListener('input', () => { tila.km = +km.value; piirra(); });
