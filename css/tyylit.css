@@ -643,7 +643,8 @@ main, .alatunniste { position: relative; z-index: 1; }
 .etusivu .paakuva { background: #1F2229 url("../assets/images/kansikuva.jpg") 52% 62% / cover no-repeat; }
 @media (max-width: 760px) { .etusivu .paakuva { background-position: 60% 50%; } }
 .etusivu .paakuva::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background: linear-gradient(180deg, rgba(31, 34, 41, .55) 0%, rgba(31, 34, 41, .08) 30%, rgba(31, 34, 41, .1) 55%, rgba(31, 34, 41, .62) 100%); }
+  /* yläreuna kiinteää tummaa (#1F2229) = sama kuin iPhonen kellon alue, liukuu kuvaan */
+  background: linear-gradient(180deg, #1F2229 0%, rgba(31, 34, 41, .92) 7%, rgba(31, 34, 41, .45) 18%, rgba(31, 34, 41, .1) 34%, rgba(31, 34, 41, .1) 55%, rgba(31, 34, 41, .62) 100%); }
 .etusivu .paneeli { position: relative; z-index: 1; }
 .etusivu .paakuva-keski { place-content: end center; padding-bottom: clamp(36px, 7svh, 72px); }
 .etusivu .paakuva h1 { text-shadow: 0 2px 24px rgba(0, 0, 0, .35); }
@@ -657,10 +658,6 @@ main, .alatunniste { position: relative; z-index: 1; }
   .etusivu .paakuva h1 { animation: etusivu-iskulause-pois linear both; animation-timeline: scroll(root block);
     animation-range: calc((var(--paneeli-korkeus) - var(--palkki)) * .3) calc((var(--paneeli-korkeus) - var(--palkki)) * .62); }
 }
-/* iPhonen kellon alue värjäytyy paneelin taustavärin mukaan: väri = kuvan yläreunan sävy (kuva peittää sen sivulla),
-   jolloin kellon alue sulautuu kuvaan. Matalassa palkissa tumma, kuten palkki. */
-.etusivu .paakuva { background-color: #45505A; }
-.kompakti .etusivu .paakuva { background-color: #1F2229; }
 /* Valikko on aina pienen palkin alla ja entisen kokoinen (ei koko kansikuvan korkuinen):
    kansikuvan ollessa näkyvissä js vierittää ensin kuvan piiloon ja avaa valikon sitten. */
 .etusivu { --valikko-korkeus: clamp(230px, 30svh, 420px); }
