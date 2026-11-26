@@ -584,3 +584,14 @@ main, .alatunniste { position: relative; z-index: 1; }
 /* Matalassa palkissa valikko jatkaa palkkia: palkin kulmat suoriksi. Yläreunassa valikko peittää iskulausealueen
    täsmälleen, joten paneelin kulmat pysyvät pyöreinä (sama --kulma kaikissa). */
 .kompakti .etusivu:has(.valikko.auki) .paakuva, .kompakti .etusivu:has(.valikko.auki) .yla::after { border-radius: 0; }
+
+/* Etusivu: logon pienennys ja palkkirivin nousu sidottu suoraan sivun vieritykseen (scroll-driven animation).
+   Selain ajaa sen vierityksen mukana näytönohjaimella, joten se ei nyi. Vanhemmissa selaimissa js asettaa --k:n. */
+@keyframes etusivu-logo { from { transform: scale(1); } to { transform: scale(.74); } }
+@keyframes etusivu-rivi { from { transform: translateY(0); } to { transform: translateY(calc((var(--palkki) - 76px) / 2)); } }
+@supports (animation-timeline: scroll()) {
+  .etusivu .logo { animation: etusivu-logo linear both; animation-timeline: scroll(root block);
+    animation-range: 0px calc(var(--paneeli-korkeus) - var(--palkki)); }
+  .etusivu .yla { animation: etusivu-rivi linear both; animation-timeline: scroll(root block);
+    animation-range: 0px calc(var(--paneeli-korkeus) - var(--palkki)); }
+}
