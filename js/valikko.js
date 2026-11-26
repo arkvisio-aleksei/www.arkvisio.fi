@@ -71,6 +71,8 @@
       else if (kompakti && y < raja - 90) { juuri.classList.remove('kompakti'); suljeValikko(); }
     };
     const mittaa = () => {
+      // Alasivuilla paneelin korkeus tulee sisällöstä: kerrotaan se CSS:lle (sticky-paneelin yläraja ja animaatiot)
+      if (document.body.classList.contains('alasivu')) document.body.style.setProperty('--paneeli-korkeus', paneeli.offsetHeight + 'px');
       const palkki = parseFloat(getComputedStyle(document.body).getPropertyValue('--palkki')) || 64;
       raja = paneeli.offsetHeight - palkki;
       viimeLeveys = innerWidth;

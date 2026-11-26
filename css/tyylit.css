@@ -789,3 +789,25 @@ html:not(.kompakti) .etusivu .valikko { translate: 0 calc(var(--vy, 0) * -1px); 
   .etusivu .paakuva::before { background: linear-gradient(180deg, #1F2229 0%, #1F2229 10%, rgba(31, 34, 41, .55) 14%, rgba(31, 34, 41, .12) 22%,
     rgba(31, 34, 41, .1) 60%, rgba(31, 34, 41, .62) 100%); }
 }
+
+/* ================= ALASIVUT samaan malliin kuin etusivu (body.etusivu.alasivu) =================
+   Vaalea sivu: sisällön värimuuttujat vaaleiksi (tummat paneelit .tumma käyttävät omia muuttujiaan). */
+.etusivu { --kalkki: #F4F1EC; --pinta: #FFFFFF; --kivi: #E2DED6; --muste: #1F2229; --harmaa: #5B6070;
+  --oranssi-teksti: #B86F00; color: var(--muste); }
+.etusivu .tumma { --kalkki: #1F2229; --pinta: #292D35; --kivi: #363B45; --muste: #F4F1EC; --harmaa: #A9ACB3; --oranssi-teksti: #F79C09; }
+/* Otsikkopaneeli: tumma, korkeus sisällön mukaan (js mittaa --paneeli-korkeus), ei kansikuvaa */
+.etusivu.alasivu .paakuva { height: auto; background: #1F2229; }
+.etusivu.alasivu .paakuva::before { content: none; }
+.etusivu.alasivu .paneeli { height: auto; }
+.etusivu.alasivu .paakuva-keski { height: auto; display: block; text-align: left;
+  padding: calc(76px + clamp(24px, 4vw, 56px)) var(--reuna-o) clamp(36px, 5vw, 64px) var(--reuna); }
+.etusivu.alasivu .paakuva h1 { font-size: clamp(48px, 7vw, 104px); text-shadow: none; animation: none; }
+.etusivu.alasivu .alasivu-otsikko { max-width: var(--leveys); margin-inline: auto; }
+.etusivu.alasivu .alasivu-sisalto { max-width: var(--leveys); margin-inline: auto; }
+/* Palkin kaista aina paneelin värinen: teksti vierii sen alle eikä logon päälle */
+.etusivu.alasivu .yla::after { opacity: 1; animation: none; }
+/* Vaalean sivun sisältö: laskuri ym. käyttävät "tumma"-muuttujia suoraan -> vaaleat vastineet sisältöalueella */
+.etusivu main { --grafiitti: #ECE8E1; --grafiitti-2: #FFFFFF; --grafiitti-3: #DAD5CC; --vaalea: #1F2229; --vaalea-2: #5B6070; }
+.etusivu main .tumma { --grafiitti: #1F2229; --grafiitti-2: #292D35; --grafiitti-3: #363B45; --vaalea: #F4F1EC; --vaalea-2: #A9ACB3; }
+/* Alasivun otsikon oranssi piste samalle riville */
+.etusivu.alasivu .paakuva h1 .oranssi { display: inline; }
