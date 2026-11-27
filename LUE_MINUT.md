@@ -38,20 +38,21 @@ Kaikki hinnat ovat tiedostossa `data/hinnasto.js`:
 
 ## Uuden kohteen lisääminen
 
-1. Lisää kohteen kuva kansioon `assets/images/` (esim. `kulosaari-huvila.jpg`, n. 1600 px leveä).
-2. Avaa `data/kohteet.js` ja lisää uusi rivi `window.KOHTEET = [` -rivin alle:
+Avaa `data/kohteet.js` ja lisää uusi rivi `window.KOHTEET = [` -rivin alle:
 
-   ```js
-   { nimi: "Huvila", paikka: "Kulosaari, Helsinki", tyyppi: "uudis", lat: 60.185, lon: 25.010, vuosi: 2025, kuvaus: "Lyhyt kuvaus.", kuva: "assets/images/kulosaari-huvila.jpg" },
-   ```
+```js
+{ paikka: "Kavaljeerintie 4C, Vantaa", tyyppi: "vantaa", lat: 60.29511, lon: 24.94431 },
+```
 
-3. Tallenna. Kohde näkyy kartalla.
+Tallenna. Kohde näkyy kartalla.
 
-**Sijainti:** Google Mapsissa oikea klikkaus kohtaan → ylimmäisenä näkyvät luvut, esim. `60.185, 25.010`. Ensimmäinen on `lat`, toinen `lon`. Tarkkaa osoitetta ei tarvitse käyttää, lähialue riittää.
+**Sijainti:** Google Mapsissa oikea klikkaus kohtaan → ylimmäisenä näkyvät luvut, esim. `60.185, 25.010`. Ensimmäinen on `lat`, toinen `lon`.
 
-**Tyypit:** `uudis`, `korjaus`, `laajennus`. Tyyppien nimet ja täppien värit ovat saman tiedoston alussa (`KOHDETYYPIT`). **Kuntotutkimuksia ei lisätä kartalle**: ne ovat asiakkaiden yksityisiä kohteita.
+**Alueet (`tyyppi`):** `helsinki`, `espoo`, `vantaa`, `uusimaa` (muu Uusimaa) ja `muu` (muu Suomi). Nimet ja täppien värit ovat saman tiedoston alussa (`KOHDETYYPIT`), ja suodattimet muodostuvat niistä.
 
-**Esimerkkikohteet:** nykyiset kohteet ovat esimerkkejä (`esimerkki: true`) ja näkyvät sivulla "Esimerkki"-merkinnällä. Poista ne, kun oikeat kohteet on lisätty.
+**Yksityisyys:** kartalla näytetään vain katu ja talon numero, ei rappua eikä asunnon numeroa. Kuntotutkimuksia ei lisätä kartalle.
+
+Valinnaisia kenttiä: `nimi` (esim. "Huvila"), `vuosi` ja `kuvaus`.
 
 Muista pilkku jokaisen rivin perään. Jos kartta tai lista katoaa tallennuksen jälkeen, tiedostossa on luultavasti puuttuva pilkku tai lainausmerkki.
 

@@ -176,8 +176,11 @@ window.luoKartta = function (juuri, asetukset = {}) {
   // Aloitusnäkymä: kaikki kohteet mahtuvat kehykseen väljästi (näytön koon mukaan).
   function kohdeNakyma() {
     if (!kohteet.length || !w) return [NAKYMA_SUOMI.k, NAKYMA_SUOMI.keski];
-    const lonit = kohteet.map(j => j.lon), latit = kohteet.map(j => j.lat);
-    const lon0 = Math.min(...lonit), lon1 = Math.max(...lonit), lat0 = Math.min(...latit), lat1 = Math.max(...latit);
+    // Yksittäiset kaukaiset kohteet eivät levitä näkymää: rajaus tiheimmän 90 %:n mukaan.
+    const lonit = kohteet.map(j => j.lon).sort((a, b) => a - b), latit = kohteet.map(j => j.lat).sort((a, b) => a - b);
+    const osuus = (l, p) => l[Math.min(l.length - 1, Math.max(0, Math.round((l.length - 1) * p)))];
+    const reuna = kohteet.length > 20 ? .05 : 0;
+    const lon0 = osuus(lonit, reuna), lon1 = osuus(lonit, 1 - reuna), lat0 = osuus(latit, reuna), lat1 = osuus(latit, 1 - reuna);
     const keskiLat = (lat0 + lat1) / 2, rad = Math.PI / 180;
     const leveys = Math.max(.05, (lon1 - lon0) * Math.cos(keskiLat * rad)) * rad, korkeus = Math.max(.05, lat1 - lat0) * rad;
     const kk = Math.min(w * .78 / (sade * leveys), h * .62 / (sade * korkeus));
@@ -433,11 +436,14 @@ window.luoKartta = function (juuri, asetukset = {}) {
     if (!o) { vihje.hidden = true; return; }
     if (o.kohde) {
       const t = tyypit[o.kohde.tyyppi];
-      vihje.innerHTML = `${esc(o.kohde.nimi)}, ${esc(o.kohde.paikka)}<small>${t ? esc(t.nimi) : ''}${o.kohde.vuosi ? ' · ' + o.kohde.vuosi : ''}${o.kohde.esimerkki ? ' · esimerkki' : ''}</small>`
+      // Tyypin nimi jätetään pois, jos se on jo paikassa (esim. alueena "Vantaa").
+      const tNimi = t && !String(o.kohde.paikka || '').endsWith(t.nimi) ? t.nimi : '';
+      const lisa = [tNimi, o.kohde.vuosi, o.kohde.esimerkki ? 'esimerkki' : ''].filter(Boolean).map(esc).join(' · ');
+      vihje.innerHTML = `${o.kohde.nimi ? esc(o.kohde.nimi) + ', ' : ''}${esc(o.kohde.paikka)}${lisa ? `<small>${lisa}</small>` : ''}`
         + (kiinni ? `<a class="sv" href="${svUrl(o.kohde)}" target="_blank" rel="noopener">${SV_IKONI}Street View</a>` : (avoin ? '<small>Klikkaa, niin näet Street View -linkin</small>' : ''));
     } else {
       const samaPaikka = k >= K_MAX * .95;
-      const lista = samaPaikka ? `<ul>${o.ryhma.slice(0, 8).map(j => `<li>${kiinni ? `<a class="sv-pieni" href="${svUrl(j)}" target="_blank" rel="noopener">${esc(j.nimi)}, ${esc(j.paikka)}</a>` : `${esc(j.nimi)}, ${esc(j.paikka)}`}</li>`).join('')}${o.ryhma.length > 8 ? `<li>+ ${o.ryhma.length - 8} muuta</li>` : ''}</ul>` : '';
+      const lista = samaPaikka ? `<ul>${o.ryhma.slice(0, 8).map(j => `<li>${kiinni ? `<a class="sv-pieni" href="${svUrl(j)}" target="_blank" rel="noopener">${j.nimi ? esc(j.nimi) + ', ' : ''}${esc(j.paikka)}</a>` : `${j.nimi ? esc(j.nimi) + ', ' : ''}${esc(j.paikka)}`}</li>`).join('')}${o.ryhma.length > 8 ? `<li>+ ${o.ryhma.length - 8} muuta</li>` : ''}</ul>` : '';
       vihje.innerHTML = `${o.ryhma.length} kohdetta<small>${samaPaikka ? 'Samalla alueella' : 'Klikkaa, niin kartta lähentää'}</small>${lista}`;
     }
     // Vihje sijoitetaan kehykseen; kangas voi alkaa kehyksen ulkopuolelta.
