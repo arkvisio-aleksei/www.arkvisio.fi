@@ -1252,3 +1252,8 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 @media (max-width: 700px) {
   html.kartta-auki .paakuva, html.kartta-auki .yla, html.kartta-auki .yla-tausta, html.kartta-auki .alasivu-yla { visibility: hidden; }
 }
+/* Vaalea yläreunapalkki: Safari värjää tilarivin yläreunaan kiinnitetyn palkin mukaan */
+.kartta-ylareuna { display: none; }
+@media (max-width: 700px) {
+  .kartta-ylareuna { display: block; position: fixed; top: 0; left: 0; right: 0; height: max(10px, env(safe-area-inset-top)); background: #F4F1EC; z-index: 1001; pointer-events: none; }
+}

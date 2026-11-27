@@ -557,7 +557,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
     const modaali = document.createElement('div');
     modaali.className = 'kartta-modaali'; modaali.hidden = true;
     modaali.setAttribute('role', 'dialog'); modaali.setAttribute('aria-modal', 'true'); modaali.setAttribute('aria-label', 'Kohteet kartalla');
-    modaali.innerHTML = '<div class="kartta-modaali-ikkuna"><div class="kartta-modaali-yla"><p class="ylaotsikko">Kohteemme</p>'
+    modaali.innerHTML = '<div class="kartta-ylareuna" aria-hidden="true"></div><div class="kartta-modaali-ikkuna"><div class="kartta-modaali-yla"><p class="ylaotsikko">Kohteemme</p>'
       + '<span class="kartta-modaali-ohje">Vedä ja nipistä. Napauta ryhmää lähentääksesi tai kohdetta avataksesi Street View’n.</span>'
       + '<button class="kartta-sulje" type="button" aria-label="Sulje kartta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
       + '<div class="kartta-modaali-kehys"><div class="kartta-ohjaimet"><button type="button" data-z="suomi" aria-label="Näytä koko Suomi">Suomi</button>'
