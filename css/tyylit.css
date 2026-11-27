@@ -1206,3 +1206,13 @@ html.kartta-auki, html.kartta-auki body { overflow: hidden; }
 .kartta-vihje .sv svg { width: 13px; height: 13px; color: var(--vision-oranssi); }
 .kartta-vihje .sv:hover { background: #000; }
 .kartta-vihje li .sv-pieni { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+/* Kapealla kartta täyttää tumman laatikon reunasta reunaan ja alas asti; yläreuna häipyy taustaan */
+@media (max-width: 900px) {
+  .kartta-osio { padding-bottom: 0; }
+  .kartta-osio .kartta { width: 100vw; max-width: none; margin-left: calc(50% - 50vw); justify-self: stretch; }
+  .kartta-alue.kortti { aspect-ratio: 1 / 1.05; border-radius: 0; clip-path: none; -webkit-mask-image: none; box-shadow: none; }
+  .kartta-alue.kortti::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 56px; z-index: 1; pointer-events: none;
+    background: linear-gradient(var(--grafiitti), rgba(31, 34, 41, 0)); }
+  .kartta-avaa { bottom: 18px; right: 18px; }
+}
+@media (min-width: 701px) and (max-width: 900px) { .kartta-alue.kortti { aspect-ratio: 4 / 3; } }
