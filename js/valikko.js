@@ -3,6 +3,14 @@
 //  Käytössä kaikilla sivuilla.
 // ============================================================
 
+// Sivu avautuu päivitettäessä aina ylhäältä (selain ei palauta vanhaa vierityskohtaa).
+// Linkki tiettyyn kohtaan (esim. index.html#kohteemme) toimii edelleen.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (!location.hash) {
+  window.scrollTo(0, 0);
+  addEventListener('load', () => { if (!location.hash) window.scrollTo(0, 0); });
+}
+
 (function () {
   // Valikon avaus: tekstinappi (mobiili) ja hampurilaisnappi (etusivun kutistunut palkki) ohjaavat samaa valikkoa
   const juuriEl = document.documentElement;
