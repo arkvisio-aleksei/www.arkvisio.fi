@@ -1180,3 +1180,5 @@ html.kartta-auki, html.kartta-auki body { overflow: hidden; }
 @media (max-width: 700px) {
   .kartta-alue.kortti, .kartta-modaali-ikkuna { clip-path: inset(0 round 18px); }
 }
+/* Karttaosion kulmat pyöristetty kuten yläpalkin alakulmat */
+.kartta-osio { border-radius: var(--kulma); }
