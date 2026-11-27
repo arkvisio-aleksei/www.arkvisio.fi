@@ -570,6 +570,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
     let sulkuAjastin = 0, lahto = null, animaatiot = [];
     const ikkunaEl = modaali.querySelector('.kartta-modaali-ikkuna');
     const ohjaimetEl = modaali.querySelector('.kartta-ohjaimet');
+    const ylareunaEl = modaali.querySelector('.kartta-ylareuna');
     // Rajaus, joka näyttää ikkunasta vain sivun karttakortin kohdan (avautuminen alkaa siitä).
     const korttiRajaus = () => {
       const r1 = ikkunaEl.getBoundingClientRect(), r0 = lahto;
@@ -589,6 +590,8 @@ window.luoKartta = function (juuri, asetukset = {}) {
       if (!matchMedia('(max-width: 700px)').matches) { juuriEl.classList.remove('kartta-ylaosa-piiloon'); return; }
       if (vahennaLiiketta || !ikkunaEl.animate) { if (!nakyviin) juuriEl.classList.add('kartta-ylaosa-piiloon'); return; }
       ylaAnimaatiot = ylaosat().map(e => e.animate([{ opacity: nakyviin ? 0 : 1 }, { opacity: nakyviin ? 1 : 0 }], { duration: kesto, delay: viive, easing: 'ease-in-out', fill: 'both' }));
+      // Ylälaidan vaalea kaistale (tilarivin kohdalla) vaihtuu yläpalkkiin samassa tahdissa
+      ylaAnimaatiot.push(ylareunaEl.animate([{ opacity: nakyviin ? 1 : 0 }, { opacity: nakyviin ? 0 : 1 }], { duration: kesto, delay: viive, easing: 'ease-in-out', fill: 'both' }));
       ylaAjastin = setTimeout(() => {
         if (!nakyviin) juuriEl.classList.add('kartta-ylaosa-piiloon');
         ylaAnimaatiot.forEach(a => a.cancel()); ylaAnimaatiot = [];
