@@ -1172,3 +1172,11 @@ html.kartta-auki, html.kartta-auki body { overflow: hidden; }
   .kartta-modaali-yla { padding-left: 16px; gap: 10px; }
   .kartta-modaali-yla .ylaotsikko { display: none; }
 }
+/* Pyöristys varmistetaan kaikissa selaimissa (Safari ei aina leikkaa kangasta overflow:lla) */
+.kartta-alue.kortti { clip-path: inset(0 round 22px); -webkit-mask-image: -webkit-radial-gradient(white, black); }
+.kartta-alue.kortti canvas { border-radius: inherit; }
+.kartta-modaali-ikkuna { clip-path: inset(0 round 22px); -webkit-mask-image: -webkit-radial-gradient(white, black); }
+.kartta-modaali .kartta-alue { clip-path: none; -webkit-mask-image: none; }
+@media (max-width: 700px) {
+  .kartta-alue.kortti, .kartta-modaali-ikkuna { clip-path: inset(0 round 18px); }
+}
