@@ -28,7 +28,6 @@ window.luoKartta = function (juuri, asetukset = {}) {
   const FONTTI = '"Jost", "Century Gothic", "Segoe UI", sans-serif';
   const NAKYMA_MAAILMA = { k: 1, keski: [15, 38] };
   const NAKYMA_SUOMI = { k: 7.8, keski: [25.4, 65.0] };
-  const NAKYMA_UUSIMAA = { k: 30, keski: [24.8, 60.62] };
   const K_MIN = .9, K_MAX = 4000;
   // Avauslennon jälkeen Suomi-näkymä on kaukaisin, mihin voi loitontaa.
   // Jos ollaan vielä kauempana (lento keskeytettiin), alarajana on nykyinen zoom: kauemmas ei pääse.
@@ -169,6 +168,16 @@ window.luoKartta = function (juuri, asetukset = {}) {
   const ruudukko = d3.geoGraticule10();
 
   const kohteet = window.KOHTEET.map((k, i) => ({ ...k, i, piste: [k.lon, k.lat] }));
+  // Aloitusnäkymä: kaikki kohteet mahtuvat kehykseen väljästi (näytön koon mukaan).
+  function kohdeNakyma() {
+    if (!kohteet.length || !w) return [NAKYMA_SUOMI.k, NAKYMA_SUOMI.keski];
+    const lonit = kohteet.map(j => j.lon), latit = kohteet.map(j => j.lat);
+    const lon0 = Math.min(...lonit), lon1 = Math.max(...lonit), lat0 = Math.min(...latit), lat1 = Math.max(...latit);
+    const keskiLat = (lat0 + lat1) / 2, rad = Math.PI / 180;
+    const leveys = Math.max(.05, (lon1 - lon0) * Math.cos(keskiLat * rad)) * rad, korkeus = Math.max(.05, lat1 - lat0) * rad;
+    const kk = Math.min(w * .78 / (sade * leveys), h * .62 / (sade * korkeus));
+    return [Math.max(NAKYMA_SUOMI.k, Math.min(400, kk)), [(lon0 + lon1) / 2, keskiLat + (lat1 - lat0) * .08]];
+  }
   const tyypit = window.KOHDETYYPIT;
   const tyyppiIdt = Object.keys(tyypit);
   const aktiiviset = new Set(tyyppiIdt);
@@ -556,7 +565,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
         paikka.replaceWith(alue); modaali.hidden = true;
         document.documentElement.classList.remove('kartta-auki'); aktivoi(false);
         koko();
-        lenna(NAKYMA_UUSIMAA.k, NAKYMA_UUSIMAA.keski, 1400);
+        lenna(...kohdeNakyma(), 1400);
       }, 220);
     };
     avausNappi.addEventListener('click', avaaIkkuna);
@@ -580,7 +589,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
     esitetty = true; havainnoija.disconnect();
     introt.push(setTimeout(() => { lenna(NAKYMA_SUOMI.k, NAKYMA_SUOMI.keski, 2400); lukitseSuomeen(); }, 300));
     // Korttitilassa jatketaan Suomesta Uudellemaalle, jossa suurin osa kohteista on.
-    if (kortti) introt.push(setTimeout(() => { if (!avoin) lenna(NAKYMA_UUSIMAA.k, NAKYMA_UUSIMAA.keski, 2600); }, 3600));
+    if (kortti) introt.push(setTimeout(() => { if (!avoin) lenna(...kohdeNakyma(), 2600); }, 3600));
   }, { threshold: .35 }).observe(alue);
 
   return {
