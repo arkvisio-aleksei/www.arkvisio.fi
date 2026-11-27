@@ -1239,3 +1239,12 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 }
 .kartta-modaali .kartta-alue::after { display: none; }
 .kartta-sulje:focus:not(:focus-visible) { outline: none; }
+/* Puhelimella karttaikkuna pyöristettynä korttina; ylä- ja alapuolella sivun vaalea sävy (myös selaimen palkkien alla) */
+@media (max-width: 700px) {
+  html.kartta-auki, html.kartta-auki body { background: #F4F1EC; }
+  .kartta-modaali { top: 0; bottom: 0; height: auto; background: #F4F1EC;
+    padding: max(10px, env(safe-area-inset-top)) 8px max(10px, env(safe-area-inset-bottom)); }
+  .kartta-modaali-ikkuna { width: 100%; height: 100%; border-radius: 22px; clip-path: inset(0 round 22px); -webkit-mask-image: -webkit-radial-gradient(white, black); }
+  .kartta-modaali-yla { padding: 12px 12px 0 0; }
+  .kartta-modaali .kartta-ohjaimet { bottom: 14px; }
+}

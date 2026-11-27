@@ -566,6 +566,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
     const kehysEl = modaali.querySelector('.kartta-modaali-kehys');
     const sulje = modaali.querySelector('.kartta-sulje');
     const paikka = document.createComment('kartta');
+    const teemaVari = document.querySelector('meta[name="theme-color"]'), teemaAlku = teemaVari ? teemaVari.getAttribute('content') : '';
     let sulkuAjastin = 0;
     avaaIkkuna = () => {
       if (avoin) return;
@@ -573,6 +574,8 @@ window.luoKartta = function (juuri, asetukset = {}) {
       if (!esitetty) { esitetty = true; lukitseSuomeen(); k = Math.max(k, NAKYMA_SUOMI.k); keski = NAKYMA_SUOMI.keski.slice(); }
       alue.before(paikka); kehysEl.prepend(alue);
       modaali.hidden = false; document.documentElement.classList.add('kartta-auki');
+      // Selaimen palkit samaan vaaleaan sävyyn kuin kartan ympärys (puhelimella)
+      if (teemaVari && matchMedia('(max-width: 700px)').matches) teemaVari.setAttribute('content', '#F4F1EC');
       koko();
       requestAnimationFrame(() => modaali.classList.add('auki'));
       aktivoi(true); vihje.hidden = true; sulje.focus({ preventScroll: true });
@@ -584,6 +587,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
       sulkuAjastin = setTimeout(() => {
         paikka.replaceWith(alue); modaali.hidden = true;
         document.documentElement.classList.remove('kartta-auki'); aktivoi(false);
+        if (teemaVari) teemaVari.setAttribute('content', teemaAlku);
         koko();
         lenna(...kohdeNakyma(), 1400);
       }, 220);
