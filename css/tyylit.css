@@ -1248,3 +1248,7 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
   .kartta-modaali-yla { padding: 12px 12px 0 0; }
   .kartta-modaali .kartta-ohjaimet { bottom: 14px; }
 }
+/* Kartan ollessa auki sivun tumma yläosa piiloon, jotta Safari värjää yläpalkin vaaleaksi */
+@media (max-width: 700px) {
+  html.kartta-auki .paakuva, html.kartta-auki .yla, html.kartta-auki .yla-tausta, html.kartta-auki .alasivu-yla { visibility: hidden; }
+}
