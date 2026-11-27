@@ -1128,3 +1128,47 @@ html:has(.valikko.auki) .etusivu .palkkitausta { animation: none !important; -we
 .etusivu.alasivu .alasivu-otsikko { padding-top: 0; }
 .lk, .lk-ryhma, .lk-valinnat, .lk-nayttamo { min-width: 0; }
 .lk-ryhma { grid-template-columns: minmax(0, 1fr); }
+
+/* ---------- Kohdekartta korttina: sivulla esikatselu, napautus avaa ison ikkunan (js/kartta.js, data-rajaus="kortti") ---------- */
+.kartta-alue.kortti { aspect-ratio: 4 / 3; border-radius: 22px; background: #242830; overflow: hidden; isolation: isolate;
+  box-shadow: inset 0 0 0 1px rgba(244, 241, 236, .08); }
+.kartta-alue.kortti canvas { touch-action: pan-y; cursor: pointer; }
+.kartta-avaa { position: absolute; right: 14px; bottom: 14px; z-index: 2; display: inline-flex; align-items: center; gap: 8px;
+  font: 500 11px/1 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; color: var(--vaalea);
+  padding: 11px 16px; border-radius: 999px; border: 1px solid rgba(244, 241, 236, .14); background: rgba(31, 34, 41, .78);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); cursor: pointer; transition: border-color .2s; }
+.kartta-avaa svg { width: 15px; height: 15px; color: var(--vision-oranssi); }
+.kartta-avaa:hover { border-color: var(--vision-oranssi); }
+html.kartta-auki, html.kartta-auki body { overflow: hidden; }
+.kartta-modaali { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+  padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  background: rgba(16, 18, 22, .72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  opacity: 0; transition: opacity .22s ease; overscroll-behavior: contain; touch-action: none; }
+.kartta-modaali[hidden] { display: none; }
+.kartta-modaali.auki { opacity: 1; }
+.kartta-modaali-ikkuna { position: relative; display: flex; flex-direction: column; width: min(1180px, 100%); height: min(860px, 100%);
+  background: #242830; border-radius: 22px; overflow: hidden; box-shadow: 0 30px 80px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(244, 241, 236, .08);
+  transform: scale(.97) translateY(8px); transition: transform .26s cubic-bezier(.2, .8, .2, 1); }
+.kartta-modaali.auki .kartta-modaali-ikkuna { transform: none; }
+.kartta-modaali-yla { display: flex; align-items: center; gap: 16px; padding: 10px 10px 10px 22px; border-bottom: 1px solid rgba(244, 241, 236, .07); background: var(--grafiitti); }
+.kartta-modaali-yla .ylaotsikko { margin: 0; }
+.kartta-modaali-ohje { flex: 1; min-width: 0; font: 400 12.5px/1.35 var(--fontti-teksti); color: rgba(244, 241, 236, .55); }
+.kartta-sulje { flex: none; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(244, 241, 236, .14); background: rgba(41, 45, 53, .9); color: var(--vaalea); }
+.kartta-sulje svg { width: 18px; height: 18px; }
+.kartta-sulje:hover { border-color: var(--vision-oranssi); }
+.kartta-modaali-kehys { position: relative; flex: 1; min-height: 0; }
+.kartta-modaali .kartta-alue { aspect-ratio: auto; width: 100%; height: 100%; max-width: none; border-radius: 0; box-shadow: none; }
+.kartta-modaali .kartta-alue canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.kartta-modaali .kartta-alue canvas:active { cursor: grabbing; }
+.kartta-modaali .kartta-avaa { display: none; }
+.kartta-modaali .kartta-ohjaimet { z-index: 4; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom) * 0); }
+.kartta-modaali .kartta-ohjaimet button { border-radius: 999px; min-width: 44px; height: 44px; font-size: 18px; letter-spacing: 0; text-transform: none; }
+.kartta-modaali .kartta-ohjaimet button[data-z="suomi"] { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+@media (max-width: 700px) {
+  .kartta-alue.kortti { aspect-ratio: 1 / 1; border-radius: 18px; }
+  .kartta-modaali { padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom)); }
+  .kartta-modaali-ikkuna { height: 100%; border-radius: 18px; }
+  .kartta-modaali-yla { padding-left: 16px; gap: 10px; }
+  .kartta-modaali-yla .ylaotsikko { display: none; }
+}

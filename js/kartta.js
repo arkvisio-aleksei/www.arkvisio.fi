@@ -28,6 +28,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
   const FONTTI = '"Jost", "Century Gothic", "Segoe UI", sans-serif';
   const NAKYMA_MAAILMA = { k: 1, keski: [15, 38] };
   const NAKYMA_SUOMI = { k: 7.8, keski: [25.4, 65.0] };
+  const NAKYMA_UUSIMAA = { k: 30, keski: [24.8, 60.62] };
   const K_MIN = .9, K_MAX = 4000;
   // Avauslennon jälkeen Suomi-näkymä on kaukaisin, mihin voi loitontaa.
   // Jos ollaan vielä kauempana (lento keskeytettiin), alarajana on nykyinen zoom: kauemmas ei pääse.
@@ -40,9 +41,12 @@ window.luoKartta = function (juuri, asetukset = {}) {
   // 'tausta' = kartta on koko pääkuvan tausta. Valitaan index.html:ssä: data-rajaus="tausta".
   const RAJAUS = juuri.dataset.rajaus || 'ikkuna';
   const haivytys = RAJAUS === 'haivytys';
+  // 'kortti' = pyöristetty kortti, joka on sivulla vain esikatselu; napautus avaa kartan isoon ikkunaan.
+  const kortti = RAJAUS === 'kortti';
   const paakuva = juuri.closest('.paakuva');
   const tausta = RAJAUS === 'tausta' && !!paakuva;
-  const vapaa = haivytys || tausta;   // pallo saa kasvaa kehystä suuremmaksi
+  const vapaa = haivytys || tausta || kortti;   // pallo saa kasvaa kehystä suuremmaksi
+  alue.classList.toggle('kortti', kortti);
   alue.classList.toggle('haivytys', haivytys); juuri.classList.toggle('haivytys', haivytys);
   juuri.classList.toggle('tausta', tausta); if (tausta) { paakuva.classList.add('kartta-taustana'); paakuva.prepend(canvas); }
 
@@ -425,7 +429,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
     const b = canvas.getBoundingClientRect();
     const mx = e.clientX - b.left, my = e.clientY - b.top;
     let paras = null, lahin = Infinity;
-    if (tausta ? mx < rajaX || my < rajaY || mx > rajaO : haivytys ? ((mx - cx) / rx) ** 2 + ((my - cy) / ry) ** 2 > 1 : Math.hypot(mx - cx, my - cy) > sade * Math.min(1, k)) return null;   // näkyvän alueen ulkopuolella
+    if (kortti) { /* koko kortti on näkyvää aluetta */ } else if (tausta ? mx < rajaX || my < rajaY || mx > rajaO : haivytys ? ((mx - cx) / rx) ** 2 + ((my - cy) / ry) ** 2 > 1 : Math.hypot(mx - cx, my - cy) > sade * Math.min(1, k)) return null;   // näkyvän alueen ulkopuolella
     for (const o of osumat) { const d = Math.hypot(o.x - mx, o.y - my); if (d < o.r && d < lahin) { lahin = d; paras = o; } }
     return paras;
   }
@@ -437,7 +441,9 @@ window.luoKartta = function (juuri, asetukset = {}) {
   const osoittimet = new Map();
   let veto = null, nipistys = null;
 
+  let esiveto = null;
   canvas.addEventListener('pointerdown', e => {
+    if (kortti && !avoin) { esiveto = { x: e.clientX, y: e.clientY }; return; }
     if (animaatio) { animaatio.stop(); animaatio = null; }
     osoittimet.set(e.pointerId, { x: e.clientX, y: e.clientY });
     canvas.setPointerCapture(e.pointerId);
@@ -450,6 +456,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
     }
   });
   canvas.addEventListener('pointermove', e => {
+    if (kortti && !avoin) return;
     if (osoittimet.has(e.pointerId)) osoittimet.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (nipistys && osoittimet.size === 2) {
       const [a, b] = [...osoittimet.values()];
@@ -466,6 +473,10 @@ window.luoKartta = function (juuri, asetukset = {}) {
     vihje.hidden = true; piirra();
   });
   const lopeta = e => {
+    if (kortti && !avoin) {
+      const avaa = e.type === 'pointerup' && esiveto && Math.hypot(e.clientX - esiveto.x, e.clientY - esiveto.y) < 10;
+      esiveto = null; if (avaa) avaaIkkuna(); return;
+    }
     osoittimet.delete(e.pointerId);
     if (osoittimet.size < 2) nipistys = null;
     const napautus = veto && !veto.liikkui;
@@ -483,6 +494,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
   canvas.addEventListener('pointerleave', () => { if (!veto) vihje.hidden = true; aktivoi(false); });
 
   canvas.addEventListener('wheel', e => {
+    if (kortti && !avoin) return;
     const b = canvas.getBoundingClientRect();
     // Taustatilassa rulla zoomaa vain kehyksen kohdalla, muualla sivu vierii normaalisti.
     if (tausta) { const x = e.clientX - b.left, y = e.clientY - b.top; if (x < kehys.x0 || x > kehys.x1 || y < kehys.y0 || y > kehys.y1) return; }
@@ -493,10 +505,65 @@ window.luoKartta = function (juuri, asetukset = {}) {
     zoomaaPisteeseen(Math.exp(-e.deltaY * (e.deltaMode === 1 ? .05 : .0018)), e.clientX - b.left, e.clientY - b.top);
     vihje.hidden = true;
   }, { passive: false });
-  document.addEventListener('pointerdown', e => { if (!alue.contains(e.target) && e.target !== canvas) aktivoi(false); });
+  document.addEventListener('pointerdown', e => { if (avoin) return; if (!alue.contains(e.target) && e.target !== canvas) aktivoi(false); });
 
   const koonSeuraaja = new ResizeObserver(koko); koonSeuraaja.observe(canvas); koonSeuraaja.observe(alue);
   koko();
+
+  // ---------- Iso ikkuna (korttitila) ----------
+  let avoin = false;
+  const introt = [];
+  let avaaIkkuna = () => {};
+  if (kortti) {
+    const avausNappi = document.createElement('button');
+    avausNappi.type = 'button'; avausNappi.className = 'kartta-avaa';
+    avausNappi.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>Avaa kartta';
+    alue.append(avausNappi);
+    const modaali = document.createElement('div');
+    modaali.className = 'kartta-modaali'; modaali.hidden = true;
+    modaali.setAttribute('role', 'dialog'); modaali.setAttribute('aria-modal', 'true'); modaali.setAttribute('aria-label', 'Kohteet kartalla');
+    modaali.innerHTML = '<div class="kartta-modaali-ikkuna"><div class="kartta-modaali-yla"><p class="ylaotsikko">Kohteemme</p>'
+      + '<span class="kartta-modaali-ohje">Vedä siirtääksesi, nipistä tai rullaa lähentääksesi. Napauta ryhmää.</span>'
+      + '<button class="kartta-sulje" type="button" aria-label="Sulje kartta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
+      + '<div class="kartta-modaali-kehys"><div class="kartta-ohjaimet"><button type="button" data-z="suomi" aria-label="Näytä koko Suomi">Suomi</button>'
+      + '<button type="button" data-z="-" aria-label="Loitonna">−</button><button type="button" data-z="+" aria-label="Lähennä">+</button></div></div></div>';
+    document.body.append(modaali);
+    const kehysEl = modaali.querySelector('.kartta-modaali-kehys');
+    const sulje = modaali.querySelector('.kartta-sulje');
+    const paikka = document.createComment('kartta');
+    let sulkuAjastin = 0;
+    avaaIkkuna = () => {
+      if (avoin) return;
+      avoin = true; clearTimeout(sulkuAjastin); introt.forEach(clearTimeout);
+      if (!esitetty) { esitetty = true; lukitseSuomeen(); k = Math.max(k, NAKYMA_SUOMI.k); keski = NAKYMA_SUOMI.keski.slice(); }
+      alue.before(paikka); kehysEl.prepend(alue);
+      modaali.hidden = false; document.documentElement.classList.add('kartta-auki');
+      koko();
+      requestAnimationFrame(() => modaali.classList.add('auki'));
+      aktivoi(true); vihje.hidden = true; sulje.focus({ preventScroll: true });
+    };
+    const suljeIkkuna = () => {
+      if (!avoin) return;
+      avoin = false; vihje.hidden = true; modaali.classList.remove('auki');
+      if (animaatio) { animaatio.stop(); animaatio = null; }
+      sulkuAjastin = setTimeout(() => {
+        paikka.replaceWith(alue); modaali.hidden = true;
+        document.documentElement.classList.remove('kartta-auki'); aktivoi(false);
+        koko();
+        lenna(NAKYMA_UUSIMAA.k, NAKYMA_UUSIMAA.keski, 1400);
+      }, 220);
+    };
+    avausNappi.addEventListener('click', avaaIkkuna);
+    sulje.addEventListener('click', suljeIkkuna);
+    modaali.addEventListener('click', e => { if (e.target === modaali) suljeIkkuna(); });
+    document.addEventListener('keydown', e => { if (avoin && e.key === 'Escape') suljeIkkuna(); });
+    modaali.querySelector('.kartta-ohjaimet').addEventListener('click', e => {
+      const z = e.target.closest('button'); if (!z) return;
+      vihje.hidden = true;
+      if (z.dataset.z === 'suomi') lenna(NAKYMA_SUOMI.k, NAKYMA_SUOMI.keski, 1200);
+      else lenna(k * (z.dataset.z === '+' ? 2 : .5), keski, 450);
+    });
+  }
 
   // Avautuessa: maapallo zoomautuu Suomeen, kun kartta tulee näkyviin.
   // Seurataan pallon kehystä, ei kangasta: kankaan häivytysleikkaus pienentäisi näkyvää osuutta
@@ -505,7 +572,9 @@ window.luoKartta = function (juuri, asetukset = {}) {
   new IntersectionObserver((merkinnat, havainnoija) => {
     if (esitetty || !merkinnat.some(m => m.isIntersecting)) return;
     esitetty = true; havainnoija.disconnect();
-    setTimeout(() => { lenna(NAKYMA_SUOMI.k, NAKYMA_SUOMI.keski, 2400); lukitseSuomeen(); }, 300);
+    introt.push(setTimeout(() => { lenna(NAKYMA_SUOMI.k, NAKYMA_SUOMI.keski, 2400); lukitseSuomeen(); }, 300));
+    // Korttitilassa jatketaan Suomesta Uudellemaalle, jossa suurin osa kohteista on.
+    if (kortti) introt.push(setTimeout(() => { if (!avoin) lenna(NAKYMA_UUSIMAA.k, NAKYMA_UUSIMAA.keski, 2600); }, 3600));
   }, { threshold: .35 }).observe(alue);
 
   return {
