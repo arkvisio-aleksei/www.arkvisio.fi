@@ -1227,3 +1227,15 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
   .kartta-modaali-yla { padding: calc(8px + env(safe-area-inset-top)) 10px 8px 16px; }
   .kartta-modaali .kartta-ohjaimet { bottom: calc(14px + env(safe-area-inset-bottom)); }
 }
+/* Karttaikkunassa ei yläpalkkia: vain kelluva sulkunappi kartan päällä */
+.kartta-modaali-yla { position: absolute; top: 0; right: 0; z-index: 5; padding: 12px; background: none; border: 0; }
+.kartta-modaali-yla .ylaotsikko, .kartta-modaali-ohje { display: none; }
+.kartta-sulje { background: rgba(31, 34, 41, .82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+@media (max-width: 700px) {
+  /* Kartta ulottuu selaimen alapalkin taakse (iso näkymäkorkeus); napit pysyvät näkyvän alueen sisällä */
+  .kartta-modaali { bottom: auto; height: 100vh; height: 100lvh; }
+  .kartta-modaali-yla { padding: calc(10px + env(safe-area-inset-top)) 12px 0 0; }
+  .kartta-modaali .kartta-ohjaimet { bottom: calc(100lvh - 100dvh + 16px + env(safe-area-inset-bottom)); }
+}
+.kartta-modaali .kartta-alue::after { display: none; }
+.kartta-sulje:focus:not(:focus-visible) { outline: none; }
