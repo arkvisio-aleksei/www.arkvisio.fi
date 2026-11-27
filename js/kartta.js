@@ -410,14 +410,20 @@ window.luoKartta = function (juuri, asetukset = {}) {
 
   // ---------- Vihje ----------
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  function naytaVihje(o) {
+  // Street View: avautuu kohteen koordinaateista uuteen välilehteen.
+  const svUrl = j => `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${j.lat},${j.lon}`;
+  const SV_IKONI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.2"/><path d="M9.5 21v-6l-1.5-1v-3.5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2V14l-1.5 1v6"/></svg>';
+  let kiinni = false;
+  function naytaVihje(o, kiinnita = false) {
+    kiinni = kiinnita && !!o; vihje.classList.toggle('kiinni', kiinni);
     if (!o) { vihje.hidden = true; return; }
     if (o.kohde) {
       const t = tyypit[o.kohde.tyyppi];
-      vihje.innerHTML = `${esc(o.kohde.nimi)}, ${esc(o.kohde.paikka)}<small>${t ? esc(t.nimi) : ''}${o.kohde.vuosi ? ' · ' + o.kohde.vuosi : ''}${o.kohde.esimerkki ? ' · esimerkki' : ''}</small>`;
+      vihje.innerHTML = `${esc(o.kohde.nimi)}, ${esc(o.kohde.paikka)}<small>${t ? esc(t.nimi) : ''}${o.kohde.vuosi ? ' · ' + o.kohde.vuosi : ''}${o.kohde.esimerkki ? ' · esimerkki' : ''}</small>`
+        + (kiinni ? `<a class="sv" href="${svUrl(o.kohde)}" target="_blank" rel="noopener">${SV_IKONI}Street View</a>` : (avoin ? '<small>Klikkaa, niin näet Street View -linkin</small>' : ''));
     } else {
       const samaPaikka = k >= K_MAX * .95;
-      const lista = samaPaikka ? `<ul>${o.ryhma.slice(0, 8).map(j => `<li>${esc(j.nimi)}, ${esc(j.paikka)}</li>`).join('')}${o.ryhma.length > 8 ? `<li>+ ${o.ryhma.length - 8} muuta</li>` : ''}</ul>` : '';
+      const lista = samaPaikka ? `<ul>${o.ryhma.slice(0, 8).map(j => `<li>${kiinni ? `<a class="sv-pieni" href="${svUrl(j)}" target="_blank" rel="noopener">${esc(j.nimi)}, ${esc(j.paikka)}</a>` : `${esc(j.nimi)}, ${esc(j.paikka)}`}</li>`).join('')}${o.ryhma.length > 8 ? `<li>+ ${o.ryhma.length - 8} muuta</li>` : ''}</ul>` : '';
       vihje.innerHTML = `${o.ryhma.length} kohdetta<small>${samaPaikka ? 'Samalla alueella' : 'Klikkaa, niin kartta lähentää'}</small>${lista}`;
     }
     // Vihje sijoitetaan kehykseen; kangas voi alkaa kehyksen ulkopuolelta.
@@ -463,7 +469,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
       k = Math.max(Math.min(kMin, nipistys.k), Math.min(K_MAX, nipistys.k * Math.hypot(a.x - b.x, a.y - b.y) / nipistys.d));
       vihje.hidden = true; piirra(); return;
     }
-    if (!veto) { const o = osuma(e); naytaVihje(o); canvas.style.cursor = o ? 'pointer' : ''; return; }
+    if (!veto) { if (kiinni && !vihje.hidden) return; const o = osuma(e); naytaVihje(o); canvas.style.cursor = o ? 'pointer' : ''; return; }
     const dx = e.clientX - veto.x, dy = e.clientY - veto.y;
     if (Math.abs(dx) + Math.abs(dy) > 4) veto.liikkui = true;
     if (!veto.liikkui) return;
@@ -484,14 +490,14 @@ window.luoKartta = function (juuri, asetukset = {}) {
     if (!napautus) return;
     aktivoi(true);
     const o = osuma(e);
-    if (!o) { vihje.hidden = true; return; }
-    if (o.ryhma && k < K_MAX * .95) { vihje.hidden = true; sovitaKohteisiin(o.ryhma); return; }
-    naytaVihje(o);
+    if (!o) { naytaVihje(null); return; }
+    if (o.ryhma && k < K_MAX * .95) { naytaVihje(null); sovitaKohteisiin(o.ryhma); return; }
+    naytaVihje(o, avoin || !kortti);
     if (o.kohde && asetukset.valittu) asetukset.valittu(o.kohde);
   };
   canvas.addEventListener('pointerup', lopeta);
   canvas.addEventListener('pointercancel', lopeta);
-  canvas.addEventListener('pointerleave', () => { if (!veto) vihje.hidden = true; aktivoi(false); });
+  canvas.addEventListener('pointerleave', () => { if (!veto && !kiinni) vihje.hidden = true; if (!avoin) aktivoi(false); });
 
   canvas.addEventListener('wheel', e => {
     if (kortti && !avoin) return;
@@ -523,7 +529,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
     modaali.className = 'kartta-modaali'; modaali.hidden = true;
     modaali.setAttribute('role', 'dialog'); modaali.setAttribute('aria-modal', 'true'); modaali.setAttribute('aria-label', 'Kohteet kartalla');
     modaali.innerHTML = '<div class="kartta-modaali-ikkuna"><div class="kartta-modaali-yla"><p class="ylaotsikko">Kohteemme</p>'
-      + '<span class="kartta-modaali-ohje">Vedä siirtääksesi, nipistä tai rullaa lähentääksesi. Napauta ryhmää.</span>'
+      + '<span class="kartta-modaali-ohje">Vedä ja nipistä. Napauta ryhmää lähentääksesi tai kohdetta avataksesi Street View’n.</span>'
       + '<button class="kartta-sulje" type="button" aria-label="Sulje kartta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
       + '<div class="kartta-modaali-kehys"><div class="kartta-ohjaimet"><button type="button" data-z="suomi" aria-label="Näytä koko Suomi">Suomi</button>'
       + '<button type="button" data-z="-" aria-label="Loitonna">−</button><button type="button" data-z="+" aria-label="Lähennä">+</button></div></div></div>';
