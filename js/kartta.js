@@ -567,30 +567,66 @@ window.luoKartta = function (juuri, asetukset = {}) {
     const sulje = modaali.querySelector('.kartta-sulje');
     const paikka = document.createComment('kartta');
     const teemaVari = document.querySelector('meta[name="theme-color"]'), teemaAlku = teemaVari ? teemaVari.getAttribute('content') : '';
-    let sulkuAjastin = 0;
+    let sulkuAjastin = 0, lahto = null, animaatiot = [];
+    const ikkunaEl = modaali.querySelector('.kartta-modaali-ikkuna');
+    const ohjaimetEl = modaali.querySelector('.kartta-ohjaimet');
+    // Rajaus, joka näyttää ikkunasta vain sivun karttakortin kohdan (avautuminen alkaa siitä).
+    const korttiRajaus = () => {
+      const r1 = ikkunaEl.getBoundingClientRect(), r0 = lahto;
+      const i = [r0.top - r1.top, r1.right - r0.right, r1.bottom - r0.bottom, r0.left - r1.left].map(v => Math.max(0, v).toFixed(1) + 'px');
+      return `inset(${i.join(' ')} round 22px)`;
+    };
+    const AUKI = 'inset(0px 0px 0px 0px round 22px)';
+    const pysayta = () => { animaatiot.forEach(a => a.cancel()); animaatiot = []; };
     avaaIkkuna = () => {
       if (avoin) return;
       avoin = true; clearTimeout(sulkuAjastin); introt.forEach(clearTimeout);
       if (!esitetty) { esitetty = true; lukitseSuomeen(); k = Math.max(k, NAKYMA_SUOMI.k); keski = NAKYMA_SUOMI.keski.slice(); }
+      lahto = alue.getBoundingClientRect();
       alue.before(paikka); kehysEl.prepend(alue);
       modaali.hidden = false; document.documentElement.classList.add('kartta-auki');
       // Selaimen palkit samaan vaaleaan sävyyn kuin kartan ympärys (puhelimella)
       if (teemaVari && matchMedia('(max-width: 700px)').matches) teemaVari.setAttribute('content', '#F4F1EC');
       koko();
-      requestAnimationFrame(() => modaali.classList.add('auki'));
+      modaali.classList.add('auki'); pysayta();
+      // Avautuminen: kartta kasvaa sivun karttakortin paikalta koko ikkunaksi, tausta häivyttyy esiin.
+      if (!vahennaLiiketta && ikkunaEl.animate) {
+        const tausta = getComputedStyle(modaali).backgroundColor;
+        const helppo = 'cubic-bezier(.22, .9, .25, 1)';
+        animaatiot = [
+          ikkunaEl.animate([{ clipPath: korttiRajaus(), webkitClipPath: korttiRajaus() }, { clipPath: AUKI, webkitClipPath: AUKI }], { duration: 620, easing: helppo }),
+          modaali.animate([{ backgroundColor: 'rgba(0,0,0,0)' }, { backgroundColor: tausta }], { duration: 420, easing: 'ease-out' }),
+          ohjaimetEl.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 380, delay: 300, easing: 'ease-out', fill: 'backwards' }),
+          sulje.animate([{ opacity: 0, transform: 'scale(.8)' }, { opacity: 1, transform: 'none' }], { duration: 380, delay: 300, easing: 'ease-out', fill: 'backwards' }),
+        ];
+      }
       aktivoi(true); vihje.hidden = true; sulje.focus({ preventScroll: true });
     };
     const suljeIkkuna = () => {
       if (!avoin) return;
-      avoin = false; vihje.hidden = true; modaali.classList.remove('auki');
+      avoin = false; vihje.hidden = true;
       if (animaatio) { animaatio.stop(); animaatio = null; }
+      let kesto = 0;
+      pysayta();
+      if (!vahennaLiiketta && ikkunaEl.animate && lahto) {
+        // Sulkeutuminen: kartta kutistuu takaisin sivun karttakortin paikalle.
+        kesto = 440;
+        const tausta = getComputedStyle(modaali).backgroundColor, loppu = korttiRajaus();
+        animaatiot = [
+          ikkunaEl.animate([{ clipPath: AUKI, webkitClipPath: AUKI }, { clipPath: loppu, webkitClipPath: loppu }], { duration: kesto, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'forwards' }),
+          modaali.animate([{ backgroundColor: tausta }, { backgroundColor: 'rgba(0,0,0,0)' }], { duration: kesto, easing: 'ease-in', fill: 'forwards' }),
+          ohjaimetEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' }),
+          sulje.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' }),
+        ];
+      }
       sulkuAjastin = setTimeout(() => {
+        pysayta(); modaali.classList.remove('auki');
         paikka.replaceWith(alue); modaali.hidden = true;
         document.documentElement.classList.remove('kartta-auki'); aktivoi(false);
         if (teemaVari) teemaVari.setAttribute('content', teemaAlku);
         koko();
         lenna(...kohdeNakyma(), 1400);
-      }, 220);
+      }, kesto);
     };
     avausNappi.addEventListener('click', avaaIkkuna);
     sulje.addEventListener('click', suljeIkkuna);

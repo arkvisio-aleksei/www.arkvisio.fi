@@ -1257,3 +1257,6 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 @media (max-width: 700px) {
   .kartta-ylareuna { display: block; position: fixed; top: 0; left: 0; right: 0; height: max(10px, env(safe-area-inset-top)); background: #F4F1EC; z-index: 1001; pointer-events: none; }
 }
+/* Karttaikkunan avautuminen hoidetaan skriptissä (kasvaa kortin paikalta), ei CSS-häivytyksellä */
+.kartta-modaali, .kartta-modaali.auki { opacity: 1; transition: none; }
+.kartta-modaali-ikkuna, .kartta-modaali.auki .kartta-modaali-ikkuna { transform: none; transition: none; }
