@@ -320,30 +320,29 @@ window.luoKartta = function (juuri, asetukset = {}) {
   }
 
   function piirraKohteet() {
-    // 1) Näkyvät kohteet ruutuihin
-    const ruudut = new Map();
+    // 1) Näkyvät kohteet. Ryhmittely perustuu kohteiden keskinäisiin etäisyyksiin (ei näytön ruudukkoon),
+    //    joten ryhmät pysyvät samoina karttaa siirrettäessä ja muuttuvat vain zoomatessa.
+    const pisteet = [];
     let nakyvia = 0;
+    const VARA = RUUTU * 4;
     for (const kohde of kohteet) {
       if (!aktiiviset.has(kohde.tyyppi) || !nakyy(kohde.piste)) continue;
       const [x, y] = proj(kohde.piste);
-      if (x < -RUUTU || y < -RUUTU || x > w + RUUTU || y > h + RUUTU) continue;
+      if (x < -VARA || y < -VARA || x > w + VARA || y > h + VARA) continue;
       // Taustatilassa lasketaan vain se osa, joka näkyy (ei häivytettyä iskulauseen puolta).
       if (x >= rajaX && y >= rajaY && x <= (tausta ? rajaO : w) && y <= (tausta ? paakuva.clientHeight : h)) nakyvia++;
-      const avain = Math.floor(x / RUUTU) + ':' + Math.floor(y / RUUTU);
-      let r = ruudut.get(avain);
-      if (!r) ruudut.set(avain, r = { jasenet: [], sx: 0, sy: 0 });
-      r.jasenet.push(kohde); r.sx += x; r.sy += y;
+      pisteet.push({ kohde, x, y });
     }
-    // 2) Liian lähekkäiset ruudut yhdistetään, isoimmat ensin
+    // 2) Kohteet liitetään lähimpään ryhmään, jonka siemen on riittävän lähellä. Järjestys on aina sama
+    //    (kohteiden oma järjestys), joten tulos ei riipu kartan siirrosta.
+    const raja = RUUTU * .9;
     const ryhmat = [];
-    [...ruudut.values()].sort((a, b) => b.jasenet.length - a.jasenet.length).forEach(r => {
-      const n = r.jasenet.length, x = r.sx / n, y = r.sy / n;
-      const lahella = ryhmat.find(g => Math.hypot(g.x - x, g.y - y) < RUUTU * .9);
-      if (!lahella) { ryhmat.push({ jasenet: r.jasenet.slice(), x, y }); return; }
-      const m = lahella.jasenet.length;
-      lahella.x = (lahella.x * m + x * n) / (m + n); lahella.y = (lahella.y * m + y * n) / (m + n);
-      lahella.jasenet.push(...r.jasenet);
-    });
+    for (const p of pisteet) {
+      let paras = null, lahin = raja;
+      for (const g of ryhmat) { const d = Math.hypot(g.sx - p.x, g.sy - p.y); if (d < lahin) { lahin = d; paras = g; } }
+      if (!paras) ryhmat.push({ jasenet: [p.kohde], sx: p.x, sy: p.y, x: p.x, y: p.y, n: 1 });
+      else { paras.jasenet.push(p.kohde); paras.x = (paras.x * paras.n + p.x) / (paras.n + 1); paras.y = (paras.y * paras.n + p.y) / (paras.n + 1); paras.n++; }
+    }
     piirraKaupungit(ryhmat);
     // 3) Piirretään: yksittäiset täppinä, useampi ryhmänä
     osumat = [];
