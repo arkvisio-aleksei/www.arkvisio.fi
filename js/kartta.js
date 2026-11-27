@@ -143,12 +143,17 @@ window.luoKartta = function (juuri, asetukset = {}) {
     // Päivämäärärajan ylittävä laatikko: pituusvälit [lon0, 180] ja [-180, lon1]
     if (r.lon0 > r.lon1) return d3.geoDistance([Math.max(r.lon0, keski[0]), lahinLat], keski) <= nakyvaSade
       || d3.geoDistance([Math.min(r.lon1, keski[0]), lahinLat], keski) <= nakyvaSade;
-    return d3.geoDistance([Math.max(r.lon0, Math.min(r.lon1, keski[0])), lahinLat], keski) <= nakyvaSade;
+    if (d3.geoDistance([Math.max(r.lon0, Math.min(r.lon1, keski[0])), lahinLat], keski) <= nakyvaSade) return true;
+    // Pohjoisessa lähin kohta ei aina ole yllä arvioitu: tarkistetaan myös reunojen pisteet.
+    const lonR = Math.max(r.lon0, Math.min(r.lon1, keski[0]));
+    for (const p of [[r.lon0, r.lat0], [r.lon0, r.lat1], [r.lon1, r.lat0], [r.lon1, r.lat1], [lonR, r.lat0], [lonR, r.lat1], [r.lon0, lahinLat], [r.lon1, lahinLat]])
+      if (d3.geoDistance(p, keski) <= nakyvaSade) return true;
+    return false;
   }
   // Lisää näkyvät osat polkuun.
   function piirraOsat(osat, t) {
     // Ortografisessa projektiossa piste kulmaetäisyydellä θ on säteellä sade·k·sin θ.
-    nakyvaSade = Math.asin(Math.min(1, nakyvaAlue() / (sade * k))) + .02;
+    nakyvaSade = Math.asin(Math.min(1, nakyvaAlue() / (sade * k))) + .05;
     for (const o of osat) {
       const taso = o.tasot[t];
       if (!taso || !laatikkoNakyy(o)) continue;
@@ -194,7 +199,8 @@ window.luoKartta = function (juuri, asetukset = {}) {
   let osumat = [], animaatio = null, valittu = null, aktiivinen = false;
 
   // Näkyvän alueen säde pikseleinä kartan keskeltä.
-  const nakyvaAlue = () => tausta ? Math.hypot(w, h) : haivytys ? Math.max(rx, ry) : sade;
+  // Kortti- ja ikkunatilassa koko suorakaide näkyy, joten säde ulottuu kulmiin asti.
+  const nakyvaAlue = () => tausta ? Math.hypot(w, h) : haivytys ? Math.max(rx, ry) : kortti ? Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy)) : sade;
 
   const asetaProj = () => proj.translate([cx, cy]).scale(sade * k).rotate([-keski[0], -keski[1]]).clipExtent([[-2, -2], [w + 2, h + 2]]);
 
