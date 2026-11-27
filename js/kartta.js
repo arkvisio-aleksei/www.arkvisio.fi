@@ -436,8 +436,12 @@ window.luoKartta = function (juuri, asetukset = {}) {
       vihje.innerHTML = `${o.ryhma.length} kohdetta<small>${samaPaikka ? 'Samalla alueella' : 'Klikkaa, niin kartta lähentää'}</small>${lista}`;
     }
     // Vihje sijoitetaan kehykseen; kangas voi alkaa kehyksen ulkopuolelta.
-    vihje.style.left = (Math.max(80, Math.min(w - 80, o.x)) - kehys.x0) + 'px';
-    vihje.style.top = (o.y - o.r + 6 - kehys.y0) + 'px';
+    // Pidetään laatikko kehyksen sisällä: sivuttain reunoista irti, ja jos yläpuolelle ei mahdu, täpän alle.
+    vihje.hidden = false; vihje.classList.remove('alle');
+    const aw = alue.clientWidth, vl = vihje.offsetWidth, vk = vihje.offsetHeight, x = o.x - kehys.x0, y = o.y - kehys.y0;
+    vihje.style.left = Math.max(vl / 2 + 10, Math.min(aw - vl / 2 - 10, x)) + 'px';
+    if (y - o.r - vk - 12 < 8) { vihje.classList.add('alle'); vihje.style.top = (y + o.r + 10) + 'px'; }
+    else vihje.style.top = (y - o.r + 6) + 'px';
     vihje.hidden = false;
   }
   function osuma(e) {
@@ -464,7 +468,10 @@ window.luoKartta = function (juuri, asetukset = {}) {
     canvas.setPointerCapture(e.pointerId);
     if (osoittimet.size === 2 && aktiivinen) {
       const [a, b] = [...osoittimet.values()];
-      nipistys = { d: Math.hypot(a.x - b.x, a.y - b.y), k };
+      const cb = canvas.getBoundingClientRect();
+      const mx = (a.x + b.x) / 2 - cb.left, my = (a.y + b.y) / 2 - cb.top;
+      asetaProj();
+      nipistys = { d: Math.hypot(a.x - b.x, a.y - b.y), k, geo: proj.invert([mx, my]) };
       veto = null;
     } else if (osoittimet.size === 1) {
       veto = { x: e.clientX, y: e.clientY, keski: keski.slice(), liikkui: false };
@@ -476,6 +483,14 @@ window.luoKartta = function (juuri, asetukset = {}) {
     if (nipistys && osoittimet.size === 2) {
       const [a, b] = [...osoittimet.values()];
       k = Math.max(Math.min(kMin, nipistys.k), Math.min(K_MAX, nipistys.k * Math.hypot(a.x - b.x, a.y - b.y) / nipistys.d));
+      // Kahden sormen siirto: sormien välissä ollut kohta pysyy sormien välissä, kun ne liikkuvat.
+      if (nipistys.geo) {
+        const cb = canvas.getBoundingClientRect(), keskipiste = [(a.x + b.x) / 2 - cb.left, (a.y + b.y) / 2 - cb.top];
+        for (let n = 0; n < 3; n++) {
+          asetaProj(); const g = proj.invert(keskipiste); if (!g) break;
+          keski = [keski[0] + (nipistys.geo[0] - g[0]), Math.max(-85, Math.min(85, keski[1] + (nipistys.geo[1] - g[1])))];
+        }
+      }
       vihje.hidden = true; piirra(); return;
     }
     if (!veto) { if (kiinni && !vihje.hidden) return; const o = osuma(e); naytaVihje(o); canvas.style.cursor = o ? 'pointer' : ''; return; }

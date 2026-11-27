@@ -1216,3 +1216,14 @@ html.kartta-auki, html.kartta-auki body { overflow: hidden; }
   .kartta-avaa { bottom: 18px; right: 18px; }
 }
 @media (min-width: 701px) and (max-width: 900px) { .kartta-alue.kortti { aspect-ratio: 4 / 3; } }
+/* Infolaatikko täpän alla, kun yläpuolelle ei mahdu */
+.kartta-vihje.alle { transform: translate(-50%, 0); }
+/* Kartan ollessa auki sivun tausta on tumma, ettei selaimen palkkien alta näy vaaleaa */
+html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
+/* Puhelimella kartta koko näytölle */
+@media (max-width: 700px) {
+  .kartta-modaali { padding: 0; background: var(--grafiitti); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .kartta-modaali-ikkuna { width: 100%; height: 100%; border-radius: 0; clip-path: none; -webkit-mask-image: none; box-shadow: none; transform: none; }
+  .kartta-modaali-yla { padding: calc(8px + env(safe-area-inset-top)) 10px 8px 16px; }
+  .kartta-modaali .kartta-ohjaimet { bottom: calc(14px + env(safe-area-inset-bottom)); }
+}
