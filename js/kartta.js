@@ -590,8 +590,9 @@ window.luoKartta = function (juuri, asetukset = {}) {
       if (!matchMedia('(max-width: 700px)').matches) { juuriEl.classList.remove('kartta-ylaosa-piiloon'); return; }
       if (vahennaLiiketta || !ikkunaEl.animate) { if (!nakyviin) juuriEl.classList.add('kartta-ylaosa-piiloon'); return; }
       ylaAnimaatiot = ylaosat().map(e => e.animate([{ opacity: nakyviin ? 0 : 1 }, { opacity: nakyviin ? 1 : 0 }], { duration: kesto, delay: viive, easing: 'ease-in-out', fill: 'both' }));
-      // Ylälaidan vaalea kaistale (tilarivin kohdalla) vaihtuu yläpalkkiin samassa tahdissa
-      ylaAnimaatiot.push(ylareunaEl.animate([{ opacity: nakyviin ? 1 : 0 }, { opacity: nakyviin ? 0 : 1 }], { duration: kesto, delay: viive, easing: 'ease-in-out', fill: 'both' }));
+      // Ylälaidan vaalea kaistale (tilarivin kohdalla) häivytetään vain suljettaessa. Avattaessa se on heti
+      // näkyvä, koska Safari valitsee tilarivin värin avaushetkellä.
+      if (nakyviin) ylaAnimaatiot.push(ylareunaEl.animate([{ opacity: nakyviin ? 1 : 0 }, { opacity: nakyviin ? 0 : 1 }], { duration: kesto, delay: viive, easing: 'ease-in-out', fill: 'both' }));
       ylaAjastin = setTimeout(() => {
         if (!nakyviin) juuriEl.classList.add('kartta-ylaosa-piiloon');
         ylaAnimaatiot.forEach(a => a.cancel()); ylaAnimaatiot = [];
