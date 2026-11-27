@@ -578,6 +578,22 @@ window.luoKartta = function (juuri, asetukset = {}) {
     };
     const AUKI = 'inset(0px 0px 0px 0px round 22px)';
     const pysayta = () => { animaatiot.forEach(a => a.cancel()); animaatiot = []; };
+    // Sivun yläosa (logo ja valikko) häivytetään pehmeästi pois ja takaisin kartan mukana.
+    const juuriEl = document.documentElement;
+    let ylaAnimaatiot = [], ylaAjastin = 0;
+    const ylaosat = () => [...document.querySelectorAll('.paakuva, .yla, .yla-tausta, .alasivu-yla')].filter(e => e.getClientRects().length);
+    const haivytaYla = (nakyviin, kesto, viive = 0) => {
+      clearTimeout(ylaAjastin); ylaAnimaatiot.forEach(a => a.cancel()); ylaAnimaatiot = [];
+      if (nakyviin) juuriEl.classList.remove('kartta-ylaosa-piiloon');
+      // Yläosa piilotetaan vain puhelimella (siellä Safari värjää palkit sen mukaan).
+      if (!matchMedia('(max-width: 700px)').matches) { juuriEl.classList.remove('kartta-ylaosa-piiloon'); return; }
+      if (vahennaLiiketta || !ikkunaEl.animate) { if (!nakyviin) juuriEl.classList.add('kartta-ylaosa-piiloon'); return; }
+      ylaAnimaatiot = ylaosat().map(e => e.animate([{ opacity: nakyviin ? 0 : 1 }, { opacity: nakyviin ? 1 : 0 }], { duration: kesto, delay: viive, easing: 'ease-in-out', fill: 'both' }));
+      ylaAjastin = setTimeout(() => {
+        if (!nakyviin) juuriEl.classList.add('kartta-ylaosa-piiloon');
+        ylaAnimaatiot.forEach(a => a.cancel()); ylaAnimaatiot = [];
+      }, kesto + viive);
+    };
     avaaIkkuna = () => {
       if (avoin) return;
       avoin = true; clearTimeout(sulkuAjastin); introt.forEach(clearTimeout);
@@ -585,6 +601,7 @@ window.luoKartta = function (juuri, asetukset = {}) {
       lahto = alue.getBoundingClientRect();
       alue.before(paikka); kehysEl.prepend(alue);
       modaali.hidden = false; document.documentElement.classList.add('kartta-auki');
+      haivytaYla(false, 420);
       // Selaimen palkit samaan vaaleaan sävyyn kuin kartan ympärys (puhelimella)
       if (teemaVari && matchMedia('(max-width: 700px)').matches) teemaVari.setAttribute('content', '#F4F1EC');
       koko();
@@ -594,10 +611,10 @@ window.luoKartta = function (juuri, asetukset = {}) {
         const tausta = getComputedStyle(modaali).backgroundColor;
         const helppo = 'cubic-bezier(.22, .9, .25, 1)';
         animaatiot = [
-          ikkunaEl.animate([{ clipPath: korttiRajaus(), webkitClipPath: korttiRajaus() }, { clipPath: AUKI, webkitClipPath: AUKI }], { duration: 620, easing: helppo }),
-          modaali.animate([{ backgroundColor: 'rgba(0,0,0,0)' }, { backgroundColor: tausta }], { duration: 420, easing: 'ease-out' }),
-          ohjaimetEl.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 380, delay: 300, easing: 'ease-out', fill: 'backwards' }),
-          sulje.animate([{ opacity: 0, transform: 'scale(.8)' }, { opacity: 1, transform: 'none' }], { duration: 380, delay: 300, easing: 'ease-out', fill: 'backwards' }),
+          ikkunaEl.animate([{ clipPath: korttiRajaus(), webkitClipPath: korttiRajaus() }, { clipPath: AUKI, webkitClipPath: AUKI }], { duration: 800, easing: helppo }),
+          modaali.animate([{ backgroundColor: 'rgba(0,0,0,0)' }, { backgroundColor: tausta }], { duration: 600, easing: 'ease-out' }),
+          ohjaimetEl.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: 420, easing: 'ease-out', fill: 'backwards' }),
+          sulje.animate([{ opacity: 0, transform: 'scale(.8)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: 420, easing: 'ease-out', fill: 'backwards' }),
         ];
       }
       aktivoi(true); vihje.hidden = true; sulje.focus({ preventScroll: true });
@@ -610,15 +627,17 @@ window.luoKartta = function (juuri, asetukset = {}) {
       pysayta();
       if (!vahennaLiiketta && ikkunaEl.animate && lahto) {
         // Sulkeutuminen: kartta kutistuu takaisin sivun karttakortin paikalle.
-        kesto = 440;
+        kesto = 650;
         const tausta = getComputedStyle(modaali).backgroundColor, loppu = korttiRajaus();
         animaatiot = [
           ikkunaEl.animate([{ clipPath: AUKI, webkitClipPath: AUKI }, { clipPath: loppu, webkitClipPath: loppu }], { duration: kesto, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'forwards' }),
           modaali.animate([{ backgroundColor: tausta }, { backgroundColor: 'rgba(0,0,0,0)' }], { duration: kesto, easing: 'ease-in', fill: 'forwards' }),
-          ohjaimetEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' }),
-          sulje.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' }),
+          ohjaimetEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: 'forwards' }),
+          sulje.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: 'forwards' }),
         ];
       }
+      // Yläosa palaa näkyviin vähitellen sulkeutumisen loppupuolella.
+      haivytaYla(true, Math.max(1, kesto * .75), kesto * .35);
       sulkuAjastin = setTimeout(() => {
         pysayta(); modaali.classList.remove('auki');
         paikka.replaceWith(alue); modaali.hidden = true;

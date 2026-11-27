@@ -1250,7 +1250,7 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 }
 /* Kartan ollessa auki sivun tumma yläosa piiloon, jotta Safari värjää yläpalkin vaaleaksi */
 @media (max-width: 700px) {
-  html.kartta-auki .paakuva, html.kartta-auki .yla, html.kartta-auki .yla-tausta, html.kartta-auki .alasivu-yla { visibility: hidden; }
+  html.kartta-ylaosa-piiloon .paakuva, html.kartta-ylaosa-piiloon .yla, html.kartta-ylaosa-piiloon .yla-tausta, html.kartta-ylaosa-piiloon .alasivu-yla { visibility: hidden; }
 }
 /* Vaalea yläreunapalkki: Safari värjää tilarivin yläreunaan kiinnitetyn palkin mukaan */
 .kartta-ylareuna { display: none; }
