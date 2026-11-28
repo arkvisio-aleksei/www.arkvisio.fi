@@ -1695,3 +1695,13 @@ a.hihna-kohta:hover .hihna-nimi::after { opacity: 1; transform: none; }
   a.hihna-kohta { font-size: 20px; }
   a.hihna-kohta .hihna-nimi::after { display: none; }
 }
+/* Siirtymässä yläosa pysyy fyysisesti paikallaan: paneeli ja palkki vaihtuvat suoraan, vain otsikot liukuvat ja sisältö slidaa */
+::view-transition-group(paneeli), ::view-transition-group(ylapalkki) { animation: none; }
+::view-transition-old(paneeli), ::view-transition-old(ylapalkki) { display: none; }
+::view-transition-new(paneeli), ::view-transition-new(ylapalkki) { animation: none; }
+.etusivu.alasivu .murupolku { view-transition-name: murupolku; }
+::view-transition-group(murupolku) { animation: none; }
+::view-transition-old(murupolku) { animation: hihna-haivy-pois .35s ease both; }
+::view-transition-new(murupolku) { animation: hihna-haivy-esiin .35s ease .2s both; }
+@keyframes hihna-haivy-pois { to { opacity: 0; } }
+@keyframes hihna-haivy-esiin { from { opacity: 0; } }
