@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1F2229">
+  <title>Toimisto – ArkVisio</title>
+  <meta name="description" content="ArkVisio Oy, Puustellinpolku 12, 00410 Helsinki. Puhelin 09 8711 281, toimisto@arkvisio.fi.">
+  <link rel="icon" href="assets/logo/logo-musta.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="css/tyylit.css?v=20261128e">
+</head>
+<body class="etusivu alasivu">
+  <a class="ohita" href="#sisalto">Siirry sisältöön</a>
+
+  <!-- YLÄOSA: sama logo ja valikko kuin etusivulla -->
+  <!-- YLÄOSA kuten etusivulla: tumma paneeli (otsikko) vierii ylös ja jää matalaksi palkiksi (js/valikko.js) -->
+  <header class="paakuva tumma">
+    <div class="paneeli">
+      <div class="paakuva-keski">
+          <div class="alasivu-otsikko">
+            <div>
+              <p class="murupolku"><a href="index.html">Etusivu</a> / Toimisto</p>
+              <h1>Toimisto</h1>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="kehys">
+      <div class="palkkitausta" aria-hidden="true"></div>
+      <div class="yla">
+        <a class="logo" href="index.html"><img class="logo-vaalea" src="assets/logo/logo-valkoinen.svg" alt="ArkVisio – etusivulle" width="84" height="40"><img class="logo-tumma" src="assets/logo/logo-musta.svg" alt="" aria-hidden="true" width="84" height="40"></a>
+        <nav class="valikko" id="valikko" aria-label="Päävalikko">
+          <div class="valikko-ryhma">
+            <a href="index.html#palvelut" aria-haspopup="true">Palvelut</a>
+            <div class="alavalikko">
+              <a class="ali" href="suunnittelu.html"><span>01</span>Suunnittelu</a>
+              <a class="ali" href="tyomaa.html"><span>02</span>Toteutus</a>
+              <a class="ali" href="tutkimus.html"><span>03</span>Tutkimus</a>
+            </div>
+          </div>
+          <a href="kohteet.html">Kohteemme</a>
+          <a href="toimisto.html" aria-current="page">Toimisto</a>
+        </nav>
+        <button class="valikko-nappi" type="button" aria-expanded="false" aria-controls="valikko">Valikko</button>
+        <button class="burgeri" type="button" aria-expanded="false" aria-controls="valikko" aria-label="Valikko"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="sisalto">
+
+    <!-- JOHDANTO -->
+    <section class="osio palvelu-intro">
+      <div class="kehys palvelu-intro-runko">
+        <p class="palvelu-lede">ArkVisio on helsinkiläinen suunnittelutoimisto vuodesta 1993. Arkkitehti, rakennesuunnittelija, työnjohtaja ja tarkastaja työskentelevät saman katon alla – yksi yhteydenotto riittää koko hankkeeseen.</p>
+        <dl class="palvelu-faktat"><div><dt>1993</dt><dd>toimisto perustettu</dd></div><div><dt>1 300+</dt><dd>suunnitteluhanketta</dd></div><div><dt>Helsinki</dt><dd>Puustellinpolku 12</dd></div></dl>
+      </div>
+    </section>
+
+    <!-- YHTEYSTIEDOT -->
+    <section class="osio yhteys-osio" aria-labelledby="yhteys-otsikko">
+      <div class="kehys">
+        <p class="ylaotsikko" id="yhteys-otsikko">Yhteystiedot</p>
+        <div class="yhteystiedot">
+          <a class="yhteystieto" href="tel:+35898711281"><span class="yhteystieto-nimi">Puhelin</span><span class="yhteystieto-arvo">09 8711 281</span><span class="yhteystieto-lisa">Arkisin</span></a>
+          <a class="yhteystieto" href="mailto:toimisto@arkvisio.fi"><span class="yhteystieto-nimi">Sähköposti</span><span class="yhteystieto-arvo">toimisto@arkvisio.fi</span><span class="yhteystieto-lisa">Yleiset asiat</span></a>
+          <a class="yhteystieto" href="mailto:myynti@arkvisio.fi"><span class="yhteystieto-nimi">Tarjouspyynnöt</span><span class="yhteystieto-arvo">myynti@arkvisio.fi</span><span class="yhteystieto-lisa">Tai laske hinta palvelusivuilla</span></a>
+          <a class="yhteystieto" href="https://www.google.com/maps/search/?api=1&amp;query=Puustellinpolku+12%2C+00410+Helsinki" target="_blank" rel="noopener"><span class="yhteystieto-nimi">Käyntiosoite</span><span class="yhteystieto-arvo">Puustellinpolku 12</span><span class="yhteystieto-lisa">00410 Helsinki · Avaa kartalla</span></a>
+        </div>
+        <dl class="yritystiedot"><div><dt>Yritys</dt><dd>ArkVisio Oy</dd></div><div><dt>Y-tunnus</dt><dd>0930755-1</dd></div></dl>
+      </div>
+    </section>
+
+    <!-- HENKILÖT (esimerkit: korvataan oikeilla nimillä, kuvilla ja yhteystiedoilla) -->
+    <section class="osio henkilot-osio" aria-labelledby="henkilot-otsikko">
+      <div class="kehys">
+        <p class="ylaotsikko" id="henkilot-otsikko">Henkilöt</p>
+        <div class="henkilot">
+          <article class="henkilo">
+            <div class="henkilo-kuva" aria-hidden="true"><svg viewBox="0 0 80 80"><circle cx="40" cy="31" r="13"/><path d="M14 74c3-15 13-23 26-23s23 8 26 23"/></svg></div>
+            <p class="henkilo-rooli">Arkkitehti</p>
+            <h3>Etunimi Sukunimi</h3>
+            <p class="henkilo-titteli">Pääsuunnittelija</p>
+            <p class="henkilo-yhteys"><a href="tel:+358401234567">040 123 4567</a><a href="mailto:toimisto@arkvisio.fi">etunimi.sukunimi@arkvisio.fi</a></p>
+          </article>
+          <article class="henkilo">
+            <div class="henkilo-kuva" aria-hidden="true"><svg viewBox="0 0 80 80"><circle cx="40" cy="31" r="13"/><path d="M14 74c3-15 13-23 26-23s23 8 26 23"/></svg></div>
+            <p class="henkilo-rooli">Arkkitehtisuunnittelu</p>
+            <h3>Etunimi Sukunimi</h3>
+            <p class="henkilo-titteli">Arkkitehti</p>
+            <p class="henkilo-yhteys"><a href="tel:+358401234567">040 123 4567</a><a href="mailto:toimisto@arkvisio.fi">etunimi.sukunimi@arkvisio.fi</a></p>
+          </article>
+          <article class="henkilo">
+            <div class="henkilo-kuva" aria-hidden="true"><svg viewBox="0 0 80 80"><circle cx="40" cy="31" r="13"/><path d="M14 74c3-15 13-23 26-23s23 8 26 23"/></svg></div>
+            <p class="henkilo-rooli">Rakennesuunnittelu</p>
+            <h3>Etunimi Sukunimi</h3>
+            <p class="henkilo-titteli">Rakennesuunnittelija</p>
+            <p class="henkilo-yhteys"><a href="tel:+358401234567">040 123 4567</a><a href="mailto:toimisto@arkvisio.fi">etunimi.sukunimi@arkvisio.fi</a></p>
+          </article>
+          <article class="henkilo">
+            <div class="henkilo-kuva" aria-hidden="true"><svg viewBox="0 0 80 80"><circle cx="40" cy="31" r="13"/><path d="M14 74c3-15 13-23 26-23s23 8 26 23"/></svg></div>
+            <p class="henkilo-rooli">Toteutus</p>
+            <h3>Etunimi Sukunimi</h3>
+            <p class="henkilo-titteli">Vastaava työnjohtaja</p>
+            <p class="henkilo-yhteys"><a href="tel:+358401234567">040 123 4567</a><a href="mailto:toimisto@arkvisio.fi">etunimi.sukunimi@arkvisio.fi</a></p>
+          </article>
+          <article class="henkilo">
+            <div class="henkilo-kuva" aria-hidden="true"><svg viewBox="0 0 80 80"><circle cx="40" cy="31" r="13"/><path d="M14 74c3-15 13-23 26-23s23 8 26 23"/></svg></div>
+            <p class="henkilo-rooli">Tutkimus</p>
+            <h3>Etunimi Sukunimi</h3>
+            <p class="henkilo-titteli">Rakennusterveysasiantuntija</p>
+            <p class="henkilo-yhteys"><a href="tel:+358401234567">040 123 4567</a><a href="mailto:toimisto@arkvisio.fi">etunimi.sukunimi@arkvisio.fi</a></p>
+          </article>
+          <article class="henkilo">
+            <div class="henkilo-kuva" aria-hidden="true"><svg viewBox="0 0 80 80"><circle cx="40" cy="31" r="13"/><path d="M14 74c3-15 13-23 26-23s23 8 26 23"/></svg></div>
+            <p class="henkilo-rooli">Laskutus ja sopimukset</p>
+            <h3>Etunimi Sukunimi</h3>
+            <p class="henkilo-titteli">Toimistopäällikkö</p>
+            <p class="henkilo-yhteys"><a href="tel:+358401234567">040 123 4567</a><a href="mailto:toimisto@arkvisio.fi">etunimi.sukunimi@arkvisio.fi</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- YHTEYS -->
+  <footer class="alatunniste tumma" id="yhteys">
+    <div class="kehys alatunniste-sisalto">
+      <div>
+        <h2>Toteutetaan <span class="oranssi">yhdessä.</span></h2>
+      </div>
+      <div class="alalaita">
+        <div class="alalaita-tiedot">
+          <a class="alalaita-logo" href="index.html"><img src="assets/logo/logo-musta.svg" alt="ArkVisio – etusivulle" width="68" height="32"></a>
+          <span>Y-tunnus 0930755-1</span>
+          <a href="mailto:toimisto@arkvisio.fi">toimisto@arkvisio.fi</a>
+          <a href="tel:+35898711281">09 8711 281</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/valikko.js?v=20261128e"></script>
+</body>
+</html>

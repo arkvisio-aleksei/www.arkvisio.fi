@@ -8,6 +8,8 @@ Tavallinen HTML-sivusto. Ei asennuksia eikä työkaluja: avaa `index.html` selai
 |---|---|
 | `index.html` | Etusivu (rakennetaan uudelleen: nyt yläpalkki, iskulause ja alatunniste) |
 | `suunnittelu.html`, `tyomaa.html`, `tutkimus.html` | Palvelusivut hintalaskureineen |
+| `kohteet.html` | Kohteemme: nostokohde, suodatettava kohderuudukko ja kohdeikkuna (`js/kohteet.js`). **Kohteet ja kuvat: `data/referenssit.js`** (nyt esimerkkejä) |
+| `toimisto.html` | Toimisto: yhteystiedot ja henkilöt (henkilöt nyt esimerkkejä – nimet, kuvat ja numerot vaihdetaan suoraan tiedostoon) |
 | `css/tyylit.css` | Kaikki tyylit. **Brändin värit, fontit ja mitat ovat tiedoston alussa muuttujina.** |
 | `js/kartta.js` | Maapallo, kohteiden ryhmittely ja zoomaus |
 | `js/sivu.js` | Etusivun suodattimet ja hankelaskuri |

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
-  <link rel="stylesheet" href="css/tyylit.css?v=20261128d">
+  <link rel="stylesheet" href="css/tyylit.css?v=20261128e">
 </head>
 <body class="etusivu">
   <a class="ohita" href="#sisalto">Siirry sisältöön</a>
@@ -39,9 +39,16 @@
       <div class="yla">
         <a class="logo" href="#"><img class="logo-vaalea" src="assets/logo/logo-valkoinen.svg" alt="ArkVisio – etusivulle" width="84" height="40"><img class="logo-tumma" src="assets/logo/logo-musta.svg" alt="" aria-hidden="true" width="84" height="40"></a>
         <nav class="valikko" id="valikko" aria-label="Päävalikko">
-          <a href="#palvelut">Palvelut</a>
-          <a href="#kohteemme">Kohteemme</a>
-          <a href="#yhteys">Yhteys</a>
+          <div class="valikko-ryhma">
+            <a href="index.html#palvelut" aria-haspopup="true">Palvelut</a>
+            <div class="alavalikko">
+              <a class="ali" href="suunnittelu.html"><span>01</span>Suunnittelu</a>
+              <a class="ali" href="tyomaa.html"><span>02</span>Toteutus</a>
+              <a class="ali" href="tutkimus.html"><span>03</span>Tutkimus</a>
+            </div>
+          </div>
+          <a href="kohteet.html">Kohteemme</a>
+          <a href="toimisto.html">Toimisto</a>
         </nav>
         <button class="valikko-nappi" type="button" aria-expanded="false" aria-controls="valikko">Valikko</button>
         <button class="burgeri" type="button" aria-expanded="false" aria-controls="valikko" aria-label="Valikko"><span></span><span></span><span></span></button>
@@ -120,10 +127,10 @@
 
   <script src="js/vendor/d3.min.js"></script>
   <script src="js/vendor/topojson-client.min.js"></script>
-  <script src="data/kartta-data.js?v=20261128d"></script>
-  <script src="data/kohteet.js?v=20261128d"></script>
-  <script src="js/kartta.js?v=20261128d"></script>
-  <script src="js/sivu.js?v=20261128d"></script>
-  <script src="js/valikko.js?v=20261128d"></script>
+  <script src="data/kartta-data.js?v=20261128e"></script>
+  <script src="data/kohteet.js?v=20261128e"></script>
+  <script src="js/kartta.js?v=20261128e"></script>
+  <script src="js/sivu.js?v=20261128e"></script>
+  <script src="js/valikko.js?v=20261128e"></script>
 </body>
 </html>
