@@ -545,7 +545,7 @@ main, .alatunniste { position: relative; z-index: 1; }
 .kompakti .etusivu { --valikko-yla: calc(var(--palkki) - var(--yla-siirto) - 1px); --yla-siirto: calc((var(--palkki) - 76px) / 2); }
 .kompakti .etusivu .valikko {
   display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
-  box-sizing: border-box; height: auto; min-height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
+  box-sizing: border-box; height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
   padding: 4px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna-o)) 22px calc(max(0px, (100% - var(--leveys)) / 2) + var(--reuna));
   background: var(--paneeli); border: 0; border-radius: 0 0 var(--kulma) var(--kulma); box-shadow: 0 14px 30px rgba(15, 17, 22, 0);
   transform: translateY(-100%); visibility: hidden; opacity: 1;
@@ -563,7 +563,7 @@ main, .alatunniste { position: relative; z-index: 1; }
 @media (max-width: 760px) {
   .etusivu .valikko {
     display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
-  box-sizing: border-box; height: auto; min-height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
+  box-sizing: border-box; height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
     padding: 4px var(--reuna-o) 22px var(--reuna);
     background: var(--paneeli); border: 0; border-radius: 0 0 var(--kulma) var(--kulma); box-shadow: 0 14px 30px rgba(15, 17, 22, 0);
     transform: translateY(-100%); visibility: hidden;
@@ -693,7 +693,7 @@ main, .alatunniste { position: relative; z-index: 1; }
 .etusivu .burgeri { opacity: 1; visibility: visible; transition: none; }
 .etusivu .valikko {
     display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0; margin: 0; position: absolute; left: 0; right: 0; top: var(--valikko-yla); z-index: -2;
-  box-sizing: border-box; height: auto; min-height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
+  box-sizing: border-box; height: calc(var(--paneeli-korkeus) - var(--valikko-yla) - var(--yla-siirto));
     padding: 4px var(--reuna-o) 22px var(--reuna);
     background: var(--paneeli); border: 0; border-radius: 0 0 var(--kulma) var(--kulma); box-shadow: 0 14px 30px rgba(15, 17, 22, 0);
     transform: translateY(-100%); visibility: hidden;
