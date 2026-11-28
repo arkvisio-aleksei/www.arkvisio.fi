@@ -25,46 +25,9 @@
     return { osat, osa, poly, viiva, lisaa, laajenna, rajat: () => rajat };
   }
 
-  // Laatikko: näkyvät sivut +y (vasen, valoisa), +x (oikea, varjossa) ja katto.
-  function laatikko(d, x0, y0, z0, w, s, h, l = '') {
-    const x1 = x0 + w, y1 = y0 + s, z1 = z0 + h;
-    d.poly([[x0, y1, z0], [x1, y1, z0], [x1, y1, z1], [x0, y1, z1]], 'ax-v ' + l);
-    d.poly([[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], 'ax-o ' + l);
-    d.poly([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], 'ax-y ' + l);
-  }
   // Suorakaide seinässä: sivu 'v' (y = vakio) tai 'o' (x = vakio); a..b vaakasuunnassa, c..e korkeus.
   function aukko(d, sivu, taso, a, b, c, e, cls = 'ax-ikkuna') {
     d.poly(sivu === 'v' ? [[a, taso, c], [b, taso, c], [b, taso, e], [a, taso, e]] : [[taso, a, c], [taso, b, c], [taso, b, e], [taso, a, e]], cls);
-  }
-  // Ikkunarivi seinään tasaisin välein
-  function ikkunarivi(d, sivu, taso, alku, pituus, z, korkeus = 1.3, leveys = 1.1, vali = 2.7, ohita = -1) {
-    const n = Math.max(1, Math.floor(pituus / vali));
-    for (let i = 0; i < n; i++) {
-      if (i === ohita) continue;
-      const kx = alku + pituus * (i + .5) / n;
-      aukko(d, sivu, taso, kx - leveys / 2, kx + leveys / 2, z, z + korkeus);
-    }
-  }
-  // Harjakatto. akseli 'x': harja x-suunnassa, pääty oikealla. 'y': harja y-suunnassa, pääty vasemmalla.
-  function harjakatto(d, x0, y0, w, s, z, r, akseli, l = '', e = 0) {
-    const x1 = x0 + w, y1 = y0 + s;
-    if (akseli === 'x') {
-      const ym = y0 + s / 2;
-      d.poly([[x0, y0 - e, z], [x1, y0 - e, z], [x1, ym, z + r], [x0, ym, z + r]], 'ax-katto-t ' + l);
-      d.poly([[x1, y0, z], [x1, y1, z], [x1, ym, z + r]], 'ax-o ' + l);
-      d.poly([[x0, y1 + e, z], [x1, y1 + e, z], [x1, ym, z + r], [x0, ym, z + r]], 'ax-katto ' + l);
-    } else {
-      const xm = x0 + w / 2;
-      d.poly([[x0 - e, y0, z], [x0 - e, y1, z], [xm, y1, z + r], [xm, y0, z + r]], 'ax-katto-t ' + l);
-      d.poly([[x1 + e, y0, z], [x1 + e, y1, z], [xm, y1, z + r], [xm, y0, z + r]], 'ax-katto-o ' + l);
-      d.poly([[x0, y1, z], [x1, y1, z], [xm, y1, z + r]], 'ax-v ' + l);
-    }
-  }
-  // Pulpettikatto: korkein reuna takana (y0), laskee eteen.
-  function pulpetti(d, x0, y0, w, s, z, nousu, l = '', e = 0) {
-    const x1 = x0 + w, y1 = y0 + s;
-    d.poly([[x1, y0, z], [x1, y1, z], [x1, y0, z + nousu]], 'ax-o ' + l);
-    d.poly([[x0 - e, y0 - e, z + nousu], [x1 + e, y0 - e, z + nousu], [x1 + e, y1 + e, z], [x0 - e, y1 + e, z]], 'ax-katto ' + l);
   }
   // Tasakatto ja räystäslinja (kaide)
   function tasakatto(d, x0, y0, w, s, z, l = '') {
@@ -76,7 +39,7 @@
   const RAKENNE = {   // kerroskorkeus, sivusuhde, kattotyyppi
     okt:        { kk: 3.0, suhde: 1.7, katto: 'harja', akseli: 'x', kalt: .55 },
     pari:       { kk: 3.0, suhde: 2.6, katto: 'harja', akseli: 'x', kalt: .5 },
-    mokki:      { kk: 2.9, suhde: 1.35, katto: 'harja', akseli: 'y', kalt: .85 },
+    mokki:      { kk: 2.9, suhde: 1.5, katto: 'harja', akseli: 'x', kalt: .85 },
     sauna:      { kk: 2.5, suhde: 1.4, katto: 'pulpetti' },
     laaj:       { kk: 3.0, suhde: 1.2, katto: 'harja', akseli: 'x', kalt: .5 },
     korj:       { kk: 3.0, suhde: 1.6, katto: 'harja', akseli: 'x', kalt: .55 },
@@ -111,103 +74,80 @@
   }
 
   // ---------- Rakennus ----------
+  // Ikkunapaikat seinälle: pariton määrä, jotta keskelle osuu ovi (tai ikkuna yläkerroksissa).
+  const paikat = (alku, pituus, vali = 2.8) => {
+    let n = Math.max(1, Math.round(pituus / vali)); if (n % 2 === 0) n -= 1;
+    return Array.from({ length: n }, (_, i) => alku + pituus * (i + .5) / n);
+  };
+  // Seinät yhtenä kappaleena (päätykolmio samaa pintaa seinän kanssa), katto ja aukot.
   function rakennus(d, m, x0, y0, w, s, pohja, l = '', etu = '') {
-    const R = m.R, kk = R.kk, x1 = x0 + w, y1 = y0 + s;
-    const sokkeli = m.laji === 'tutkimus' && m.perustus === 'rossi' ? .9 : .4;
-    d.osa(etu + 'sokkeli'); laatikko(d, x0, y0, pohja, w, s, sokkeli, 'ax-sokkeli ' + l);
-    if (m.laji === 'tutkimus' && m.perustus === 'rossi')
-      for (let x = x0 + 1.2; x < x1 - .6; x += 2.4) aukko(d, 'v', y1, x, x + .5, pohja + .35, pohja + .6, 'ax-tuuletus');
-    let z = pohja + sokkeli;
-    const nauhat = m.kerrokset > 24;   // korkeissa taloissa ikkunat nauhoina (kevyempi piirtää)
-    for (let k = 0; k < m.kerrokset; k++) {
-      d.osa(etu + 'k' + k);
-      laatikko(d, x0, y0, z, w, s, kk, l);
-      if (m.kohde === 'halli') {
-        if (k === 0) {
-          const n = Math.max(1, Math.round(w / 9));
-          for (let i = 0; i < n; i++) {
-            const kx = x0 + w * (i + .5) / n;
-            aukko(d, 'v', y1, kx - 1.8, kx + 1.8, z, z + 3.6, 'ax-ovi');
-            for (let j = 1; j < 5; j++) d.viiva([[kx - 1.8, y1, z + j * .72], [kx + 1.8, y1, z + j * .72]], 'ax-ohut');
-          }
-        }
-        aukko(d, 'o', x1, y0 + .8, y1 - .8, z + kk - 1.3, z + kk - .6, 'ax-ikkuna');
-      } else if (m.kohde === 'liike') {
-        const korkeus = k === 0 ? kk - 1 : 1.5;
-        aukko(d, 'v', y1, x0 + .6, x1 - .6, z + (k === 0 ? .2 : 1), z + (k === 0 ? .2 : 1) + korkeus, 'ax-lasi');
-        aukko(d, 'o', x1, y0 + .6, y1 - .6, z + (k === 0 ? .2 : 1), z + (k === 0 ? .2 : 1) + korkeus, 'ax-lasi');
-        if (k === 0) for (let x = x0 + 3; x < x1 - 1; x += 3) d.viiva([[x, y1, z + .2], [x, y1, z + kk - .8]], 'ax-ohut');
-      } else if (nauhat) {
-        aukko(d, 'v', y1, x0 + .5, x1 - .5, z + .9, z + 2.1, 'ax-ikkuna');
-        aukko(d, 'o', x1, y0 + .5, y1 - .5, z + .9, z + 2.1, 'ax-ikkuna');
-      } else {
-        const ovi = k === 0 && m.kohde !== 'kerrostalo' ? 0 : -1;
-        ikkunarivi(d, 'v', y1, x0, w, z + .9, 1.3, 1.1, m.kohde === 'kerrostalo' ? 2.4 : 2.8, ovi);
-        ikkunarivi(d, 'o', x1, y0, s, z + .9, 1.3, 1.1, 2.8);
-        if (k === 0) {
-          const n = Math.max(1, Math.floor(w / (m.kohde === 'kerrostalo' ? 2.4 : 2.8)));
-          const kx = m.kohde === 'kerrostalo' ? x0 + w / 2 : x0 + w * .5 / n;
-          aukko(d, 'v', y1, kx - .55, kx + .55, z, z + 2.1, 'ax-ovi');
-          if (m.kohde === 'pari') { const kx2 = x0 + w * (n - .5) / n; aukko(d, 'v', y1, kx2 - .55, kx2 + .55, z, z + 2.1, 'ax-ovi'); }
-        }
-        // Kerrostalon parvekkeet
-        if (m.kohde === 'kerrostalo' && k > 0 && m.kerrokset <= 30) {
-          for (let x = x0 + 1.2; x < x1 - 3; x += w / Math.max(2, Math.round(w / 7))) {
-            laatikko(d, x, y1, z, 2.6, 1.3, .18, 'ax-laatta');
-            d.poly([[x, y1 + 1.3, z + .18], [x + 2.6, y1 + 1.3, z + .18], [x + 2.6, y1 + 1.3, z + 1.1], [x, y1 + 1.3, z + 1.1]], 'ax-kaidelasi');
-          }
-        }
-      }
-      if (m.kohde === 'pari') d.viiva([[x0 + w / 2, y1, z], [x0 + w / 2, y1, z + kk]], 'ax-ohut');
-      z += kk;
-    }
+    const R = m.R, kk = R.kk, x1 = x0 + w, y1 = y0 + s, ym = y0 + s / 2;
+    const harja = R.katto === 'harja', polvi = harja && m.ullakko ? 1.1 : 0;
+    const zt = pohja + kk * m.kerrokset + polvi;
+    const r = harja ? Math.max(s * R.kalt * .5, m.ullakko ? s * .55 : 0) : 0, nousu = R.katto === 'pulpetti' ? .8 : 0;
+    d.osa(etu + 'runko' + m.kerrokset + (m.ullakko ? 'u' : ''));
+    // Etuseinä (pitkä sivu) ja päätyseinä
+    d.poly([[x0, y1, pohja], [x1, y1, pohja], [x1, y1, zt], [x0, y1, zt]], 'ax-v ' + l);
+    d.poly(harja ? [[x1, y0, pohja], [x1, y1, pohja], [x1, y1, zt], [x1, ym, zt + r], [x1, y0, zt]]
+         : nousu ? [[x1, y0, pohja], [x1, y1, pohja], [x1, y1, zt], [x1, y0, zt + nousu]]
+         : [[x1, y0, pohja], [x1, y1, pohja], [x1, y1, zt], [x1, y0, zt]], 'ax-o ' + l);
     // Katto
-    const katto = 'katto' + m.kerrokset + (m.ullakko ? 'u' : '');
-    d.osa(etu + katto);
-    if (R.katto === 'tasa') {
-      tasakatto(d, x0, y0, w, s, z, l);
-      if (m.kohde === 'kerrostalo') laatikko(d, x0 + w * .55, y0 + s * .3, z, Math.min(5, w * .2), Math.min(4, s * .35), 2.2, l);
-      else laatikko(d, x0 + w * .6, y0 + s * .25, z, Math.min(3, w * .18), Math.min(2.4, s * .3), 1.2, l);
-    } else if (R.katto === 'pulpetti') {
-      pulpetti(d, x0, y0, w, s, z, .8, l);
-      laatikko(d, x0 + w * .25, y0 + s * .2, z + .5, .5, .5, 1.3, 'ax-hormi ' + l);
+    if (harja) {
+      d.poly([[x0, y0, zt], [x1, y0, zt], [x1, ym, zt + r], [x0, ym, zt + r]], 'ax-katto-t ' + l);
+      d.poly([[x0, y1, zt], [x1, y1, zt], [x1, ym, zt + r], [x0, ym, zt + r]], 'ax-katto ' + l);
+    } else if (nousu) {
+      d.poly([[x0, y0, zt + nousu], [x1, y0, zt + nousu], [x1, y1, zt], [x0, y1, zt]], 'ax-katto ' + l);
     } else {
-      const leveys = R.akseli === 'x' ? s : w;
-      let r = leveys * R.kalt * .5;
-      if (m.ullakko) r = Math.max(r, leveys * .55);
-      if (m.ullakko) {
-        // Asuinullakko: korkeampi seinä (polvi) ja ikkuna päädyssä
-        laatikko(d, x0, y0, z, w, s, 1.1, l); z += 1.1;
-      }
-      harjakatto(d, x0, y0, w, s, z, r, R.akseli, l);
-      if (m.ullakko) {
-        if (R.akseli === 'x') aukko(d, 'o', x1, y0 + s / 2 - .55, y0 + s / 2 + .55, z + .3, z + 1.5);
-        else aukko(d, 'v', y1, x0 + w / 2 - .55, x0 + w / 2 + .55, z + .3, z + 1.5);
-      }
-      if (m.kohde === 'okt' || m.kohde === 'mokki' || m.kohde === 'korj') {
-        const hx = R.akseli === 'x' ? x0 + w * .3 : x0 + w * .3, hy = R.akseli === 'x' ? y0 + s * .35 : y0 + s * .4;
-        laatikko(d, hx, hy, z + r * .35, .55, .55, r * .75 + .6, 'ax-hormi ' + l);
-      }
-      if (m.kohde === 'pari' && R.akseli === 'x') d.viiva([[x0 + w / 2, y1 + .45, z], [x0 + w / 2, y0 + s / 2, z + r]], 'ax-ohut');
+      d.poly([[x0, y0, zt], [x1, y0, zt], [x1, y1, zt], [x0, y1, zt]], 'ax-y ' + l);
+      tasakatto(d, x0, y0, w, s, zt, l);
     }
-    return z;
+    // Aukot
+    if (m.laji === 'tutkimus' && m.perustus === 'rossi')
+      paikat(x0, w, 2.4).forEach(x => aukko(d, 'v', y1, x - .25, x + .25, pohja + .15, pohja + .4, 'ax-tuuletus'));
+    if (m.kohde === 'halli') {
+      paikat(x0, w, 9).forEach(x => aukko(d, 'v', y1, x - 1.8, x + 1.8, pohja, pohja + 3.6, 'ax-ovi'));
+      aukko(d, 'o', x1, y0 + .8, y1 - .8, zt - 1.3, zt - .6);
+      return zt;
+    }
+    if (m.kohde === 'liike') {
+      for (let k = 0; k < m.kerrokset; k++) {
+        const z = pohja + k * kk + (k === 0 ? .2 : 1), korkeus = k === 0 ? kk - 1 : 1.5;
+        aukko(d, 'v', y1, x0 + .6, x1 - .6, z, z + korkeus, 'ax-lasi');
+        aukko(d, 'o', x1, y0 + .6, y1 - .6, z, z + korkeus, 'ax-lasi');
+      }
+      aukko(d, 'v', y1, x0 + w / 2 - .9, x0 + w / 2 + .9, pohja + .2, pohja + 2.3, 'ax-ovi');
+      return zt;
+    }
+    // Ovet pitkän sivun keskelle; kahdessa asunnossa kummankin asunnon keskelle.
+    const osat = m.kohde === 'pari' ? [[x0, w / 2], [x0 + w / 2, w / 2]] : [[x0, w]];
+    const ovet = osat.map(([a, p]) => a + p / 2);
+    const nauhat = m.kerrokset > 24;   // korkeissa taloissa ikkunat nauhoina
+    for (let k = 0; k < m.kerrokset; k++) {
+      const z = pohja + k * kk + .9;
+      if (nauhat) {
+        aukko(d, 'v', y1, x0 + .5, x1 - .5, z, z + 1.2);
+        aukko(d, 'o', x1, y0 + .5, y1 - .5, z, z + 1.2);
+        continue;
+      }
+      osat.forEach(([a, p]) => paikat(a, p).forEach(x => {
+        if (k === 0 && ovet.some(o => Math.abs(o - x) < 1.4)) return;
+        aukko(d, 'v', y1, x - .55, x + .55, z, z + 1.3);
+      }));
+      paikat(y0, s, 3).forEach(y => aukko(d, 'o', x1, y - .55, y + .55, z, z + 1.3));
+    }
+    ovet.forEach(x => aukko(d, 'v', y1, x - .5, x + .5, pohja, pohja + 2.1, 'ax-ovi'));
+    if (m.ullakko && harja) aukko(d, 'o', x1, ym - .55, ym + .55, zt + .2, zt + 1.4);
+    return zt;
   }
 
   // Pieni lisärakennus (autotalli, sauna, vierasmaja)
   function lisarakennus(d, x0, y0, i) {
     const w = 5 + (i % 2) * 1.5, s = 4;
-    d.osa('lisa' + i);
-    laatikko(d, x0, y0, 0, w, s, .3, 'ax-sokkeli');
-    laatikko(d, x0, y0, .3, w, s, 2.5);
-    aukko(d, 'v', y0 + s, x0 + .8, x0 + 1.8, .3, 2.3, 'ax-ovi');
-    aukko(d, 'v', y0 + s, x0 + w - 2.2, x0 + w - 1, 1.2, 2.2);
-    pulpetti(d, x0, y0, w, s, 2.8, .6);
-    return { w, s };
+    rakennus(d, { R: { kk: 2.6, katto: 'pulpetti' }, kerrokset: 1, kohde: 'lisa' }, x0, y0, w, s, 0, '', 'lisa' + i);
   }
 
   function rakenna(h) {
     const m = malli(h), d = luoPiirros();
-    const rak = [];   // kaikki rakennukset [x0, y0, w, s, korkeus]
     // Sijoittelu: päärakennus origossa, lisärakennukset vasemmalle taakse.
     const x0 = 0, y0 = 0;
     const lisat = [];
