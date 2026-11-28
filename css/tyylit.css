@@ -1737,3 +1737,16 @@ html[data-siirto="taakse"]::view-transition-new(root) { animation-name: hihna-si
 .lk-malli .lk-salaoja { fill: #FFFFFF; stroke: #2B2E35; stroke-width: .8; vector-effect: non-scaling-stroke; }
 .lk-nayttamo { cursor: default; }
 .lk-nayttamo.lk-vaihto .lk-svg { animation: lk-vaihto .45s ease both; }
+/* Henkilökortit: sisältö ei saa venyttää korttia (pitkät sanat rivittyvät) */
+.henkilot > .henkilo { min-width: 0; grid-template-columns: minmax(0, 1fr); }
+.henkilo-kuva { max-width: 100%; }
+.henkilo-rooli, .henkilo h3, .henkilo-titteli, .henkilo-yhteys a { overflow-wrap: anywhere; hyphens: auto; }
+@media (max-width: 560px) {
+  .henkilo { padding: 10px 10px 16px; }
+  .henkilot .henkilo .henkilo-rooli { font-size: 9px; letter-spacing: .04em; overflow-wrap: break-word; }
+  .henkilo h3 { font-size: 21px; }
+  .henkilo-titteli { font-size: 12.5px; }
+  .henkilo-yhteys a { font-size: 12.5px; }
+  .henkilo h3, .henkilo > p:not(.henkilo-yhteys) { padding-inline: 4px; }
+  .henkilo-yhteys { margin-inline: 4px; }
+}
