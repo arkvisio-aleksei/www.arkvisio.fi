@@ -1345,10 +1345,10 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 .vaiheet .vaihe-piste { position: absolute; top: -6px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--vision-oranssi); opacity: 0; }
 .vaiheet.animoi li > :not(.vaihe-piste) { opacity: 0; transform: translateY(12px); }
 .vaiheet.animoi li::before { opacity: 0; }
-.vaiheet.nakyvissa li::after { transform: scaleX(1); transition: transform .6s cubic-bezier(.5, 0, .2, 1) calc(var(--n) * .45s); }
-.vaiheet.nakyvissa li > :not(.vaihe-piste) { opacity: 1; transform: none; transition: opacity .6s ease calc(var(--n) * .45s + .25s), transform .6s cubic-bezier(.2, .8, .2, 1) calc(var(--n) * .45s + .25s); }
-.vaiheet.nakyvissa li::before { opacity: 1; transition: opacity .4s ease calc(var(--n) * .45s + .15s); }
-.vaiheet.nakyvissa .vaihe-piste { animation: vaihe-piste .6s cubic-bezier(.5, 0, .2, 1) calc(var(--n) * .45s) both; }
+.vaiheet.nakyvissa li::after { transform: scaleX(1); transition: transform 1.1s cubic-bezier(.45, 0, .25, 1) calc(var(--n) * .9s); }
+.vaiheet.nakyvissa li > :not(.vaihe-piste) { opacity: 1; transform: none; transition: opacity .9s ease calc(var(--n) * .9s + .5s), transform .9s cubic-bezier(.2, .8, .2, 1) calc(var(--n) * .9s + .5s); }
+.vaiheet.nakyvissa li::before { opacity: 1; transition: opacity .4s ease calc(var(--n) * .9s + .3s); }
+.vaiheet.nakyvissa .vaihe-piste { animation: vaihe-piste 1.1s cubic-bezier(.45, 0, .25, 1) calc(var(--n) * .9s) both; }
 @keyframes vaihe-piste { 0% { opacity: 1; left: 0; } 90% { opacity: 1; } 100% { opacity: 0; left: calc(100% - 10px); } }
 /* Viimeisen vaiheen jälkeen piste jää oranssina loppuun */
 .vaiheet.nakyvissa li:last-child .vaihe-piste { animation-name: vaihe-piste-loppu; }
@@ -1362,3 +1362,9 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
   .vaiheet li::after { transform: none; }
   .vaiheet .vaihe-piste { display: none; }
 }
+
+/* Valinnat rivittyvät (kaikki vaihtoehdot näkyvissä, ei piilossa vaakavierityksen takana) */
+.avattava .ruudut, .avattava .ruudut-pienet, .avattava .ruudut-palvelut { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding-inline: 0; -webkit-mask-image: none; mask-image: none; }
+/* Liukusäätimen kohdistuskehys pyöreänä, eikä sitä näytetä hiirellä klikatessa */
+.liuku input { border-radius: 999px; }
+.liuku input:focus:not(:focus-visible) { outline: none; }
