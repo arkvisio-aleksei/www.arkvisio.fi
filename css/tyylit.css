@@ -1624,3 +1624,35 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 .palvelukortti h3 { color: #F4F1EC; }
 .palvelukortti p { color: #A9ACB3; }
 .palvelukortti { justify-items: center; text-align: center; }
+
+/* Alasivujen johdanto ilman lukuja */
+.intro { grid-template-columns: minmax(0, 1fr); }
+.intro-teksti { padding: 0; }
+
+/* ================= Etusivu: luvut palveluiden alla ================= */
+.luvut-osio { padding: 0 var(--reuna-o) clamp(48px, 7vw, 88px) var(--reuna); }
+.luvut { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid #DAD5CC; border-bottom: 1px solid #DAD5CC; }
+.luvut div { display: grid; align-content: start; gap: 8px; padding: clamp(20px, 2.6vw, 32px) clamp(14px, 2vw, 28px); text-align: center; }
+.luvut div + div { border-left: 1px solid #DAD5CC; }
+.luvut dt { font: 400 clamp(40px, 4.4vw, 64px)/.95 var(--fontti-otsikko); color: #C97F00; }
+.luvut dd { margin: 0; font: 500 11px/1.4 var(--fontti-teksti); letter-spacing: .16em; text-transform: uppercase; color: #5B6070; }
+@media (max-width: 700px) {
+  .luvut { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .luvut div:nth-child(3) { border-left: 0; }
+  .luvut div:nth-child(n+3) { border-top: 1px solid #DAD5CC; }
+}
+/* Johdanto kahdessa palstassa: otsikko vasemmalla, teksti ja napit oikealla */
+@media (min-width: 901px) {
+  .intro-teksti { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
+  .intro-otsikko { grid-row: 1 / span 3; }
+  .intro-teksti > :not(.intro-otsikko) { grid-column: 2; }
+}
+/* Toimisto-sivulla luvut johdannon oikealla puolella */
+.intro:has(.intro-faktat) { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+.intro:has(.intro-faktat) .intro-teksti { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0 clamp(24px, 4vw, 64px) 0 0; }
+.intro:has(.intro-faktat) .intro-otsikko { grid-row: auto; }
+.intro:has(.intro-faktat) .intro-teksti > * { grid-column: auto; }
+@media (max-width: 900px) {
+  .intro:has(.intro-faktat) { grid-template-columns: minmax(0, 1fr); }
+  .intro:has(.intro-faktat) .intro-teksti { padding: 0 0 clamp(22px, 4vw, 32px); }
+}
