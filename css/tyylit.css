@@ -1710,3 +1710,25 @@ html[data-siirto="taakse"]::view-transition-old(root) { animation-name: hihna-ul
 html[data-siirto="taakse"]::view-transition-new(root) { animation-name: hihna-sisaan-vasemmalta; }
 @keyframes hihna-ulos-oikealle { to { transform: translateX(18%); opacity: 0; } }
 @keyframes hihna-sisaan-vasemmalta { from { transform: translateX(-18%); opacity: 0; } }
+
+/* ================= Talo leikkauksena: hintalaskurin tyyli ================= */
+.lk-nayttamo { background: #FBFAF7; border: 1px solid #E6E1D8; border-radius: 22px; }
+.lk-malli polygon { stroke: #2B2E35; stroke-opacity: .55; stroke-width: .6; }
+.lk-malli polygon.k { stroke-opacity: .8; stroke-width: .8; }
+/* Valinnat kuten laskurin pillerit: valittu oranssin sävyisenä */
+.lk-pilleri[aria-pressed="true"] { background: rgba(247, 156, 9, .1); border-color: var(--vision-oranssi); color: var(--muste); }
+/* Tietokortti vaaleana pyöristettynä kuten laskurin tulosruutu */
+.lk-kortti { background: #FFFFFF; color: var(--muste); border: 1px solid #DAD5CC; border-radius: 22px; padding: 14px 14px 20px; gap: 10px; }
+.lk-kortti > :not(.lk-media) { padding-inline: 8px; }
+.lk-kortti-yla { color: var(--harmaa); }
+.lk-kortti p { color: #4A4F5A; }
+.lk-kortti-palvelut span { border-color: #DAD5CC; color: var(--harmaa); }
+.lk-kortti-palvelut span.on { border-color: var(--vision-oranssi); color: #B86F00; }
+/* Kuva tai video kohdasta, tai varattu paikka */
+.lk-media { position: relative; margin: 0 0 4px; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #F4F1EC; }
+.lk-media img, .lk-media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lk-media figcaption { position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; border-radius: 999px; background: rgba(31, 34, 41, .72); color: #F4F1EC; font: 500 11px/1.2 var(--fontti-teksti); }
+.lk-media.tyhja { display: grid; place-items: center; border: 1px dashed #D6CEBF; background: #FBFAF7; }
+.lk-media-tyhja { display: grid; justify-items: center; gap: 8px; font: 500 10px/1.2 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; color: var(--harmaa); }
+.lk-media-tyhja svg { width: 30px; height: 30px; color: #C9C0B1; }
+.lk-nayttamo { align-self: start; }

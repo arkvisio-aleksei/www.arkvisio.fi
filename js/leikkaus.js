@@ -21,6 +21,16 @@ window.alustaLeikkaus = function () {
   // ---------- Värit (sivun väreihin sopivat) ----------
   const VALK = '#FBFAF7', PUU = '#E8DAC0', BET = '#CBC6BD', BETK = '#A9A398', LAATTA = '#D2DFE4', KATTO = '#4A505C',
     IKK = '#BCD0D9', TUMMA = '#3A3F49', LAUDE = '#D8B37E', RISKI = '#E0785A';
+  // Piirros samaan tyyliin kuin hintalaskurin aksonometria: värit muunnetaan vaaleiksi paperisävyiksi
+  // (tummuus säilyy), ikkunat lasin sävyisinä ja riskirakenteet oranssilla korostettuina.
+  const ERIKOIS = { [IKK]: '#C9CED3', '#C9D8DE': '#C9CED3', [RISKI]: '#F3B45E' };
+  const paperi = hex => {
+    if (ERIKOIS[hex]) return ERIKOIS[hex];
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+    const l = Math.max(0, Math.min(1, ((.3 * r + .59 * g + .11 * b) - .25) / .72));
+    const tumma = [214, 206, 192], vaalea = [255, 255, 255];
+    return '#' + tumma.map((c, i) => Math.round(c + (vaalea[i] - c) * l).toString(16).padStart(2, '0')).join('');
+  };
   const ERISTE = 'url(#lk-eriste)', MAA = 'url(#lk-maa)', SORA = 'url(#lk-sora)';
   const FASADI = { okt: '#E4DCCD', rivi: '#E4DCCD', mokki: '#CDB99B', yhtio: '#DAD5CC' };
   const VALO = (() => { const v = [-.35, .85, .45], p = Math.hypot(...v); return v.map(x => x / p); })();
@@ -352,8 +362,11 @@ window.alustaLeikkaus = function () {
       kohta('julkisivu', 'Julkisivu ja parvekkeet', [x1 + .75, tasot[2].yb, -.3], 'Betonin rapautuminen, raudoitteiden suojabetoni, parvekelaattojen vedenpoisto ja kaiteiden kiinnitykset. Tarvittaessa suosittelemme julkisivun kuntotutkimusta.', ['kunto', 'vaur']);
       kohta('markatila', 'Märkätilat ja putkistot', markaP, 'Märkätilojen pintakosteus, vedeneristykset ja putkistojen ikä. Havainnot ovat pohja linjasaneerauksen ajoitukselle ja suunnittelulle.', ['kunto', 'kost', 'vaur']);
     } else {
-      const lisa = d.vuosi === 'v79' ? ' Loivalla katolla vesi poistuu hitaasti, joten läpiviennit ja aluskate tarkastetaan erityisen huolellisesti.' : '';
-      kohta('katto', d.vuosi === 'v79' ? 'Loiva vesikatto' : 'Vesikatto', [W * .2, yr, 0], 'Katteen kunto, läpiviennit, kattoturvatuotteet sekä räystäät ja sadevesijärjestelmä. Katolle noustaan, kun se on turvallista.' + lisa, ['kunto'], d.vuosi === 'v79');
+      // Loiva katto vain, kun piirretty katto on oikeasti loiva (1½-kerroksisessa katto on aina jyrkkä)
+      const loiva = n.kalt < 20;
+      const lisa = loiva ? ' Loivalla katolla vesi poistuu hitaasti, joten läpiviennit ja aluskate tarkastetaan erityisen huolellisesti.' : '';
+      // Täppä katon takalappeelle (etupuoli leikataan pois), puoliväliin räystään ja harjan väliin
+      kohta('katto', loiva ? 'Loiva vesikatto' : 'Vesikatto', [W * .22, yt + (D / 4) * tn + .35, -D / 4], 'Katteen kunto, läpiviennit, kattoturvatuotteet sekä räystäät ja sadevesijärjestelmä. Katolle noustaan, kun se on turvallista.' + lisa, ['kunto'], loiva);
       kohta('ylapohja', 'Yläpohja', d.kerr === '15' ? [-W * .2, yt + 1.2, -D / 4] : [-1.6, yt + .35, -1.2],
         'Ullakolla tarkastetaan lämmöneristeet, tuuletus, aluskate ja mahdolliset vuoto- ja kosteusjäljet.' + (d.vuosi === 'v59' ? ' Vanhoissa taloissa eristeenä on usein sahanpuru, joka painuu ja voi kerätä kosteutta.' : ''), ['kunto', 'kost']);
       kohta('iv', ivNimi, ivP, ivTeksti, ['kunto', 'ener']);
@@ -368,7 +381,7 @@ window.alustaLeikkaus = function () {
       'Ryömintätilan tuuletus, maapohjan kosteus ja puurakenteiden kunto. Tarkastamme tilan luukusta ja mittaamme ilman suhteellisen kosteuden; mikrobivauriot ovat rossipohjissa yleisiä.', ['kunto', 'kost', 'vaur'], vanha);
     else kohta('alapohja', 'Maanvarainen laatta', [1.6, n.fH, z0 * .5],
       'Lattiapinnoitteiden alta mitataan kosteutta erityisesti märkätilojen vierestä ja ulkoseinien läheltä. Kapillaarikatko ja eristys laatan alla ratkaisevat, nouseeko maaperän kosteus rakenteisiin.', ['kunto', 'kost']);
-    if (d.perustus === 'laatta' && (d.vuosi === 'v79' || d.vuosi === 'v99')) kohta('vale', 'Valesokkeli', [x1, .2, .6],
+    if (d.perustus === 'laatta' && (d.vuosi === 'v79' || d.vuosi === 'v99')) kohta('vale', 'Valesokkeli', [x1 - t / 2, .14, -D / 4],
       'Valesokkelissa puurungon alajuoksu on lattiapinnan alapuolella, maanpinnan tuntumassa ohuen betonilevyn takana. Rakenne on 1960–80-lukujen tunnetuin kosteusvaurioiden paikka – suosittelemme rakennetutkimusta.', ['kunto', 'vaur'], true);
     kohta('salaoja', 'Salaojat ja sadevedet', [x1 + .7, 0, z0 - .7], 'Maanpinnan kallistukset, syöksytorvet ja sadevesikaivot. Salaojien kuntoa arvioidaan iän ja tarkastuskaivojen perusteella.' + (vanha ? ' Yli 40 vuotta vanhat salaojat ovat usein käyttöikänsä lopussa.' : ''), ['kunto'], vanha);
     if (ennen94) kohta('asbesti', 'Asbesti ja haitta-aineet', keittioP || markaP, 'Ennen vuotta 1994 rakennettujen tai remontoitujen tilojen laattojen liimoissa, tasoitteissa, kiteissä ja eristeissä voi olla asbestia. Kartoitus tehdään ennen remonttia – otamme näytteet tarvittaessa.', ['vaur'], true);
@@ -401,7 +414,8 @@ window.alustaLeikkaus = function () {
         else if (ny < -.3 && o.ala) v = o.ala;
         else if (o.ulko && Math.abs(ny) <= .3 && nx * fc[0] + nz * fc[2] > 0 && (Math.abs(fc[0]) > W / 2 - .02 || Math.abs(fc[2]) > D / 2 - .02)) v = o.ulko;
         if (v[0] === '#') {
-          const s = .8 + .22 * Math.max(0, nx * VALO[0] + ny * VALO[1] + nz * VALO[2]);
+          v = paperi(v);
+          const s = .86 + .16 * Math.max(0, nx * VALO[0] + ny * VALO[1] + nz * VALO[2]);
           v = `rgb(${rgb(v).map(x => Math.min(255, Math.round(x * s))).join(',')})`;
         }
         // kellari: vain sisäpinnat ja yläpinnat
@@ -434,9 +448,9 @@ window.alustaLeikkaus = function () {
       <div class="lk-nayttamo">
         <svg class="lk-svg" role="img" aria-label="Talon leikkauskuva, jossa numeroidut tarkastuskohdat">
           <defs>
-            <pattern id="lk-maa" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#D6CAB5"/><line x1="0" y1="0" x2="0" y2="7" stroke="#BCAD93" stroke-width="1.3"/></pattern>
-            <pattern id="lk-sora" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#D3CCC0"/><circle cx="1.8" cy="1.8" r="1.1" fill="#A39B8E"/><circle cx="4.6" cy="4.4" r=".8" fill="#A39B8E"/></pattern>
-            <pattern id="lk-eriste" width="8" height="5" patternUnits="userSpaceOnUse"><rect width="8" height="5" fill="#F3DEA9"/><path d="M0 2.5Q2 0 4 2.5T8 2.5" fill="none" stroke="#D8B464" stroke-width=".7"/></pattern>
+            <pattern id="lk-maa" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#F1ECE3"/><line x1="0" y1="0" x2="0" y2="7" stroke="#D6CEBF" stroke-width="1"/></pattern>
+            <pattern id="lk-sora" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#EEE9E0"/><circle cx="1.8" cy="1.8" r=".9" fill="#C9C0B1"/><circle cx="4.6" cy="4.4" r=".7" fill="#C9C0B1"/></pattern>
+            <pattern id="lk-eriste" width="8" height="5" patternUnits="userSpaceOnUse"><rect width="8" height="5" fill="#FBF5E8"/><path d="M0 2.5Q2 0 4 2.5T8 2.5" fill="none" stroke="#DCCDB0" stroke-width=".7"/></pattern>
           </defs>
           <g class="lk-malli"></g>
         </svg>
@@ -519,7 +533,8 @@ window.alustaLeikkaus = function () {
           const u = p => p[0] * c + p[2] * s;
           const cu = q.reduce((a, p) => a + u(p), 0) / q.length, cy = q.reduce((a, p) => a + p[1], 0) / q.length;
           q.sort((a, b) => Math.atan2(a[1] - cy, u(a) - cu) - Math.atan2(b[1] - cy, u(b) - cu));
-          html += `<polygon class="k" points="${pt(q)}" fill="${o.kansi || k.vari[0]}"/>`;
+          const kansi = o.kansi && o.kansi[0] === '#' ? paperi(o.kansi) : (o.kansi || k.vari[0]);
+          html += `<polygon class="k" points="${pt(q)}" fill="${kansi}"/>`;
           q.forEach(p => { summa += syv(p); lkm++; });
         }
       }
@@ -566,7 +581,14 @@ window.alustaLeikkaus = function () {
       b.classList.toggle('himmea', !!kohde && !kohde.palvelut.some(p => tila.palvelut.includes(p)));
       if (b.classList.contains('lk-rivi')) b.setAttribute('aria-current', on ? 'true' : 'false');
     });
+    // Kuva tai video kohdasta (data/leikkaus-media.js); muuten varattu paikka
+    const media = (window.LEIKKAUS_MEDIA || {})[kk.id] || {};
+    const mediaHtml = media.video
+      ? `<video src="${media.video}"${media.kuva ? ` poster="${media.kuva}"` : ''} muted loop playsinline autoplay controls></video>`
+      : media.kuva ? `<img src="${media.kuva}" alt="${kk.nimi}" loading="lazy">`
+      : `<span class="lk-media-tyhja"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3z"/></svg>Kuva tai video tulossa</span>`;
     kortti.innerHTML = `
+      <figure class="lk-media${media.video || media.kuva ? '' : ' tyhja'}">${mediaHtml}${media.teksti ? `<figcaption>${media.teksti}</figcaption>` : ''}</figure>
       <p class="lk-kortti-yla"><span class="lk-kortti-nro${kk.varoitus ? ' varoitus' : ''}">${nro}</span>${kk.varoitus ? 'Riskirakenne' : 'Tarkastuskohta'}</p>
       <h3>${kk.nimi}</h3>
       <p>${kk.teksti}</p>
