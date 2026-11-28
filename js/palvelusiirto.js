@@ -67,6 +67,36 @@
   // Esihaku myös, kun sormi tai hiiri osuu linkkiin
   document.addEventListener('pointerdown', e => { const a = e.target.closest('a[href]'); if (a && onPalvelu(a.href)) hae(a.href).catch(() => {}); }, { passive: true });
 
+  // Pyyhkäisy puhelimessa: vasemmalle = seuraava palvelu, oikealle = edellinen (kiertävä järjestys).
+  // Ei reunoilta (Safarin oma takaisin-ele), ei lomakekentistä eikä sivusuunnassa vieritettävistä alueista.
+  const vaakaVieritys = el => {
+    for (; el && el !== document.body; el = el.parentElement) {
+      const ox = getComputedStyle(el).overflowX;
+      if ((ox === 'auto' || ox === 'scroll') && el.scrollWidth > el.clientWidth + 1) return true;
+    }
+    return false;
+  };
+  let alku = null;
+  document.addEventListener('touchstart', e => {
+    alku = null;
+    if (e.touches.length !== 1 || (window.visualViewport && visualViewport.scale > 1.05)) return;
+    const t = e.touches[0];
+    if (t.clientX < 28 || t.clientX > innerWidth - 28) return;
+    if (e.target.closest('input, select, textarea, button, .palveluhihna, video') || vaakaVieritys(e.target)) return;
+    alku = { x: t.clientX, y: t.clientY, aika: Date.now() };
+  }, { passive: true });
+  document.addEventListener('touchmove', e => { if (e.touches.length > 1) alku = null; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (!alku) return;
+    const t = e.changedTouches[0], dx = t.clientX - alku.x, dy = t.clientY - alku.y, aika = Date.now() - alku.aika;
+    alku = null;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.8 || aika > 800) return;
+    if (String(getSelection && getSelection()).length) return;
+    const n = PALVELUT.length, i = PALVELUT.indexOf(tiedosto(location.href));
+    if (i < 0) return;
+    vaihda(PALVELUT[(i + (dx < 0 ? 1 : n - 1)) % n], dx < 0 ? 'eteen' : 'taakse', true);
+  }, { passive: true });
+
   history.replaceState({ palvelu: tiedosto(location.href) }, '');
   addEventListener('popstate', () => { if (onPalvelu(location.href)) vaihda(location.href, 'taakse', false); });
 })();
