@@ -1591,3 +1591,4 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 
 /* Näin työ etenee: viivat oransseina */
 .vaiheet li::after { background: var(--vision-oranssi); }
+.vaiheet li { border-top-color: rgba(247, 156, 9, .28); }

@@ -191,19 +191,26 @@ if (!location.hash) {
 
 // Näin työ etenee: vaiheet piirtyvät vasemmalta oikealle, kun osio tulee näkyviin.
 (function () {
-  const listat = document.querySelectorAll('.vaiheet');
-  if (!listat.length || !('IntersectionObserver' in window)) return;
-  const havainnoija = new IntersectionObserver(merkinnat => merkinnat.forEach(m => {
-    if (!m.isIntersecting) return;
-    m.target.classList.add('nakyvissa');
-    havainnoija.unobserve(m.target);
-  }), { threshold: .35 });
+  const listat = [...document.querySelectorAll('.vaiheet')];
+  if (!listat.length) return;
   listat.forEach(lista => {
     lista.querySelectorAll(':scope > li').forEach((li, i) => {
       li.style.setProperty('--n', i);
       li.insertAdjacentHTML('afterbegin', '<span class="vaihe-piste" aria-hidden="true"></span>');
     });
     lista.classList.add('animoi');
-    havainnoija.observe(lista);
   });
+  // Käynnistys, kun listan yläreuna on noussut näkymän alimman viidenneksen yläpuolelle
+  const tarkista = () => {
+    listat.forEach(lista => {
+      if (lista.classList.contains('nakyvissa')) return;
+      const r = lista.getBoundingClientRect();
+      if (r.top < innerHeight * .85 && r.bottom > 0) lista.classList.add('nakyvissa');
+    });
+    if (listat.every(l => l.classList.contains('nakyvissa'))) { removeEventListener('scroll', tarkista); removeEventListener('resize', tarkista); }
+  };
+  addEventListener('scroll', tarkista, { passive: true });
+  addEventListener('resize', tarkista);
+  addEventListener('load', tarkista);
+  requestAnimationFrame(tarkista);
 })();
