@@ -27,25 +27,30 @@
       valinnat: {},     // lisävalinnat, esim. { tontti: 'tasa', kerrokset: '1', rakennukset: 1 }
     };
     const lisavalinnat = L.lisavalinnat || [];
-    lisavalinnat.forEach(v => { tila.valinnat[v.id] = v.tyyppi === 'maara' ? v.min : v.vaihtoehdot[0].id; });
+    // Määrävalinnan oletus voi riippua kohdetyypistä (esim. kerrostalossa 5 kerrosta).
+    const oletusMaara = v => (v.oletus && v.oletus[tila.kohde.id]) || v.min;
+    const alkuarvo = v => v.tyyppi === 'maara' ? oletusMaara(v) : v.tyyppi === 'monivalinta' ? [] : v.vaihtoehdot[0].id;
+    lisavalinnat.forEach(v => { tila.valinnat[v.id] = alkuarvo(v); });
     const nakyy = v => !v.kohteet || v.kohteet.includes(tila.kohde.id);
+    const vaihtoehtoNakyy = o => !o.kohteet || o.kohteet.includes(tila.kohde.id);
+    const MAARA_YLA = 999;
     // Vaiheiden numerot lasketaan piirrettäessä, koska osa vaiheista näkyy vain tietyille kohteille.
     const otsikko = teksti => `<legend class="vaihe-otsikko"><span class="vaihe-nro"></span>${teksti}</legend>`;
     const lisavalintaHtml = v => v.tyyppi === 'maara' ? `
         <fieldset class="vaihe" data-lisavalinta="${v.id}">${otsikko(v.otsikko)}
           <div class="maaravalitsin">
-            <button type="button" data-maara="-1" aria-label="Vähemmän">−</button>
-            <output data-maara-arvo></output>
-            <button type="button" data-maara="1" aria-label="Enemmän">+</button>
+            <button class="mv-miinus" type="button" data-maara="-1" aria-label="Vähemmän"></button>
+            <input type="number" inputmode="numeric" min="${v.min}" ${v.max ? `max="${v.max}"` : ''} data-maara-arvo aria-label="${v.otsikko}">
+            <button class="mv-plus" type="button" data-maara="1" aria-label="Enemmän"></button>
           </div>
           ${v.ohje ? `<p class="vaihe-ohje">${v.ohje}</p>` : ''}
         </fieldset>` : `
         <fieldset class="vaihe" data-lisavalinta="${v.id}">${otsikko(v.otsikko)}
           <div class="ruudut ruudut-pienet">${v.vaihtoehdot.map(o => `
-            <button class="ruutu" type="button" data-valinta="${v.id}" data-arvo="${o.id}" aria-pressed="false">${o.ikoni ? ikoni(o.ikoni) : `<span class="ruutu-vuosi">${o.lyhyt}</span>`}<span class="ruutu-nimi">${o.nimi}</span></button>`).join('')}
+            <button class="ruutu" type="button" ${v.tyyppi === 'monivalinta' ? 'data-moni' : 'data-valinta'}="${v.id}" data-arvo="${o.id}" aria-pressed="false">${o.ikoni ? ikoni(o.ikoni) : `<span class="ruutu-vuosi">${o.lyhyt}</span>`}<span class="ruutu-nimi">${o.nimi}</span></button>`).join('')}
           </div>
         </fieldset>`;
-    const ennenKokoa = lisavalinnat.filter(v => v.tyyppi !== 'maara'), kokoJalkeen = lisavalinnat.filter(v => v.tyyppi === 'maara');
+    const ennenKokoa = lisavalinnat.filter(v => !v.kokoJalkeen), kokoJalkeen = lisavalinnat.filter(v => v.kokoJalkeen);
 
     juuri.classList.add('laskuri-runko');
     juuri.innerHTML = `
@@ -84,7 +89,7 @@
         </fieldset>` : ''}
       </div>
       <aside class="laskuri-tulos" aria-live="polite">
-        ${L.havainne && window.piirraHavainne ? '<figure class="havainne-kehys"><div data-havainne></div><figcaption data-havainne-teksti></figcaption></figure>' : ''}
+        ${L.akso && window.piirraAkso ? '<figure class="akso-kehys"><div class="akso" data-akso></div><figcaption data-akso-teksti></figcaption></figure>' : ''}
         <div class="alv-vaihto" role="group" aria-label="Hinnan esitystapa">
           <button type="button" data-alv="1" aria-pressed="true">Kuluttaja</button>
           <button type="button" data-alv="0" aria-pressed="false">Yritys</button>
@@ -102,16 +107,24 @@
     function asetaKohde(k) {
       tila.kohde = k;
       tila.m2 = k.m2;
+      // Kohdetyypin vaihtuessa määrät palaavat sen oletuksiin ja epäsopivat monivalinnat poistuvat.
+      lisavalinnat.forEach(v => {
+        if (v.tyyppi === 'maara' && v.oletus) tila.valinnat[v.id] = oletusMaara(v);
+        if (v.tyyppi === 'monivalinta') tila.valinnat[v.id] = tila.valinnat[v.id].filter(id => vaihtoehtoNakyy(v.vaihtoehdot.find(o => o.id === id)));
+      });
       m2.min = k.min; m2.max = k.max; m2.step = k.max > 1000 ? 50 : 5; m2.value = k.m2;
     }
 
     function laske() {
       const kerroin = Math.min(3, Math.max(.5, Math.pow(tila.m2 / tila.kohde.m2, L.skaalaus)));
       // Lisävalintojen kertoimet ja lisärakennusten tunnit palveluittain
-      const valintaKerroin = id => lisavalinnat.filter(v => nakyy(v) && v.vaihtoehdot)
-        .reduce((x, v) => x * ((v.vaihtoehdot.find(o => o.id === tila.valinnat[v.id]) || {}).kerroin?.[id] || 1), 1);
+      const valintaKerroin = id => lisavalinnat.filter(nakyy).reduce((x, v) => {
+        if (v.tyyppi === 'maara') return v.potenssi && v.potenssi[id] ? x * Math.pow(tila.valinnat[v.id] / oletusMaara(v), v.potenssi[id]) : x;
+        const valitut = v.tyyppi === 'monivalinta' ? tila.valinnat[v.id] : [tila.valinnat[v.id]];
+        return valitut.reduce((y, oid) => y * ((v.vaihtoehdot.find(o => o.id === oid) || {}).kerroin?.[id] || 1), x);
+      }, 1);
       const lisaTunnit = id => lisavalinnat.filter(v => nakyy(v) && v.lisaTunnit && v.lisaTunnit[id])
-        .reduce((x, v) => { const n = tila.valinnat[v.id] - (v.min || 0); return [x[0] + n * v.lisaTunnit[id][0], x[1] + n * v.lisaTunnit[id][1]]; }, [0, 0]);
+        .reduce((x, v) => { const n = Math.max(0, tila.valinnat[v.id] - oletusMaara(v)); return [x[0] + n * v.lisaTunnit[id][0], x[1] + n * v.lisaTunnit[id][1]]; }, [0, 0]);
       const rivit = [];
       let ala = 0, yla = 0, kaynnit = [0, 0], matkaHinta = 0;
       for (const p of L.palvelut) {
@@ -139,8 +152,12 @@
     function valintaTekstit() {
       const tekstit = [tila.kohde.nimi, `${muotoile(tila.m2)} m²`];
       lisavalinnat.filter(nakyy).forEach(v => {
-        if (v.tyyppi === 'maara') { if (tila.valinnat[v.id] > 1) tekstit.push(`${tila.valinnat[v.id]} rakennusta`); }
-        else { const o = v.vaihtoehdot.find(o => o.id === tila.valinnat[v.id]); tekstit.push(o.kuvateksti || o.nimi.toLowerCase()); }
+        if (v.tyyppi === 'maara') {
+          const n = tila.valinnat[v.id], y = v.yksikko || ['', ''];
+          if (v.naytaAina || n > v.min) tekstit.push(`${n} ${n === 1 ? y[0] : y[1]}`);
+        } else if (v.tyyppi === 'monivalinta') {
+          v.vaihtoehdot.filter(o => tila.valinnat[v.id].includes(o.id) && vaihtoehtoNakyy(o)).forEach(o => tekstit.push(o.nimi.toLowerCase()));
+        } else { const o = v.vaihtoehdot.find(o => o.id === tila.valinnat[v.id]); tekstit.push(o.kuvateksti || o.nimi.toLowerCase()); }
       });
       return tekstit;
     }
@@ -157,24 +174,28 @@
         const kentta = $(`[data-lisavalinta="${v.id}"]`);
         kentta.hidden = !nakyy(v);
         if (v.tyyppi === 'maara') {
-          kentta.querySelector('[data-maara-arvo]').textContent = tila.valinnat[v.id];
+          const syote = kentta.querySelector('[data-maara-arvo]');
+          if (document.activeElement !== syote) syote.value = tila.valinnat[v.id];
           kentta.querySelector('[data-maara="-1"]').disabled = tila.valinnat[v.id] <= v.min;
-          kentta.querySelector('[data-maara="1"]').disabled = tila.valinnat[v.id] >= v.max;
+          kentta.querySelector('[data-maara="1"]').disabled = tila.valinnat[v.id] >= (v.max || MAARA_YLA);
+        } else if (v.tyyppi === 'monivalinta') {
+          kentta.querySelectorAll('[data-moni]').forEach(b => {
+            const o = v.vaihtoehdot.find(x => x.id === b.dataset.arvo);
+            b.hidden = !vaihtoehtoNakyy(o);
+            b.setAttribute('aria-pressed', tila.valinnat[v.id].includes(o.id));
+          });
         } else kentta.querySelectorAll('[data-valinta]').forEach(b => b.setAttribute('aria-pressed', b.dataset.arvo === tila.valinnat[v.id]));
       });
       let nro = 0;
       juuri.querySelectorAll('.vaihe').forEach(f => { if (!f.hidden) f.querySelector('.vaihe-nro').textContent = ++nro; });
 
-      // Havainnekuva: animoidaan vain, kun muoto vaihtuu (ei koon liukusäätimestä)
-      const kuva = $('[data-havainne]');
+      // Aksonometria (js/akso.js): rakennus vaihtuu animoiden, koko ja kerrokset liukuvat.
+      const kuva = $('[data-akso]');
       if (kuva) {
-        const arvo = id => { const v = lisavalinnat.find(x => x.id === id); return v && nakyy(v) ? tila.valinnat[id] : undefined; };
         const h = { laji: juuri.dataset.laskuri, kohde: tila.kohde.id, m2: tila.m2, vertailu: tila.kohde.m2, palvelut: [...tila.palvelut] };
-        lisavalinnat.forEach(v => { h[v.id] = arvo(v.id); });
-        const avain = [h.kohde, ...lisavalinnat.map(v => h[v.id])].join('|');
-        kuva.innerHTML = window.piirraHavainne(h);
-        if (avain !== kuva.dataset.avain) { kuva.dataset.avain = avain; kuva.classList.remove('animoi'); void kuva.offsetWidth; kuva.classList.add('animoi'); }
-        $('[data-havainne-teksti]').textContent = valintaTekstit().join(' · ');
+        lisavalinnat.forEach(v => { h[v.id] = nakyy(v) ? tila.valinnat[v.id] : undefined; });
+        window.piirraAkso(kuva, h);
+        $('[data-akso-teksti]').textContent = valintaTekstit().join(' · ');
       }
 
       const { rivit, ala, yla } = laske();
@@ -206,12 +227,18 @@
       if (kohde) { asetaKohde(L.kohteet.find(k => k.id === kohde.dataset.kohde)); return piirra(); }
       const palvelu = e.target.closest('[data-palvelu]');
       if (palvelu) { const id = palvelu.dataset.palvelu; tila.palvelut.has(id) ? tila.palvelut.delete(id) : tila.palvelut.add(id); return piirra(); }
+      const moni = e.target.closest('[data-moni]');
+      if (moni) {
+        const lista = tila.valinnat[moni.dataset.moni], id = moni.dataset.arvo;
+        tila.valinnat[moni.dataset.moni] = lista.includes(id) ? lista.filter(x => x !== id) : [...lista, id];
+        return piirra();
+      }
       const valinta = e.target.closest('[data-valinta]');
       if (valinta) { tila.valinnat[valinta.dataset.valinta] = valinta.dataset.arvo; return piirra(); }
       const maara = e.target.closest('[data-maara]');
       if (maara) {
         const v = lisavalinnat.find(x => x.id === maara.closest('[data-lisavalinta]').dataset.lisavalinta);
-        tila.valinnat[v.id] = Math.max(v.min, Math.min(v.max, tila.valinnat[v.id] + +maara.dataset.maara));
+        tila.valinnat[v.id] = Math.max(v.min, Math.min(v.max || MAARA_YLA, tila.valinnat[v.id] + +maara.dataset.maara));
         return piirra();
       }
       const alv = e.target.closest('[data-alv]');
@@ -224,6 +251,14 @@
       piirra();
     });
     m2.addEventListener('input', () => { tila.m2 = +m2.value; piirra(); });
+    // Määrän voi myös kirjoittaa (esim. 24 kerrosta).
+    juuri.addEventListener('input', e => {
+      const syote = e.target.closest('[data-maara-arvo]'); if (!syote) return;
+      const v = lisavalinnat.find(x => x.id === syote.closest('[data-lisavalinta]').dataset.lisavalinta);
+      const n = Math.round(+syote.value);
+      if (syote.value !== '' && n >= v.min) { tila.valinnat[v.id] = Math.min(v.max || MAARA_YLA, n); piirra(); }
+    });
+    juuri.addEventListener('focusout', e => { if (e.target.closest('[data-maara-arvo]')) setTimeout(piirra); });
     if (km) km.addEventListener('input', () => { tila.km = +km.value; piirra(); });
 
     asetaKohde(tila.kohde);

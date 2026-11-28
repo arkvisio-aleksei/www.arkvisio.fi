@@ -12,7 +12,7 @@ Tavallinen HTML-sivusto. Ei asennuksia eikä työkaluja: avaa `index.html` selai
 | `js/kartta.js` | Maapallo, kohteiden ryhmittely ja zoomaus |
 | `js/sivu.js` | Etusivun suodattimet ja hankelaskuri |
 | `js/valikko.js` | Mobiilivalikko (kaikilla sivuilla) |
-| `js/laskuri.js`, `js/ikonit.js`, `js/havainne.js` | Palvelusivujen hintalaskuri, kuvakkeet sekä suunnittelu- ja tutkimuslaskurin piirros |
+| `js/laskuri.js`, `js/ikonit.js`, `js/akso.js` | Palvelusivujen hintalaskuri, kuvakkeet ja aksonometriapiirros, joka muuttuu valintojen mukaan |
 | `js/vendor/` | Valmiit kirjastot (d3, topojson) – ei muokata |
 | `data/kohteet.js` | **Kohteet – tätä muokataan, kun lisätään referenssi** |
 | `data/hinnasto.js` | **Tuntihinnat ja laskureiden tuntiarviot – tätä muokataan, kun hinnasto muuttuu** |
@@ -30,8 +30,9 @@ Kaikki hinnat ovat tiedostossa `data/hinnasto.js`:
 - **Tuntihinnat** (`tuntihinnat`) ovat hinnastosta 2026 (Etelä-Suomi), sis. alv 25,5 %. Alv 0 % -hinta lasketaan automaattisesti.
 - **Tuntiarviot** (`tunnit: { okt: [30, 40], ... }`) ovat vähimmäis- ja enimmäistunnit kohdetyypeittäin oletuskoossa (`m2`). Suuremmassa kohteessa tunnit kasvavat loivasti. **Arviot ovat alustavia – tarkistakaa ne.**
 - **Käynnit** (`kaynnit`) työmaa- ja tutkimuspalveluissa: jokaiseen käyntiin lisätään matka-aika, yksi tunti ja 0,90 €/km.
-- **Lisävalinnat** (`lisavalinnat`, suunnittelussa): tontti, kerrokset ja rakennusten määrä. `kerroin` kasvattaa tunteja palveluittain (esim. rinnetontti rakennesuunnittelu 1,25 = +25 %), `lisaTunnit` lisää tunnit jokaista lisärakennusta kohden. Julkisivupiirros (`js/havainne.js`) muuttuu valintojen mukaan.
+- **Lisävalinnat** (`lisavalinnat`, suunnittelussa): tontti, kerrokset ja rakennusten määrä. `kerroin` kasvattaa tunteja palveluittain (esim. rinnetontti rakennesuunnittelu 1,25 = +25 %), `lisaTunnit` lisää tunnit jokaista lisärakennusta kohden. Aksonometriapiirros (`js/akso.js`) muuttuu valintojen mukaan. Kerroksia voi valita rajattomasti, ja kellari ja asuinullakko ovat omia valintojaan.
 - **Tutkimuslaskurin lisävalinnat**: rakennusvuosi, alapohja (laatta / rossipohja / kellari) ja kerrokset. Vanhemmat rakennukset ja rossipohja/kellari lisäävät tarkastustunteja (riskirakenteet). Piirros näyttää perustustavan ja merkit kohtiin, joihin valitut tutkimukset kohdistuvat.
+- Suunnittelu- ja työmaalaskurissa on myös kerrostalo, liike- tai toimitila ja halli. **Niiden tuntiarviot ovat alustavia – tarkistakaa ne.**
 - Uuden palvelun tai kohdetyypin voi lisätä samalla mallilla. Kuvakkeet ovat tiedostossa `js/ikonit.js`.
 
 "Pyydä tarjous" avaa sähköpostin osoitteeseen myynti@arkvisio.fi, ja laskurin valinnat ovat viestissä valmiina.

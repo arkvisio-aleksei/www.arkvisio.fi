@@ -41,41 +41,50 @@ window.HINNASTO = {
       kohdeOtsikko: "Mitä suunnitellaan?",
       palveluOtsikko: "Mitä suunnittelua tarvitset?",
       skaalaus: 0.6,
-      havainne: true,   // julkisivupiirros, joka muuttuu valintojen mukaan
+      akso: true,   // aksonometrinen piirros, joka muuttuu valintojen mukaan (js/akso.js)
       // Lisävalinnat. kohteet = millä kohdetyypeillä valinta näytetään.
       //   kerroin = tuntien kerroin palveluittain (1,15 = +15 %).
-      //   lisaTunnit = tunnit jokaista lisärakennusta kohden (päärakennuksen lisäksi).
+      //   tyyppi "maara": numerovalitsin. oletus = oletusarvo kohdetyypeittäin.
+      //     lisaTunnit = tunnit jokaista oletusarvon ylittävää kohden.
+      //     potenssi = tunnit kasvavat (arvo / oletus) ^ potenssi, esim. kerrokset.
+      //   tyyppi "monivalinta": useampi vaihtoehto voi olla valittuna, tai ei yhtään.
       lisavalinnat: [
-        { id: "tontti", otsikko: "Millainen tontti?", kohteet: ["okt", "pari", "mokki", "sauna", "laaj"],
+        { id: "tontti", otsikko: "Millainen tontti?", kohteet: ["okt", "pari", "mokki", "sauna", "laaj", "kerrostalo", "liike", "halli"],
           vaihtoehdot: [
             { id: "tasa",  nimi: "Tasamaa",     ikoni: "tasamaa", kerroin: {} },
             { id: "rinne", nimi: "Rinnetontti", ikoni: "rinne",   kerroin: { paa: 1.10, ark: 1.15, rak: 1.25 } },
           ] },
-        { id: "kerrokset", otsikko: "Montako kerrosta?", kohteet: ["okt", "pari", "mokki"],
+        { id: "kerrokset", otsikko: "Montako kerrosta maan päällä?", tyyppi: "maara", kohteet: ["okt", "pari", "mokki", "kerrostalo", "liike", "halli"],
+          min: 1, max: 99, oletus: { kerrostalo: 5, liike: 2 }, yksikko: ["kerros", "kerrosta"], naytaAina: true,
+          potenssi: { paa: 0.08, ark: 0.15, rak: 0.20 } },
+        { id: "lisatilat", otsikko: "Kellari tai ullakko?", tyyppi: "monivalinta", kohteet: ["okt", "pari", "mokki", "kerrostalo", "liike"],
           vaihtoehdot: [
-            { id: "1",  nimi: "1 kerros",    ikoni: "kerros1",  kerroin: {} },
-            { id: "15", nimi: "1½ kerrosta", ikoni: "kerros15", kerroin: { ark: 1.08, rak: 1.08 } },
-            { id: "2",  nimi: "2 kerrosta",  ikoni: "kerros2",  kerroin: { ark: 1.12, rak: 1.15 } },
+            { id: "kellari", nimi: "Kellari", ikoni: "kellari", kerroin: { paa: 1.05, ark: 1.10, rak: 1.20 } },
+            { id: "ullakko", nimi: "Asuinullakko", ikoni: "ullakko", kohteet: ["okt", "pari", "mokki"], kerroin: { ark: 1.06, rak: 1.06 } },
           ] },
-        { id: "rakennukset", otsikko: "Montako rakennusta?", tyyppi: "maara", kohteet: ["okt", "pari", "mokki", "sauna"],
-          min: 1, max: 4, ohje: "Esimerkiksi päärakennuksen lisäksi autotalli, sauna tai vierasmaja.",
+        { id: "rakennukset", otsikko: "Montako rakennusta?", tyyppi: "maara", kokoJalkeen: true, kohteet: ["okt", "pari", "mokki", "sauna"],
+          min: 1, max: 9, yksikko: ["rakennus", "rakennusta"], ohje: "Esimerkiksi päärakennuksen lisäksi autotalli, sauna tai vierasmaja.",
           lisaTunnit: { paa: [3, 5], ark: [6, 10], rak: [3, 6] } },
       ],
       kohteet: [
-        { id: "okt",   nimi: "Omakotitalo",            ikoni: "talo",      m2: 150, min: 60,  max: 400 },
-        { id: "pari",  nimi: "Pari- tai rivitalo",     ikoni: "paritalo",  m2: 250, min: 100, max: 900 },
-        { id: "mokki", nimi: "Vapaa-ajan asunto",      ikoni: "mokki",     m2: 90,  min: 30,  max: 250 },
-        { id: "sauna", nimi: "Sauna tai piharakennus", ikoni: "sauna",     m2: 25,  min: 8,   max: 80 },
-        { id: "laaj",  nimi: "Laajennus",              ikoni: "laajennus", m2: 40,  min: 10,  max: 200 },
-        { id: "korj",  nimi: "Muutos tai korjaus",     ikoni: "korjaus",   m2: 100, min: 20,  max: 400 },
+        { id: "okt",        nimi: "Omakotitalo",            ikoni: "talo",       m2: 150,  min: 60,  max: 400 },
+        { id: "pari",       nimi: "Pari- tai rivitalo",     ikoni: "paritalo",   m2: 250,  min: 100, max: 900 },
+        { id: "mokki",      nimi: "Vapaa-ajan asunto",      ikoni: "mokki",      m2: 90,   min: 30,  max: 250 },
+        { id: "sauna",      nimi: "Sauna tai piharakennus", ikoni: "sauna",      m2: 25,   min: 8,   max: 80 },
+        { id: "laaj",       nimi: "Laajennus",              ikoni: "laajennus",  m2: 40,   min: 10,  max: 200 },
+        { id: "korj",       nimi: "Muutos tai korjaus",     ikoni: "korjaus",    m2: 100,  min: 20,  max: 400 },
+        { id: "kerrostalo", nimi: "Kerrostalo",             ikoni: "kerrostalo", m2: 1500, min: 300, max: 20000 },
+        { id: "liike",      nimi: "Liike- tai toimitila",   ikoni: "liike",      m2: 600,  min: 100, max: 10000 },
+        { id: "halli",      nimi: "Halli tai teollisuusrakennus", ikoni: "halli", m2: 800, min: 100, max: 10000 },
       ],
+      // Kerrostalon, toimitilan ja hallin tuntiarviot ovat alustavia – tarkistakaa.
       palvelut: [
         { id: "paa", nimi: "Pääsuunnittelu", kuvaus: "Hankkeen kokonaisuus ja rakennuslupa", ikoni: "paa", hinta: "skol2", oletus: true,
-          tunnit: { okt: [30, 40], pari: [45, 65], mokki: [22, 32], sauna: [4, 6], laaj: [12, 18], korj: [10, 20] } },
+          tunnit: { okt: [30, 40], pari: [45, 65], mokki: [22, 32], sauna: [4, 6], laaj: [12, 18], korj: [10, 20], kerrostalo: [180, 300], liike: [60, 100], halli: [40, 70] } },
         { id: "ark", nimi: "Arkkitehtisuunnittelu", kuvaus: "Pohjat, julkisivut ja lupakuvat", ikoni: "ark", hinta: "skol3", oletus: true,
-          tunnit: { okt: [25, 45], pari: [45, 80], mokki: [18, 32], sauna: [8, 12], laaj: [15, 25], korj: [15, 30] } },
+          tunnit: { okt: [25, 45], pari: [45, 80], mokki: [18, 32], sauna: [8, 12], laaj: [15, 25], korj: [15, 30], kerrostalo: [700, 1200], liike: [150, 260], halli: [60, 110] } },
         { id: "rak", nimi: "Rakennesuunnittelu", kuvaus: "Rakenteet, mitoitus ja rakennekuvat", ikoni: "rak", hinta: "skol3", oletus: false,
-          tunnit: { okt: [20, 35], pari: [35, 60], mokki: [15, 26], sauna: [4, 8], laaj: [10, 18], korj: [8, 20] } },
+          tunnit: { okt: [20, 35], pari: [35, 60], mokki: [15, 26], sauna: [4, 8], laaj: [10, 18], korj: [8, 20], kerrostalo: [400, 700], liike: [100, 180], halli: [80, 140] } },
       ],
     },
 
@@ -84,6 +93,7 @@ window.HINNASTO = {
       palveluOtsikko: "Mitä tarvitset työmaalle?",
       skaalaus: 0.6,
       matka: true,
+      akso: true,
       kohteet: [
         { id: "okt",   nimi: "Omakotitalo",            ikoni: "talo",      m2: 150, min: 60,  max: 400 },
         { id: "pari",  nimi: "Pari- tai rivitalo",     ikoni: "paritalo",  m2: 250, min: 100, max: 900 },
@@ -91,14 +101,17 @@ window.HINNASTO = {
         { id: "sauna", nimi: "Sauna tai piharakennus", ikoni: "sauna",     m2: 25,  min: 8,   max: 80 },
         { id: "laaj",  nimi: "Laajennus",              ikoni: "laajennus", m2: 40,  min: 10,  max: 200 },
         { id: "korj",  nimi: "Muutos tai korjaus",     ikoni: "korjaus",   m2: 100, min: 20,  max: 400 },
+        { id: "kerrostalo", nimi: "Kerrostalo",           ikoni: "kerrostalo", m2: 1500, min: 300, max: 20000 },
+        { id: "liike",      nimi: "Liike- tai toimitila", ikoni: "liike",      m2: 600,  min: 100, max: 10000 },
+        { id: "halli",      nimi: "Halli tai teollisuusrakennus", ikoni: "halli", m2: 800, min: 100, max: 10000 },
       ],
       palvelut: [
         { id: "vtj", nimi: "Vastaava työnjohto", kuvaus: "Lakisääteinen työnjohto ja tarkastukset", ikoni: "kypara", hinta: "skol3", oletus: true,
-          tunnit:  { okt: [80, 150], pari: [120, 220], mokki: [50, 100], sauna: [10, 20], laaj: [30, 60], korj: [30, 80] },
-          kaynnit: { okt: [12, 20],  pari: [16, 28],   mokki: [8, 14],   sauna: [2, 4],   laaj: [5, 10],  korj: [5, 12] } },
+          tunnit:  { okt: [80, 150], pari: [120, 220], mokki: [50, 100], sauna: [10, 20], laaj: [30, 60], korj: [30, 80], kerrostalo: [600, 1100], liike: [200, 380], halli: [150, 280] },
+          kaynnit: { okt: [12, 20],  pari: [16, 28],   mokki: [8, 14],   sauna: [2, 4],   laaj: [5, 10],  korj: [5, 12], kerrostalo: [60, 110], liike: [25, 45], halli: [20, 35] } },
         { id: "val", nimi: "Rakennuttaminen ja valvonta", kuvaus: "Urakoiden kilpailutus ja laadun valvonta", ikoni: "valvonta", hinta: "skol2", oletus: false,
-          tunnit:  { okt: [30, 60],  pari: [50, 90],    mokki: [20, 40],  sauna: [4, 8],   laaj: [12, 25], korj: [15, 35] },
-          kaynnit: { okt: [6, 10],   pari: [8, 14],     mokki: [4, 8],    sauna: [1, 2],   laaj: [3, 6],   korj: [3, 8] } },
+          tunnit:  { okt: [30, 60],  pari: [50, 90],    mokki: [20, 40],  sauna: [4, 8],   laaj: [12, 25], korj: [15, 35], kerrostalo: [400, 800], liike: [120, 240], halli: [80, 160] },
+          kaynnit: { okt: [6, 10],   pari: [8, 14],     mokki: [4, 8],    sauna: [1, 2],   laaj: [3, 6],   korj: [3, 8], kerrostalo: [40, 80], liike: [15, 30], halli: [10, 20] } },
       ],
     },
 
@@ -107,7 +120,7 @@ window.HINNASTO = {
       palveluOtsikko: "Mitä tutkimuksia tarvitset?",
       skaalaus: 0.6,
       matka: true,
-      havainne: true,   // leikkauspiirros: perustustapa ja valittujen tutkimusten kohdat
+      akso: true,   // aksonometrinen piirros: perustustapa ja kerrokset
       // Riskirakenteet riippuvat rakennusajasta ja perustustavasta → tarkastuksiin kuluu enemmän aikaa.
       lisavalinnat: [
         { id: "vuosi", otsikko: "Milloin rakennettu?",

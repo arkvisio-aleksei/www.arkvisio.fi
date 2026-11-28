@@ -188,3 +188,22 @@ if (!location.hash) {
     osaamiset.forEach(o => havainnoija.observe(o));
   }
 })();
+
+// Näin työ etenee: vaiheet piirtyvät vasemmalta oikealle, kun osio tulee näkyviin.
+(function () {
+  const listat = document.querySelectorAll('.vaiheet');
+  if (!listat.length || !('IntersectionObserver' in window)) return;
+  const havainnoija = new IntersectionObserver(merkinnat => merkinnat.forEach(m => {
+    if (!m.isIntersecting) return;
+    m.target.classList.add('nakyvissa');
+    havainnoija.unobserve(m.target);
+  }), { threshold: .35 });
+  listat.forEach(lista => {
+    lista.querySelectorAll(':scope > li').forEach((li, i) => {
+      li.style.setProperty('--n', i);
+      li.insertAdjacentHTML('afterbegin', '<span class="vaihe-piste" aria-hidden="true"></span>');
+    });
+    lista.classList.add('animoi');
+    havainnoija.observe(lista);
+  });
+})();

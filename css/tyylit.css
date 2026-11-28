@@ -1260,3 +1260,105 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 /* Karttaikkunan avautuminen hoidetaan skriptissä (kasvaa kortin paikalta), ei CSS-häivytyksellä */
 .kartta-modaali, .kartta-modaali.auki { opacity: 1; transition: none; }
 .kartta-modaali-ikkuna, .kartta-modaali.auki .kartta-modaali-ikkuna { transform: none; transition: none; }
+
+/* ================= Hintalaskuri: pyöristykset, kuvakkeet ja aksonometria ================= */
+/* Avattavan otsikon +/× piirretään viivoina, jotta merkki on tarkalleen ympyrän keskellä */
+.avattava summary { border-radius: 14px; }
+.avattava summary::after { content: ""; color: var(--vision-oranssi);
+  background: linear-gradient(currentColor, currentColor) center / 14px 1.5px no-repeat, linear-gradient(currentColor, currentColor) center / 1.5px 14px no-repeat; }
+/* Määrävalitsin: − ja + viivoina, luvun voi myös kirjoittaa */
+.maaravalitsin button { position: relative; color: var(--vaalea);
+  background: linear-gradient(currentColor, currentColor) center / 14px 1.5px no-repeat; }
+.maaravalitsin .mv-plus { background: linear-gradient(currentColor, currentColor) center / 14px 1.5px no-repeat, linear-gradient(currentColor, currentColor) center / 1.5px 14px no-repeat; }
+.maaravalitsin button:hover:not(:disabled) { background-color: var(--grafiitti-3); }
+.maaravalitsin input { width: 3.2ch; min-width: 48px; padding: 0; border: 0; background: none; text-align: center; color: var(--vaalea);
+  font: 400 32px/1 var(--fontti-otsikko); font-variant-numeric: tabular-nums; -moz-appearance: textfield; appearance: textfield; }
+.maaravalitsin input::-webkit-inner-spin-button, .maaravalitsin input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.maaravalitsin input:focus { outline: none; color: #B86F00; }
+.avattava .maaravalitsin input { min-width: 40px; font-size: 22px; }
+/* Tulosruutu pyöristetyillä kulmilla */
+.laskuri-tulos, .avattava .laskuri-tulos { border-radius: 22px; }
+.ruutu[hidden] { display: none !important; }
+/* Pienet kuvakkeet valinnoissa */
+.avattava .ruutu .ikoni { display: block; width: 18px; height: 18px; flex: none; color: var(--vaalea-2); }
+.avattava .ruutu[aria-pressed="true"] .ikoni { color: #B86F00; }
+.avattava .ruutu { padding: 7px 13px 7px 10px; gap: 7px; }
+
+/* Aksonometria tulosruudun yläosassa */
+.akso-kehys { margin: 0 0 4px; }
+.akso { aspect-ratio: 4 / 3; border-radius: 14px; background: #FBFAF7; overflow: hidden; }
+.akso-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.akso-kehys figcaption { margin-top: 8px; font: 500 10px/1.5 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; color: var(--harmaa); }
+.akso-svg * { vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+.akso-svg polygon, .akso-svg polyline { stroke: #2B2E35; stroke-width: .8; }
+.akso-svg polyline { fill: none; }
+.akso-svg .ax-y { fill: #FFFFFF; }
+.akso-svg .ax-v { fill: #F6F3EC; }
+.akso-svg .ax-o { fill: #E3DDD1; }
+.akso-svg .ax-katto { fill: #F1EDE5; }
+.akso-svg .ax-katto-t { fill: #FAF8F3; }
+.akso-svg .ax-katto-o { fill: #DED8CB; }
+.akso-svg .ax-otsa { fill: #E7E1D6; }
+.akso-svg .ax-kaide { fill: none; stroke-width: .6; }
+.akso-svg .ax-sokkeli { fill: #D9D3C7; }
+.akso-svg .ax-sokkeli.ax-y { fill: #E9E4DA; }
+.akso-svg .ax-hormi { fill: #E3DDD1; }
+.akso-svg .ax-ikkuna { fill: #3A3E47; stroke-width: .5; }
+.akso-svg .ax-ovi { fill: #8E8A82; stroke-width: .6; }
+.akso-svg .ax-lasi { fill: #C9CED3; stroke-width: .6; }
+.akso-svg .ax-tuuletus { fill: #2B2E35; stroke-width: .4; }
+.akso-svg .ax-laatta { fill: #F1EDE5; stroke-width: .5; }
+.akso-svg .ax-kaidelasi { fill: rgba(255, 255, 255, .55); stroke-width: .5; }
+.akso-svg .ax-ohut { stroke-width: .45; }
+.akso-svg .ax-maa { fill: #F3EFE7; stroke: #CFC7B8; stroke-width: .7; }
+.akso-svg .ax-ruudukko { stroke: #E0D9CC; stroke-width: .45; }
+.akso-svg .ax-varjo { fill: rgba(70, 60, 40, .09); stroke: none; }
+.akso-svg .ax-mitta { stroke: #8F8A80; stroke-width: .6; stroke-dasharray: 3 3; }
+.akso-svg .ax-piilo { stroke: #6E6A62; stroke-width: .7; stroke-dasharray: 4 3; }
+.akso-svg .ax-piilo-taka { stroke-opacity: .5; }
+.akso-svg .ax-nosturi { stroke: #B86F00; stroke-width: 1; }
+.akso-svg .ax-teline { stroke: #B86F00; stroke-width: .55; stroke-opacity: .85; }
+/* Laajennus: nykyinen talo vaaleana, uusi osa oranssin sävyisenä. Korjaus: julkisivuissa viivoitus. */
+.akso-svg .ax-vanha { stroke: #9C978D; }
+.akso-svg .ax-vanha.ax-y, .akso-svg .ax-vanha.ax-v, .akso-svg .ax-vanha.ax-katto, .akso-svg .ax-vanha.ax-katto-t { fill: #FBFAF7; }
+.akso-svg .ax-uusi.ax-y { fill: #FDF1DD; }
+.akso-svg .ax-uusi.ax-v, .akso-svg .ax-uusi.ax-katto { fill: #FBE3BC; }
+.akso-svg .ax-uusi.ax-o { fill: #EFC98C; }
+.akso-svg .ax-korjattava.ax-v, .akso-svg .ax-korjattava.ax-katto { fill: #FBE9CC; }
+.akso-svg .ax-korjattava.ax-o { fill: #EFD3A6; }
+/* Uudet osat putoavat paikalleen yksi kerrallaan */
+.ax-uusi-osa { animation: ax-pudotus .55s cubic-bezier(.2, .9, .25, 1) both; animation-delay: calc(var(--i, 0) * 55ms); }
+@keyframes ax-pudotus { from { opacity: 0; transform: translateY(-34px); } 60% { opacity: 1; } to { opacity: 1; transform: none; } }
+@media (max-width: 760px) {
+  .avattava .laskuri-tulos .akso-kehys { grid-column: 1 / -1; grid-row: 1; margin-bottom: 2px; }
+  .avattava .laskuri-tulos .alv-vaihto { grid-row: 2; }
+  .avattava .laskuri-tulos .tulos-otsikko { grid-row: 3; }
+  .avattava .laskuri-tulos .tulos-luku { grid-row: 4; }
+  .avattava .laskuri-tulos .tulos-nappi { grid-row: 3 / span 2; }
+  .akso { aspect-ratio: 16 / 10; }
+}
+
+/* ================= Näin työ etenee: vaiheet piirtyvät vuorotellen ================= */
+.vaiheet li { position: relative; border-top-color: #DAD5CC; }
+.vaiheet li::after { content: ""; position: absolute; left: 0; right: 0; top: -2px; height: 2px; background: var(--muste);
+  transform-origin: left; transform: scaleX(0); }
+.vaiheet .vaihe-piste { position: absolute; top: -6px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--vision-oranssi); opacity: 0; }
+.vaiheet.animoi li > :not(.vaihe-piste) { opacity: 0; transform: translateY(12px); }
+.vaiheet.animoi li::before { opacity: 0; }
+.vaiheet.nakyvissa li::after { transform: scaleX(1); transition: transform .6s cubic-bezier(.5, 0, .2, 1) calc(var(--n) * .45s); }
+.vaiheet.nakyvissa li > :not(.vaihe-piste) { opacity: 1; transform: none; transition: opacity .6s ease calc(var(--n) * .45s + .25s), transform .6s cubic-bezier(.2, .8, .2, 1) calc(var(--n) * .45s + .25s); }
+.vaiheet.nakyvissa li::before { opacity: 1; transition: opacity .4s ease calc(var(--n) * .45s + .15s); }
+.vaiheet.nakyvissa .vaihe-piste { animation: vaihe-piste .6s cubic-bezier(.5, 0, .2, 1) calc(var(--n) * .45s) both; }
+@keyframes vaihe-piste { 0% { opacity: 1; left: 0; } 90% { opacity: 1; } 100% { opacity: 0; left: calc(100% - 10px); } }
+/* Viimeisen vaiheen jälkeen piste jää oranssina loppuun */
+.vaiheet.nakyvissa li:last-child .vaihe-piste { animation-name: vaihe-piste-loppu; }
+@keyframes vaihe-piste-loppu { 0% { opacity: 1; left: 0; } 100% { opacity: 1; left: calc(100% - 10px); } }
+@media (max-width: 900px) {
+  .vaiheet li::after { top: -1px; height: 1px; }
+  .vaiheet .vaihe-piste { top: -5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vaiheet.animoi li > :not(.vaihe-piste), .vaiheet.animoi li::before { opacity: 1; transform: none; }
+  .vaiheet li::after { transform: none; }
+  .vaiheet .vaihe-piste { display: none; }
+}
