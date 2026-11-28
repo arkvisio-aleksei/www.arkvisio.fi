@@ -1543,3 +1543,51 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
   .henkilot { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .henkilo { border-radius: 16px; }
 }
+
+/* ================= Palvelusivujen johdanto: otsikko, avainasiat ja luvut tummassa paneelissa ================= */
+.palvelu-intro { padding-block: clamp(32px, 4.5vw, 64px) clamp(20px, 3vw, 40px); }
+.intro { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: clamp(14px, 1.8vw, 22px); align-items: stretch; }
+/* Teksti oranssien kulmien sisällä (sama aihe kuin etusivun palvelulaatikoissa) */
+.intro-teksti { --k: var(--vision-oranssi); --kp: 26px; --kv: 2px;
+  display: grid; align-content: start; gap: 18px; padding: clamp(26px, 3.4vw, 48px);
+  background:
+    linear-gradient(var(--k), var(--k)) left top / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) left top / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) right top / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) right top / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) left bottom / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) left bottom / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) right bottom / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) right bottom / var(--kv) var(--kp) no-repeat; }
+.intro-otsikko { font: 400 clamp(34px, 3.8vw, 58px)/1.02 var(--fontti-otsikko); letter-spacing: -.01em; color: var(--muste); max-width: 18ch; }
+.intro-otsikko .oranssi { color: #B86F00; }
+.intro .palvelu-lede { font: 300 clamp(16px, 1.3vw, 18px)/1.65 var(--fontti-teksti); color: #4A4F5A; max-width: 60ch; }
+.intro-pisteet { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px; }
+.intro-pisteet li { display: flex; align-items: baseline; gap: 12px; font: 400 15px/1.45 var(--fontti-teksti); color: var(--muste); }
+.intro-pisteet li::before { content: ""; flex: none; width: 16px; height: 16px; transform: translateY(3px); border-radius: 50%; background: var(--vision-oranssi)
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4.5 8.2 2.3 2.3 4.7-5' fill='none' stroke='%231F2229' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat; }
+.intro-napit { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.intro-napit .nappi-reuna { color: var(--muste); border-color: #CFC8BB; }
+.intro-napit .nappi-reuna:hover { color: #B86F00; border-color: var(--vision-oranssi); }
+/* Luvut tummassa paneelissa isoina oransseina */
+.intro-faktat { display: grid; align-content: center; padding: clamp(22px, 3vw, 40px); border-radius: 22px; background: #1F2229; color: #F4F1EC; }
+.intro-faktat .palvelu-faktat div { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: clamp(14px, 1.8vw, 22px) 0; border-top: 1px solid #363B45; }
+.intro-faktat .palvelu-faktat div:first-child { border-top: 0; padding-top: 0; }
+.intro-faktat .palvelu-faktat div:last-child { border-bottom: 0; padding-bottom: 0; }
+.intro-faktat .palvelu-faktat dt { font: 400 clamp(38px, 4vw, 60px)/.95 var(--fontti-otsikko); color: var(--vision-oranssi); }
+.intro-faktat .palvelu-faktat dd { color: #A9ACB3; }
+@media (max-width: 900px) {
+  .intro { grid-template-columns: minmax(0, 1fr); }
+  .intro-faktat .palvelu-faktat { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .intro-faktat .palvelu-faktat div, .intro-faktat .palvelu-faktat div:first-child { padding: 0; border-top: 0; }
+  .intro-faktat .palvelu-faktat dt { font-size: clamp(26px, 6vw, 40px); overflow-wrap: anywhere; }
+  .intro-faktat .palvelu-faktat dd { font-size: 10px; }
+}
+@media (max-width: 480px) {
+  .intro-faktat .palvelu-faktat { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .intro-faktat .palvelu-faktat div { grid-template-columns: auto 1fr; align-items: baseline; gap: 12px; padding: 12px 0; border-top: 1px solid #363B45; }
+  .intro-faktat .palvelu-faktat div:first-child { padding-top: 0; border-top: 0; }
+}
+
+/* Näin työ etenee: viivat oransseina */
+.vaiheet li::after { background: var(--vision-oranssi); }
