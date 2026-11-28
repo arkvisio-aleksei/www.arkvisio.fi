@@ -46,28 +46,25 @@
     }
   }
   // Harjakatto. akseli 'x': harja x-suunnassa, pääty oikealla. 'y': harja y-suunnassa, pääty vasemmalla.
-  function harjakatto(d, x0, y0, w, s, z, r, akseli, l = '', e = .45) {
+  function harjakatto(d, x0, y0, w, s, z, r, akseli, l = '', e = 0) {
     const x1 = x0 + w, y1 = y0 + s;
     if (akseli === 'x') {
       const ym = y0 + s / 2;
       d.poly([[x0, y0 - e, z], [x1, y0 - e, z], [x1, ym, z + r], [x0, ym, z + r]], 'ax-katto-t ' + l);
       d.poly([[x1, y0, z], [x1, y1, z], [x1, ym, z + r]], 'ax-o ' + l);
       d.poly([[x0, y1 + e, z], [x1, y1 + e, z], [x1, ym, z + r], [x0, ym, z + r]], 'ax-katto ' + l);
-      d.poly([[x0, y1 + e, z], [x1, y1 + e, z], [x1, y1 + e, z - .22], [x0, y1 + e, z - .22]], 'ax-otsa ' + l);
     } else {
       const xm = x0 + w / 2;
       d.poly([[x0 - e, y0, z], [x0 - e, y1, z], [xm, y1, z + r], [xm, y0, z + r]], 'ax-katto-t ' + l);
       d.poly([[x1 + e, y0, z], [x1 + e, y1, z], [xm, y1, z + r], [xm, y0, z + r]], 'ax-katto-o ' + l);
       d.poly([[x0, y1, z], [x1, y1, z], [xm, y1, z + r]], 'ax-v ' + l);
-      d.poly([[x1 + e, y0, z], [x1 + e, y1, z], [x1 + e, y1, z - .22], [x1 + e, y0, z - .22]], 'ax-otsa ' + l);
     }
   }
   // Pulpettikatto: korkein reuna takana (y0), laskee eteen.
-  function pulpetti(d, x0, y0, w, s, z, nousu, l = '', e = .4) {
+  function pulpetti(d, x0, y0, w, s, z, nousu, l = '', e = 0) {
     const x1 = x0 + w, y1 = y0 + s;
-    d.poly([[x1, y0, z], [x1, y1, z], [x1, y1, z + .05], [x1, y0, z + nousu]], 'ax-o ' + l);
-    d.poly([[x0 - e, y0 - e, z + nousu + .1], [x1 + e, y0 - e, z + nousu + .1], [x1 + e, y1 + e, z], [x0 - e, y1 + e, z]], 'ax-katto ' + l);
-    d.poly([[x0 - e, y1 + e, z], [x1 + e, y1 + e, z], [x1 + e, y1 + e, z - .2], [x0 - e, y1 + e, z - .2]], 'ax-otsa ' + l);
+    d.poly([[x1, y0, z], [x1, y1, z], [x1, y0, z + nousu]], 'ax-o ' + l);
+    d.poly([[x0 - e, y0 - e, z + nousu], [x1 + e, y0 - e, z + nousu], [x1 + e, y1 + e, z], [x0 - e, y1 + e, z]], 'ax-katto ' + l);
   }
   // Tasakatto ja räystäslinja (kaide)
   function tasakatto(d, x0, y0, w, s, z, l = '') {

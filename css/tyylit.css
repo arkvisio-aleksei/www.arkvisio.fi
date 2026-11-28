@@ -1303,7 +1303,7 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 .akso-svg .ax-sokkeli { fill: #D9D3C7; }
 .akso-svg .ax-sokkeli.ax-y { fill: #E9E4DA; }
 .akso-svg .ax-hormi { fill: #E3DDD1; }
-.akso-svg .ax-ikkuna { fill: #3A3E47; stroke-width: .5; }
+.akso-svg .ax-ikkuna { fill: #C9CED3; stroke-width: .6; }   /* sama lasin sävy kuin liikerakennuksessa */
 .akso-svg .ax-ovi { fill: #8E8A82; stroke-width: .6; }
 .akso-svg .ax-lasi { fill: #C9CED3; stroke-width: .6; }
 .akso-svg .ax-tuuletus { fill: #2B2E35; stroke-width: .4; }
