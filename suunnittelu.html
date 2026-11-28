@@ -10,7 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
-  <link rel="stylesheet" href="css/tyylit.css?v=20261128q">
+  <link rel="stylesheet" href="css/tyylit.css?v=20261128r">
+  <style>@view-transition { navigation: auto; }</style>
 </head>
 <body class="etusivu alasivu">
   <a class="ohita" href="#sisalto">Siirry sisältöön</a>
@@ -23,7 +24,11 @@
           <div class="alasivu-otsikko">
             <div>
               <p class="murupolku"><a href="index.html#palvelut">Palvelumme</a> / Suunnittelu</p>
-              <h1><span class="otsikko-nro">01</span>Suunnittelu</h1>
+              <nav class="palveluhihna" aria-label="Palvelut">
+                <h1 class="hihna-kohta nyky" style="view-transition-name: hihna-suunnittelu"><span class="otsikko-nro">01</span><span class="hihna-nimi">Suunnittelu</span></h1>
+                <a class="hihna-kohta" href="tyomaa.html" style="view-transition-name: hihna-tyomaa"><span class="otsikko-nro">02</span><span class="hihna-nimi">Toteutus</span></a>
+                <a class="hihna-kohta" href="tutkimus.html" style="view-transition-name: hihna-tutkimus"><span class="otsikko-nro">03</span><span class="hihna-nimi">Tutkimus</span></a>
+              </nav>
             </div>
           </div>
       </div>
@@ -136,10 +141,10 @@
     </div>
   </footer>
 
-  <script src="data/hinnasto.js?v=20261128q"></script>
-  <script src="js/ikonit.js?v=20261128q"></script>
-  <script src="js/akso.js?v=20261128q"></script>
-  <script src="js/laskuri.js?v=20261128q"></script>
-  <script src="js/valikko.js?v=20261128q"></script>
+  <script src="data/hinnasto.js?v=20261128r"></script>
+  <script src="js/ikonit.js?v=20261128r"></script>
+  <script src="js/akso.js?v=20261128r"></script>
+  <script src="js/laskuri.js?v=20261128r"></script>
+  <script src="js/valikko.js?v=20261128r"></script>
 </body>
 </html>
