@@ -1686,3 +1686,12 @@ a.hihna-kohta:hover .hihna-nimi::after { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+/* Liukuhihna puhelimessa: vain sivuttainen pyyhkäisy, kirjaimille tilaa, pysähtyy palvelun kohdalle */
+.palveluhihna { overflow-y: hidden; overscroll-behavior: contain; padding-block: .12em .28em; margin-block: -.12em -.28em;
+  scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; }
+.hihna-kohta { scroll-snap-align: start; line-height: 1.15; }
+@media (max-width: 760px) {
+  .palveluhihna { gap: 22px; }
+  a.hihna-kohta { font-size: 20px; }
+  a.hihna-kohta .hihna-nimi::after { display: none; }
+}
