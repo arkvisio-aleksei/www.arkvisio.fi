@@ -1623,3 +1623,4 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 .palvelukortti .nro { color: var(--vision-oranssi); }
 .palvelukortti h3 { color: #F4F1EC; }
 .palvelukortti p { color: #A9ACB3; }
+.palvelukortti { justify-items: center; text-align: center; }
