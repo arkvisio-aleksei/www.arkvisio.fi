@@ -6,7 +6,8 @@
 //           <div data-tuntihinnat="skol2,skol3"></div>, <ul data-lisakulut></ul>
 // ============================================================
 
-(function () {
+// Käynnistys funktiona, jotta palvelusivun sisällön vaihtuessa (js/palvelusiirto.js) se voidaan ajaa uudelleen.
+window.alustaLaskurit = function () {
   const H = window.HINNASTO, ikoni = window.IKONIT;
   const ALV = 1 + H.alv / 100;
   const muotoile = (n, des = 0) => n.toLocaleString('fi-FI', { minimumFractionDigits: des, maximumFractionDigits: des }).replace(/\s/g, ' ');
@@ -278,4 +279,5 @@
     }).join('');
   });
   document.querySelectorAll('[data-lisakulut]').forEach(el => { el.innerHTML = H.lisakulut.map(x => `<li>${x}</li>`).join(''); });
-})();
+};
+window.alustaLaskurit();

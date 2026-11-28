@@ -9,7 +9,8 @@
 //  Sivulla: <div data-leikkaus></div>
 // ============================================================
 
-(function () {
+// Käynnistys funktiona, jotta palvelusivun sisällön vaihtuessa (js/palvelusiirto.js) se voidaan ajaa uudelleen.
+window.alustaLeikkaus = function () {
   const juuri = document.querySelector('[data-leikkaus]');
   const L = window.HINNASTO && window.HINNASTO.laskurit && window.HINNASTO.laskurit.tutkimus;
   if (!juuri || !L) return;
@@ -686,4 +687,5 @@
   if (laskuri && laskuri.laskuriTila) tila.palvelut = laskuri.laskuriTila.palvelut.slice();
   kerroLaskurille();
   kaynnista();
-})();
+};
+window.alustaLeikkaus();

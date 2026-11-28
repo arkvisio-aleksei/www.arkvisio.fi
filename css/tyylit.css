@@ -1705,3 +1705,8 @@ a.hihna-kohta:hover .hihna-nimi::after { opacity: 1; transform: none; }
 ::view-transition-new(murupolku) { animation: hihna-haivy-esiin .35s ease .2s both; }
 @keyframes hihna-haivy-pois { to { opacity: 0; } }
 @keyframes hihna-haivy-esiin { from { opacity: 0; } }
+/* Takaisin-napilla sisältö liukuu toiseen suuntaan */
+html[data-siirto="taakse"]::view-transition-old(root) { animation-name: hihna-ulos-oikealle; }
+html[data-siirto="taakse"]::view-transition-new(root) { animation-name: hihna-sisaan-vasemmalta; }
+@keyframes hihna-ulos-oikealle { to { transform: translateX(18%); opacity: 0; } }
+@keyframes hihna-sisaan-vasemmalta { from { transform: translateX(-18%); opacity: 0; } }

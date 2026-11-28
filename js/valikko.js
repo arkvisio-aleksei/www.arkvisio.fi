@@ -190,7 +190,7 @@ if (!location.hash) {
 })();
 
 // Näin työ etenee: vaiheet piirtyvät vasemmalta oikealle, kun osio tulee näkyviin.
-(function () {
+window.alustaVaiheet = function () {
   const listat = [...document.querySelectorAll('.vaiheet')];
   if (!listat.length) return;
   listat.forEach(lista => {
@@ -213,4 +213,5 @@ if (!location.hash) {
   addEventListener('resize', tarkista);
   addEventListener('load', tarkista);
   requestAnimationFrame(tarkista);
-})();
+};
+window.alustaVaiheet();
