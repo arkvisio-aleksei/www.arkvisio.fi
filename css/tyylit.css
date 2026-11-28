@@ -1732,3 +1732,8 @@ html[data-siirto="taakse"]::view-transition-new(root) { animation-name: hihna-si
 .lk-media-tyhja { display: grid; justify-items: center; gap: 8px; font: 500 10px/1.2 var(--fontti-teksti); letter-spacing: .14em; text-transform: uppercase; color: var(--harmaa); }
 .lk-media-tyhja svg { width: 30px; height: 30px; color: #C9C0B1; }
 .lk-nayttamo { align-self: start; }
+/* Kiinteä leikkauspiirros */
+.lk-malli polyline.lk-ruudukko { fill: none; stroke: #E0D9CC; stroke-width: .45; stroke-opacity: 1; vector-effect: non-scaling-stroke; }
+.lk-malli .lk-salaoja { fill: #FFFFFF; stroke: #2B2E35; stroke-width: .8; vector-effect: non-scaling-stroke; }
+.lk-nayttamo { cursor: default; }
+.lk-nayttamo.lk-vaihto .lk-svg { animation: lk-vaihto .45s ease both; }
