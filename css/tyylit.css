@@ -1477,7 +1477,7 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 .ref-ikkuna::backdrop { background: rgba(20, 22, 27, .72); }
 .ref-ikkuna[open] { animation: ref-ikkuna-auki .45s cubic-bezier(.2, .8, .2, 1); }
 @keyframes ref-ikkuna-auki { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
-.ref-ikkuna-runko { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.ref-ikkuna-runko { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); outline: none; }
 .ref-ikkuna-kuva { position: relative; min-height: 420px; background: #F7F4EE; }
 .ref-ikkuna-kuva img, .ref-ikkuna-kuva .ref-piirros { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ref-ikkuna-teksti { display: grid; align-content: start; justify-items: start; gap: 14px; padding: clamp(28px, 3.4vw, 48px); }

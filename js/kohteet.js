@@ -6,8 +6,8 @@
 (function () {
   const kohteet = window.REFERENSSIT || [], luokat = window.REFERENSSILUOKAT || {};
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const kuvaHtml = (k, koko) => k.kuva
-    ? `<img src="${esc(k.kuva)}" alt="${esc(k.nimi)}, ${esc(k.paikka)}" loading="lazy" decoding="async">`
+  const kuvaHtml = (k, laiska) => k.kuva
+    ? `<img src="${esc(k.kuva)}" alt="${esc(k.nimi)}, ${esc(k.paikka)}"${laiska ? ' loading="lazy"' : ''} decoding="async">`
     : `<div class="akso ref-piirros" data-piirros="${kohteet.indexOf(k)}" aria-hidden="true"></div>`;
   const piirraKuvat = juuri => {
     if (!window.piirraAkso) return;
@@ -17,6 +17,8 @@
     });
   };
   const merkki = k => k.esimerkki ? '<span class="ref-esimerkki">Esimerkki</span>' : '';
+  const tyyppiVuosi = k => esc(k.tyyppi) + (k.vuosi ? ' · ' + k.vuosi : '');
+  const palvelut = k => k.palvelut || [];
 
   // ---------- Nosto ----------
   const nosto = kohteet.find(k => k.nosto);
@@ -25,11 +27,11 @@
     nostoEl.innerHTML = `
       <button class="nosto-kuva" type="button" data-avaa="${kohteet.indexOf(nosto)}" aria-label="Avaa kohde ${esc(nosto.nimi)}">${kuvaHtml(nosto)}${merkki(nosto)}</button>
       <div class="nosto-teksti">
-        <p class="ref-tyyppi">${esc(nosto.tyyppi)} · ${nosto.vuosi}</p>
+        <p class="ref-tyyppi">${tyyppiVuosi(nosto)}</p>
         <h2>${esc(nosto.nimi)}</h2>
         <p class="ref-paikka">${esc(nosto.paikka)}</p>
         <p class="nosto-kuvaus">${esc(nosto.kuvaus)}</p>
-        <ul class="ref-palvelut">${nosto.palvelut.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
+        ${palvelut(nosto).length ? `<ul class="ref-palvelut">${palvelut(nosto).map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}
         <button class="nappi nappi-oranssi" type="button" data-avaa="${kohteet.indexOf(nosto)}">Katso kohde</button>
       </div>`;
     piirraKuvat(nostoEl);
@@ -67,9 +69,9 @@
     }
     ruudukko.innerHTML = sarakkeet.map(([k, s, n], j) => `
       <button type="button" class="ref-kortti ${n >= 3 ? 'pieni' : 'iso'}" style="--sarake:${s};--j:${j % 3}" data-avaa="${kohteet.indexOf(k)}">
-        <span class="ref-kuva">${kuvaHtml(k)}${merkki(k)}</span>
+        <span class="ref-kuva">${kuvaHtml(k, true)}${merkki(k)}</span>
         <span class="ref-teksti">
-          <span class="ref-tyyppi">${esc(k.tyyppi)} · ${k.vuosi}</span>
+          <span class="ref-tyyppi">${tyyppiVuosi(k)}</span>
           <span class="ref-nimi">${esc(k.nimi)}</span>
           <span class="ref-paikka">${esc(k.paikka)}</span>
         </span>
@@ -105,13 +107,14 @@
         <p class="nosto-kuvaus">${esc(k.kuvaus)}</p>
         <dl class="ref-tiedot">
           <div><dt>Paikka</dt><dd>${esc(k.paikka)}</dd></div>
-          <div><dt>Valmistunut</dt><dd>${k.vuosi}</dd></div>
-          <div><dt>Palvelut</dt><dd>${k.palvelut.map(esc).join(', ')}</dd></div>
+          ${k.vuosi ? `<div><dt>Valmistunut</dt><dd>${k.vuosi}</dd></div>` : ''}
+          ${palvelut(k).length ? `<div><dt>Palvelut</dt><dd>${palvelut(k).map(esc).join(', ')}</dd></div>` : ''}
         </dl>
         <a class="nappi nappi-oranssi" href="mailto:myynti@arkvisio.fi?subject=${encodeURIComponent('Kysely: ' + k.nimi)}&body=${encodeURIComponent(viesti)}">Kysy vastaavasta hankkeesta</a>
       </div>`;
     piirraKuvat(ikkuna);
     ikkuna.showModal();
+    ikkuna.querySelector('[data-ikkuna-sisalto]').focus();
   });
   if (ikkuna) {
     ikkuna.addEventListener('click', e => { if (e.target === ikkuna || e.target.closest('[data-sulje]')) ikkuna.close(); });

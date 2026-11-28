@@ -6,10 +6,10 @@
 //
 //  nimi       – kohteen nimi
 //  paikka     – kaupunki tai kaupunginosa (ei katuosoitetta)
-//  vuosi      – valmistumisvuosi
+//  vuosi      – valmistumisvuosi (valinnainen)
 //  tyyppi     – näkyvä tyyppi, esim. "Uudisrakennus"
 //  luokka     – suodatin: asuin, kerros, toimi tai korjaus (nimet alla)
-//  palvelut   – mitä teimme
+//  palvelut   – mitä teimme (valinnainen)
 //  kuvaus     – lyhyt kuvaus
 //  kuva       – kuvan polku, esim. "assets/images/kohteet/pakila.jpg" (n. 2000 px leveä).
 //               Jos kuvaa ei ole, näytetään piirros (akso = piirroksen valinnat).
@@ -24,7 +24,10 @@ window.REFERENSSILUOKAT = {
 };
 
 window.REFERENSSIT = [
-  { nimi: "Kalliotalo", paikka: "Espoo", vuosi: 2025, tyyppi: "Uudisrakennus", luokka: "asuin", nosto: true,
+  { nimi: "Paritalo", paikka: "Vantaa", tyyppi: "Uudisrakennus", luokka: "asuin", nosto: true,
+    kuvaus: "Rinnetontille porrastettu paritalo. Puuverhoiltu julkisivu, katettu sisäänkäyntiterassi ja autokatokset alarinteen puolella.",
+    kuva: "assets/images/kohteet/vanha-porvoontie-paritalo-web.jpg" },
+  { nimi: "Kalliotalo", paikka: "Espoo", vuosi: 2025, tyyppi: "Uudisrakennus", luokka: "asuin",
     palvelut: ["Pääsuunnittelu", "Arkkitehtisuunnittelu", "Rakennesuunnittelu"],
     kuvaus: "Kaksiosainen asuinrakennus kallioiselle metsätontille. Tummat massat, isot lasipinnat ja kivimuuri, joka sitoo talon maastoon.",
     kuva: "assets/images/kansikuva.jpg", esimerkki: true },
