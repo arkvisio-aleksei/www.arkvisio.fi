@@ -1592,3 +1592,34 @@ html.kartta-auki, html.kartta-auki body { background: var(--grafiitti); }
 /* Näin työ etenee: viivat oransseina */
 .vaiheet li::after { background: var(--vision-oranssi); }
 .vaiheet li { border-top-color: rgba(247, 156, 9, .28); }
+
+/* ================= Johdanto yhtenä kehyksenä: teksti vasemmalla, luvut oikealla (ei tummaa laatikkoa) ================= */
+.intro { --k: var(--vision-oranssi); --kp: 26px; --kv: 2px; gap: 0; padding: clamp(26px, 3.4vw, 48px);
+  background:
+    linear-gradient(var(--k), var(--k)) left top / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) left top / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) right top / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) right top / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) left bottom / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) left bottom / var(--kv) var(--kp) no-repeat,
+    linear-gradient(var(--k), var(--k)) right bottom / var(--kp) var(--kv) no-repeat,
+    linear-gradient(var(--k), var(--k)) right bottom / var(--kv) var(--kp) no-repeat; }
+.intro-teksti { background: none; padding: 0 clamp(24px, 4vw, 64px) 0 0; }
+.intro-faktat { padding: 0 0 0 clamp(24px, 4vw, 64px); border-radius: 0; background: none; color: var(--muste); border-left: 1px solid #DAD5CC; }
+.intro-faktat .palvelu-faktat div { border-top-color: #DAD5CC; }
+.intro-faktat .palvelu-faktat dt { color: #C97F00; }
+.intro-faktat .palvelu-faktat dd { color: #5B6070; }
+@media (max-width: 900px) {
+  .intro-teksti { padding: 0 0 clamp(22px, 4vw, 32px); }
+  .intro-faktat { padding: clamp(22px, 4vw, 32px) 0 0; border-left: 0; border-top: 1px solid #DAD5CC; }
+}
+@media (max-width: 480px) {
+  .intro-faktat .palvelu-faktat div { border-top-color: #DAD5CC; }
+}
+
+/* ================= Mitä suunnittelemme / teemme: kortit tummassa paneelissa ================= */
+.palvelukortit { gap: 1px; background: #363B45; border: 0; border-radius: 22px; overflow: hidden; }
+.palvelukortti { background: #1F2229; }
+.palvelukortti .nro { color: var(--vision-oranssi); }
+.palvelukortti h3 { color: #F4F1EC; }
+.palvelukortti p { color: #A9ACB3; }
